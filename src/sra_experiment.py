@@ -67,7 +67,7 @@ def make_batch(task: str, batch_size: int, min_len: int, max_len: int, device: s
 
 
 class TinySynapse(nn.Module):
-    """A small synapse module. Start with MLP; swap with tiny Transformer later."""
+    """A small synapse module with a persistent synapse state."""
     def __init__(self, dim: int, hidden: int):
         super().__init__()
         self.net = nn.Sequential(
@@ -76,9 +76,10 @@ class TinySynapse(nn.Module):
             nn.GELU(),
             nn.Linear(hidden, dim),
         )
+        self.state = nn.Parameter(torch.zeros(dim))
 
     def forward(self, h):
-        return self.net(h)
+        return self.net(h) + self.state
 
 
 class Router(nn.Module):
@@ -86,12 +87,14 @@ class Router(nn.Module):
         super().__init__()
         self.k = k
         self.num_synapses = num_synapses
-        self.proj = nn.Linear(dim, num_synapses)
+        self.synapse_emb = nn.Parameter(torch.randn(num_synapses, dim) * 0.02)
+        self.scale = math.sqrt(dim)
 
-    def forward(self, h):
+    def forward(self, h, k_override=None):
         # h: (B, T, D)
-        logits = self.proj(h)  # (B, T, N)
-        vals, idx = torch.topk(logits, self.k, dim=-1)  # top-k routing
+        k = self.k if k_override is None else k_override
+        logits = torch.einsum("btd,nd->btn", h, self.synapse_emb) / self.scale
+        vals, idx = torch.topk(logits, k, dim=-1)
         weights = F.softmax(vals, dim=-1)
         return idx, weights, logits
 
@@ -103,10 +106,11 @@ class SRABlock(nn.Module):
         self.router = Router(dim, num_synapses, k)
         self.norm = nn.LayerNorm(dim)
 
-    def forward(self, h):
+    def forward(self, h, dense=False):
         base = h
         h = self.norm(h)
-        idx, weights, logits = self.router(h)
+        k_override = self.router.num_synapses if dense else None
+        idx, weights, logits = self.router(h, k_override=k_override)
         B, T, D = h.shape
         out = torch.zeros_like(h)
         syn_outputs = []  # record synapse outputs
@@ -129,19 +133,39 @@ class SRAModel(nn.Module):
         self.blocks = nn.ModuleList([SRABlock(dim, num_synapses, k, syn_hidden) for _ in range(layers)])
         self.out = nn.Linear(dim, vocab_size)
 
-    def forward(self, x, y_in):
+    def forward(self, x, y_in, dense=False):
         # encoder-ish summary from input + autoregressive-ish target prefix conditioning
         seq = torch.cat([x, y_in], dim=1)
         h = self.embed(seq) + self.pos[:, :seq.size(1)]
         router_logits = []
         all_synapse_outputs = []  # record all synapse outputs from all blocks
         for block in self.blocks:
-            h, logits, syn_outs = block(h)
+            h, logits, syn_outs = block(h, dense=dense)
             router_logits.append(logits)
             all_synapse_outputs.append(syn_outs)
         # predict only target positions
         h_tgt = h[:, x.size(1):]
         return self.out(h_tgt), router_logits, all_synapse_outputs
+
+
+def make_optimizer(model, lr):
+    params = [p for p in model.parameters() if p.requires_grad]
+    return torch.optim.AdamW(params, lr=lr, weight_decay=0.01)
+
+
+def specialization_loss(router_logits):
+    """Promote specialization by maximizing entropy of synapse usage."""
+    logits = router_logits[-1].detach()
+    probs = F.softmax(logits, dim=-1).mean(dim=(0, 1))
+    entropy = -(probs * torch.log(probs + 1e-9)).sum()
+    return -entropy  # negative for maximization in loss
+
+
+def freeze_router(model):
+    for block in model.blocks:
+        for name, p in block.router.named_parameters():
+            if 'synapse_emb' not in name:
+                p.requires_grad = False
 
 
 def usage_stats(router_logits):
@@ -219,17 +243,41 @@ def train(args):
     random.seed(args.seed)
     torch.manual_seed(args.seed)
     model = SRAModel(VOCAB_SIZE, args.dim, args.layers, args.synapses, args.k, args.syn_hidden).to(device)
-    opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
-    print(f"device={device} task={args.task} k={args.k} batch_size={args.batch_size} dim={args.dim} layers={args.layers} synapses={args.synapses} steps={args.steps} save={args.save}")
+    opt = make_optimizer(model, args.lr)
+    phase1_end = args.warmup_steps + args.joint_steps
+    phase2_end = phase1_end + args.stabilize_steps
+    print(
+        f"device={device} task={args.task} k={args.k} batch_size={args.batch_size} dim={args.dim} "
+        f"layers={args.layers} synapses={args.synapses} steps={args.steps} save={args.save} "
+        f"warmup={args.warmup_steps} joint={args.joint_steps} stabilize={args.stabilize_steps}"
+    )
 
     for step in range(1, args.steps + 1):
+        if step <= args.warmup_steps:
+            phase = "warmup"
+        elif step <= phase1_end:
+            phase = "joint"
+        elif step <= phase2_end:
+            phase = "stabilize"
+        else:
+            phase = "specialize"
+
         model.train()
+        dense = step <= args.warmup_steps
+        if step == phase1_end + 1:
+            freeze_router(model)
+            opt = make_optimizer(model, args.lr)
+            print(f"phase transition: stabilization after step {phase1_end}")
+
         x, y = make_batch(args.task, args.batch_size, args.min_len, args.max_len, device)
         y_in = torch.cat([torch.full((y.size(0), 1), BOS, dtype=torch.long, device=device), y[:, :-1]], dim=1)
-        logits, router_logits, all_syn_outputs = model(x, y_in)
+        logits, router_logits, all_syn_outputs = model(x, y_in, dense=dense)
         ce = F.cross_entropy(logits.reshape(-1, VOCAB_SIZE), y.reshape(-1), ignore_index=PAD)
         lb = load_balance_loss(router_logits)
         loss = ce + args.load_balance * lb
+        if phase == "specialize":
+            spec_loss = specialization_loss(router_logits)
+            loss = loss + args.specialization_weight * spec_loss
 
         opt.zero_grad(set_to_none=True)
         loss.backward()
@@ -243,7 +291,14 @@ def train(args):
             top_usage = ", ".join(f"{v:.2f}" for v in usage.tolist()[:min(8, len(usage))])
             syn_norms = synapse_stats(all_syn_outputs)
             syn_str = " | ".join(f"L{i}:[" + ", ".join(f"{n:.3f}" for n in norms) + "]" for i, norms in enumerate(syn_norms))
-            print(f"step={step:5d} train_loss={loss.item():.4f} ce={ce.item():.4f} lb={lb.item():.4f} val_loss={val_loss:.4f} seq_acc={seq_acc:.3f} entropy={entropy:.3f} usage[:8]=[{top_usage}] synapses={syn_str}")
+            log_str = (
+                f"step={step:5d} phase={phase} train_loss={loss.item():.4f} ce={ce.item():.4f} "
+                f"lb={lb.item():.4f} val_loss={val_loss:.4f} seq_acc={seq_acc:.3f} entropy={entropy:.3f} "
+                f"usage[:8]=[{top_usage}] synapses={syn_str}"
+            )
+            if phase == "specialize":
+                log_str += f" spec={spec_loss.item():.4f}"
+            print(log_str)
             sample_x, sample_y = make_sample(args.task, args.min_len, args.max_len)
             sample_x_t = torch.tensor([sample_x], dtype=torch.long, device=device)
             sample_pred = generate_prediction(model, sample_x_t, len(sample_y), device)
@@ -286,6 +341,10 @@ if __name__ == "__main__":
     p.add_argument("--syn-hidden", type=int, default=128)
     p.add_argument("--lr", type=float, default=3e-4)
     p.add_argument("--load-balance", type=float, default=0.01)
+    p.add_argument("--warmup-steps", type=int, default=200)
+    p.add_argument("--joint-steps", type=int, default=1400)
+    p.add_argument("--stabilize-steps", type=int, default=300)
+    p.add_argument("--specialization-weight", type=float, default=0.1)
     p.add_argument("--log-every", type=int, default=50)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--save", type=str, default="sra_model.pt")
