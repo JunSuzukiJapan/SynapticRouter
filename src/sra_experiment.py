@@ -87,7 +87,10 @@ class Router(nn.Module):
         super().__init__()
         self.k = k
         self.num_synapses = num_synapses
-        self.synapse_emb = nn.Parameter(torch.randn(num_synapses, dim) * 0.02)
+        # Initialize with orthogonal matrix to balance initial routing
+        self.synapse_emb = nn.Parameter(torch.zeros(num_synapses, dim))
+        nn.init.orthogonal_(self.synapse_emb)
+        self.synapse_emb.data = self.synapse_emb.data / math.sqrt(dim)
         self.scale = math.sqrt(dim)
 
     def forward(self, h, k_override=None):
@@ -211,11 +214,12 @@ def generate_prediction(model, x, max_len, device):
 
 
 def load_balance_loss(router_logits):
+    """Enforce balanced usage of synapses."""
     loss = 0.0
     for logits in router_logits:
         probs = F.softmax(logits, dim=-1).mean(dim=(0, 1))
         uniform = torch.full_like(probs, 1.0 / probs.numel())
-        loss = loss + F.mse_loss(probs, uniform)
+        loss = loss + ((probs - uniform) ** 2).mean()
     return loss
 
 
@@ -340,7 +344,7 @@ if __name__ == "__main__":
     p.add_argument("--k", type=int, default=2)
     p.add_argument("--syn-hidden", type=int, default=128)
     p.add_argument("--lr", type=float, default=3e-4)
-    p.add_argument("--load-balance", type=float, default=0.01)
+    p.add_argument("--load-balance", type=float, default=0.5)
     p.add_argument("--warmup-steps", type=int, default=200)
     p.add_argument("--joint-steps", type=int, default=1400)
     p.add_argument("--stabilize-steps", type=int, default=300)
