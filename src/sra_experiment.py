@@ -71,17 +71,28 @@ class TinySynapse(nn.Module):
     def __init__(self, dim: int, hidden: int):
         super().__init__()
         self.attn = nn.MultiheadAttention(dim, num_heads=2, batch_first=True)
+        self.norm1 = nn.LayerNorm(dim)
         self.net = nn.Sequential(
-            nn.LayerNorm(dim),
             nn.Linear(dim, hidden),
             nn.GELU(),
             nn.Linear(hidden, dim),
         )
+        self.norm2 = nn.LayerNorm(dim)
         self.state = nn.Parameter(torch.zeros(dim))
 
-    def forward(self, h):
-        h_attn, _ = self.attn(h, h, h)
-        return self.net(h_attn) + self.state
+    def forward(self, h, key_padding_mask=None, encoder_len=0):
+        B, T, D = h.shape
+        attn_mask = torch.zeros((T, T), dtype=torch.bool, device=h.device)
+        if encoder_len > 0:
+            # source positions may attend only to source positions
+            attn_mask[:encoder_len, encoder_len:] = True
+            # target positions may attend to all source positions and past target positions
+            future_target = torch.triu(torch.ones((T - encoder_len, T - encoder_len), dtype=torch.bool, device=h.device), diagonal=1)
+            attn_mask[encoder_len:, encoder_len:] = future_target
+        h_attn, _ = self.attn(h, h, h, attn_mask=attn_mask, key_padding_mask=key_padding_mask, need_weights=False)
+        h = self.norm1(h + h_attn)
+        out = self.net(h)
+        return self.norm2(out + h) + self.state
 
 
 class Router(nn.Module):
@@ -111,7 +122,7 @@ class SRABlock(nn.Module):
         self.router = Router(dim, num_synapses, k)
         self.norm = nn.LayerNorm(dim)
 
-    def forward(self, h, dense=False):
+    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0):
         base = h
         h = self.norm(h)
         k_override = self.router.num_synapses if dense else None
@@ -120,9 +131,8 @@ class SRABlock(nn.Module):
         out = torch.zeros_like(h)
         syn_outputs = []  # record synapse outputs
 
-        # Simple clear implementation. Fine for toy experiments.
         for syn_id, syn in enumerate(self.synapses):
-            y = syn(h)  # (B, T, D)
+            y = syn(h, key_padding_mask=key_padding_mask, encoder_len=encoder_len)  # (B, T, D)
             syn_outputs.append(y.detach())
             mask = (idx == syn_id).float()  # (B, T, k)
             coeff = (mask * weights).sum(dim=-1).unsqueeze(-1)  # (B, T, 1)
@@ -135,17 +145,33 @@ class SRAModel(nn.Module):
         super().__init__()
         self.embed = nn.Embedding(vocab_size, dim, padding_idx=PAD)
         self.pos = nn.Parameter(torch.randn(1, 128, dim) * 0.02)
+        self.rel_pos = nn.Embedding(129, dim)
+        self.seg = nn.Embedding(2, dim)
         self.blocks = nn.ModuleList([SRABlock(dim, num_synapses, k, syn_hidden) for _ in range(layers)])
         self.out = nn.Linear(dim, vocab_size)
 
     def forward(self, x, y_in, dense=False):
         # encoder-ish summary from input + autoregressive-ish target prefix conditioning
         seq = torch.cat([x, y_in], dim=1)
-        h = self.embed(seq) + self.pos[:, :seq.size(1)]
+        mask = seq == PAD
+        segment_ids = torch.cat(
+            [torch.zeros_like(x), torch.ones_like(y_in)],
+            dim=1,
+        )
+        target_rel_pos = torch.cat(
+            [torch.zeros_like(x), torch.arange(1, y_in.size(1) + 1, device=seq.device).unsqueeze(0).repeat(x.size(0), 1)],
+            dim=1,
+        )
+        h = (
+            self.embed(seq)
+            + self.pos[:, :seq.size(1)]
+            + self.seg(segment_ids)
+            + self.rel_pos(target_rel_pos)
+        )
         router_logits = []
         all_synapse_outputs = []  # record all synapse outputs from all blocks
         for block in self.blocks:
-            h, logits, syn_outs = block(h, dense=dense)
+            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1))
             router_logits.append(logits)
             all_synapse_outputs.append(syn_outs)
         # predict only target positions
@@ -160,7 +186,7 @@ def make_optimizer(model, lr):
 
 def specialization_loss(router_logits):
     """Promote specialization by maximizing entropy of synapse usage."""
-    logits = router_logits[-1].detach()
+    logits = router_logits[-1]
     probs = F.softmax(logits, dim=-1).mean(dim=(0, 1))
     entropy = -(probs * torch.log(probs + 1e-9)).sum()
     return -entropy  # negative for maximization in loss
@@ -213,6 +239,15 @@ def generate_prediction(model, x, max_len, device):
         if nxt.item() == EOS:
             break
     return out
+
+
+def generate_self_conditioned_prefix(model, x, max_len, device):
+    y_in = torch.full((x.size(0), 1), BOS, dtype=torch.long, device=device)
+    for _ in range(max_len - 1):
+        logits, _, _ = model(x, y_in)
+        nxt = logits[:, -1].argmax(dim=-1, keepdim=True)
+        y_in = torch.cat([y_in, nxt], dim=1)
+    return y_in
 
 
 def load_balance_loss(router_logits):
@@ -281,6 +316,15 @@ def train(args):
         ce = F.cross_entropy(logits.reshape(-1, VOCAB_SIZE), y.reshape(-1), ignore_index=PAD)
         lb = load_balance_loss(router_logits)
         loss = ce + args.load_balance * lb
+
+        if args.self_gen_weight > 0 and phase != "warmup":
+            y_in_self = generate_self_conditioned_prefix(model, x, y.size(1), device)
+            logits_self, _, _ = model(x, y_in_self)
+            ce_self = F.cross_entropy(logits_self.reshape(-1, VOCAB_SIZE), y.reshape(-1), ignore_index=PAD)
+            loss = loss + args.self_gen_weight * ce_self
+        else:
+            ce_self = torch.tensor(0.0, device=device)
+
         if phase == "specialize":
             spec_loss = specialization_loss(router_logits)
             loss = loss + args.specialization_weight * spec_loss
@@ -302,6 +346,8 @@ def train(args):
                 f"lb={lb.item():.4f} val_loss={val_loss:.4f} seq_acc={seq_acc:.3f} entropy={entropy:.3f} "
                 f"usage[:8]=[{top_usage}] synapses={syn_str}"
             )
+            if args.self_gen_weight > 0 and phase != "warmup":
+                log_str += f" ce_self={ce_self.item():.4f}"
             if phase == "specialize":
                 log_str += f" spec={spec_loss.item():.4f}"
             print(log_str)
@@ -351,6 +397,7 @@ if __name__ == "__main__":
     p.add_argument("--joint-steps", type=int, default=1400)
     p.add_argument("--stabilize-steps", type=int, default=300)
     p.add_argument("--specialization-weight", type=float, default=0.1)
+    p.add_argument("--self-gen-weight", type=float, default=0.5)
     p.add_argument("--log-every", type=int, default=50)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--save", type=str, default="sra_model.pt")
