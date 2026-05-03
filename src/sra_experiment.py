@@ -67,9 +67,10 @@ def make_batch(task: str, batch_size: int, min_len: int, max_len: int, device: s
 
 
 class TinySynapse(nn.Module):
-    """A small synapse module with a persistent synapse state."""
+    """A small synapse module with self-attention for token mixing."""
     def __init__(self, dim: int, hidden: int):
         super().__init__()
+        self.attn = nn.MultiheadAttention(dim, num_heads=2, batch_first=True)
         self.net = nn.Sequential(
             nn.LayerNorm(dim),
             nn.Linear(dim, hidden),
@@ -79,7 +80,8 @@ class TinySynapse(nn.Module):
         self.state = nn.Parameter(torch.zeros(dim))
 
     def forward(self, h):
-        return self.net(h) + self.state
+        h_attn, _ = self.attn(h, h, h)
+        return self.net(h_attn) + self.state
 
 
 class Router(nn.Module):
