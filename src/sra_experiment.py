@@ -388,6 +388,15 @@ def train_single(args):
     
     if args.model_type == "sra":
         model = SRAModel(VOCAB_SIZE, args.dim, args.layers, args.synapses, args.k, args.syn_hidden).to(device)
+    elif args.model_type == "batched_sra":
+        from sra_gpu_models import BatchedSRAModel
+        model = BatchedSRAModel(VOCAB_SIZE, args.dim, args.layers, args.synapses, args.k, args.syn_hidden).to(device)
+    elif args.model_type == "moe_sra":
+        from sra_gpu_models import MoESRAModel
+        model = MoESRAModel(VOCAB_SIZE, args.dim, args.layers, args.synapses, args.k, args.syn_hidden).to(device)
+    elif args.model_type == "seq_sra":
+        from sra_gpu_models import SeqSRAModel
+        model = SeqSRAModel(VOCAB_SIZE, args.dim, args.layers, args.synapses, args.k, args.syn_hidden).to(device)
     elif args.model_type == "transformer":
         model = BaselineTransformer(VOCAB_SIZE, args.dim, args.layers, getattr(args, "baseline_hidden", 256)).to(device)
     elif args.model_type == "mlp":
@@ -417,7 +426,7 @@ def train_single(args):
 
         model.train()
         dense = step <= args.warmup_steps
-        if step == phase1_end + 1 and args.model_type == "sra":
+        if step == phase1_end + 1 and "sra" in args.model_type:
             freeze_router(model)
             opt = make_optimizer(model, args.lr)
             print(f"phase transition: stabilization after step {phase1_end}")
@@ -427,7 +436,7 @@ def train_single(args):
         logits, router_logits, all_syn_outputs = model(x, y_in, dense=dense)
         ce = F.cross_entropy(logits.reshape(-1, VOCAB_SIZE), y.reshape(-1), ignore_index=PAD)
         
-        if args.model_type == "sra":
+        if "sra" in args.model_type:
             lb = load_balance_loss(router_logits)
             loss = ce + args.load_balance * lb
         else:
@@ -442,7 +451,7 @@ def train_single(args):
         else:
             ce_self = torch.tensor(0.0, device=device)
 
-        if phase == "specialize" and args.model_type == "sra":
+        if phase == "specialize" and "sra" in args.model_type:
             spec_loss = specialization_loss(router_logits)
             loss = loss + args.specialization_weight * spec_loss
         else:
@@ -457,7 +466,7 @@ def train_single(args):
             val_loss, seq_acc = evaluate(model, args.task, 20, args.batch_size, args.min_len, args.max_len, device)
             final_val_loss, final_seq_acc = val_loss, seq_acc
             
-            if args.model_type == "sra":
+            if "sra" in args.model_type:
                 usage = usage_stats(router_logits)
                 entropy = usage_entropy(usage)
                 top_usage = ", ".join(f"{v:.2f}" for v in usage.tolist()[:min(8, len(usage))])
@@ -476,7 +485,7 @@ def train_single(args):
             
             if args.self_gen_weight > 0 and phase != "warmup":
                 log_str += f" ce_self={ce_self.item():.4f}"
-            if phase == "specialize" and args.model_type == "sra":
+            if phase == "specialize" and "sra" in args.model_type:
                 log_str += f" spec={spec_loss.item():.4f}"
             print(log_str)
             sample_x, sample_y = make_sample(args.task, args.min_len, args.max_len)
@@ -547,7 +556,7 @@ def train(args):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("--model-type", choices=["sra", "transformer", "mlp"], default="sra")
+    p.add_argument("--model-type", choices=["sra", "transformer", "mlp", "batched_sra", "moe_sra", "seq_sra"], default="sra")
     p.add_argument("--profile", action="store_true", help="Enable memory/time profiling")
     p.add_argument("--baseline-hidden", type=int, default=256, help="Hidden dim for transformer/mlp baselines")
     p.add_argument("--task", choices=["copy", "reverse", "paren", "addmod"], default="reverse")
