@@ -5,6 +5,7 @@
 import argparse
 import math
 import random
+import time
 from dataclasses import dataclass
 from typing import Tuple, Dict
 
@@ -187,6 +188,84 @@ class SRAModel(nn.Module):
         return self.out(h_tgt), router_logits, all_synapse_outputs
 
 
+class BaselineTransformer(nn.Module):
+    def __init__(self, vocab_size: int, dim: int, layers: int, hidden: int):
+        super().__init__()
+        self.embed = nn.Embedding(vocab_size, dim, padding_idx=PAD)
+        self.pos = nn.Parameter(torch.randn(1, 128, dim) * 0.02)
+        self.rel_pos = nn.Embedding(129, dim)
+        self.seg = nn.Embedding(2, dim)
+        
+        encoder_layer = nn.TransformerEncoderLayer(d_model=dim, nhead=2, dim_feedforward=hidden, batch_first=True)
+        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=layers)
+        self.out = nn.Linear(dim, vocab_size)
+
+    def forward(self, x, y_in, dense=False):
+        seq = torch.cat([x, y_in], dim=1)
+        mask = seq == PAD
+        segment_ids = torch.cat(
+            [torch.zeros_like(x), torch.ones_like(y_in)],
+            dim=1,
+        )
+        target_rel_pos = torch.cat(
+            [torch.zeros_like(x), torch.arange(1, y_in.size(1) + 1, device=seq.device).unsqueeze(0).repeat(x.size(0), 1)],
+            dim=1,
+        )
+        h = (
+            self.embed(seq)
+            + self.pos[:, :seq.size(1)]
+            + self.seg(segment_ids)
+            + self.rel_pos(target_rel_pos)
+        )
+        T = h.size(1)
+        encoder_len = x.size(1)
+        attn_mask = torch.zeros((T, T), dtype=torch.bool, device=h.device)
+        attn_mask[:encoder_len, encoder_len:] = True
+        future_target = torch.triu(torch.ones((T - encoder_len, T - encoder_len), dtype=torch.bool, device=h.device), diagonal=1)
+        attn_mask[encoder_len:, encoder_len:] = future_target
+        
+        h = self.transformer(h, mask=attn_mask, src_key_padding_mask=mask)
+        return self.out(h[:, x.size(1):]), [], []
+
+
+class BaselineMLP(nn.Module):
+    def __init__(self, vocab_size: int, dim: int, layers: int, hidden: int):
+        super().__init__()
+        self.embed = nn.Embedding(vocab_size, dim, padding_idx=PAD)
+        self.pos = nn.Parameter(torch.randn(1, 128, dim) * 0.02)
+        self.rel_pos = nn.Embedding(129, dim)
+        self.seg = nn.Embedding(2, dim)
+        
+        self.net = nn.ModuleList()
+        for _ in range(layers):
+            self.net.append(nn.Linear(dim, hidden))
+            self.net.append(nn.GELU())
+            self.net.append(nn.Linear(hidden, dim))
+            self.net.append(nn.LayerNorm(dim))
+        self.out = nn.Linear(dim, vocab_size)
+
+    def forward(self, x, y_in, dense=False):
+        seq = torch.cat([x, y_in], dim=1)
+        segment_ids = torch.cat(
+            [torch.zeros_like(x), torch.ones_like(y_in)],
+            dim=1,
+        )
+        target_rel_pos = torch.cat(
+            [torch.zeros_like(x), torch.arange(1, y_in.size(1) + 1, device=seq.device).unsqueeze(0).repeat(x.size(0), 1)],
+            dim=1,
+        )
+        h = (
+            self.embed(seq)
+            + self.pos[:, :seq.size(1)]
+            + self.seg(segment_ids)
+            + self.rel_pos(target_rel_pos)
+        )
+        for i in range(0, len(self.net), 4):
+            lin1, gelu, lin2, norm = self.net[i:i+4]
+            h = norm(h + lin2(gelu(lin1(h))))
+        return self.out(h[:, x.size(1):]), [], []
+
+
 def make_optimizer(model, lr):
     params = [p for p in model.parameters() if p.requires_grad]
     return torch.optim.AdamW(params, lr=lr, weight_decay=0.01)
@@ -288,19 +367,44 @@ def evaluate(model, task, batches, batch_size, min_len, max_len, device):
 
 
 def train_single(args):
-    device = "cuda" if torch.cuda.is_available() and not args.cpu else "cpu"
+    start_time = time.time()
+    if args.cpu:
+        device = "cpu"
+    elif torch.cuda.is_available():
+        device = "cuda"
+    elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        device = "mps"
+    else:
+        device = "cpu"
+        
+    if getattr(args, "profile", False):
+        if device == "cuda":
+            torch.cuda.reset_peak_memory_stats(device)
+        elif device == "mps" and hasattr(torch.mps, "empty_cache"):
+            torch.mps.empty_cache()
+
     random.seed(args.seed)
     torch.manual_seed(args.seed)
-    model = SRAModel(VOCAB_SIZE, args.dim, args.layers, args.synapses, args.k, args.syn_hidden).to(device)
+    
+    if args.model_type == "sra":
+        model = SRAModel(VOCAB_SIZE, args.dim, args.layers, args.synapses, args.k, args.syn_hidden).to(device)
+    elif args.model_type == "transformer":
+        model = BaselineTransformer(VOCAB_SIZE, args.dim, args.layers, getattr(args, "baseline_hidden", 256)).to(device)
+    elif args.model_type == "mlp":
+        model = BaselineMLP(VOCAB_SIZE, args.dim, args.layers, getattr(args, "baseline_hidden", 256)).to(device)
+    else:
+        raise ValueError(f"Unknown model type: {args.model_type}")
+
     opt = make_optimizer(model, args.lr)
     phase1_end = args.warmup_steps + args.joint_steps
     phase2_end = phase1_end + args.stabilize_steps
     print(
-        f"device={device} task={args.task} k={args.k} batch_size={args.batch_size} dim={args.dim} "
-        f"layers={args.layers} synapses={args.synapses} steps={args.steps} save={args.save} "
-        f"warmup={args.warmup_steps} joint={args.joint_steps} stabilize={args.stabilize_steps}"
+        f"device={device} model={args.model_type} task={args.task} k={args.k} batch_size={args.batch_size} dim={args.dim} "
+        f"layers={args.layers} synapses={args.synapses} baseline_hidden={getattr(args, 'baseline_hidden', 0)} "
+        f"steps={args.steps} save={args.save} warmup={args.warmup_steps} joint={args.joint_steps} stabilize={args.stabilize_steps}"
     )
 
+    final_val_loss, final_seq_acc = 0.0, 0.0
     for step in range(1, args.steps + 1):
         if step <= args.warmup_steps:
             phase = "warmup"
@@ -313,7 +417,7 @@ def train_single(args):
 
         model.train()
         dense = step <= args.warmup_steps
-        if step == phase1_end + 1:
+        if step == phase1_end + 1 and args.model_type == "sra":
             freeze_router(model)
             opt = make_optimizer(model, args.lr)
             print(f"phase transition: stabilization after step {phase1_end}")
@@ -322,8 +426,13 @@ def train_single(args):
         y_in = torch.cat([torch.full((y.size(0), 1), BOS, dtype=torch.long, device=device), y[:, :-1]], dim=1)
         logits, router_logits, all_syn_outputs = model(x, y_in, dense=dense)
         ce = F.cross_entropy(logits.reshape(-1, VOCAB_SIZE), y.reshape(-1), ignore_index=PAD)
-        lb = load_balance_loss(router_logits)
-        loss = ce + args.load_balance * lb
+        
+        if args.model_type == "sra":
+            lb = load_balance_loss(router_logits)
+            loss = ce + args.load_balance * lb
+        else:
+            lb = torch.tensor(0.0, device=device)
+            loss = ce
 
         if args.self_gen_weight > 0 and phase != "warmup":
             y_in_self = generate_self_conditioned_prefix(model, x, y.size(1), device)
@@ -333,9 +442,11 @@ def train_single(args):
         else:
             ce_self = torch.tensor(0.0, device=device)
 
-        if phase == "specialize":
+        if phase == "specialize" and args.model_type == "sra":
             spec_loss = specialization_loss(router_logits)
             loss = loss + args.specialization_weight * spec_loss
+        else:
+            spec_loss = torch.tensor(0.0, device=device)
 
         opt.zero_grad(set_to_none=True)
         loss.backward()
@@ -344,19 +455,28 @@ def train_single(args):
 
         if step % args.log_every == 0 or step == 1:
             val_loss, seq_acc = evaluate(model, args.task, 20, args.batch_size, args.min_len, args.max_len, device)
-            usage = usage_stats(router_logits)
-            entropy = usage_entropy(usage)
-            top_usage = ", ".join(f"{v:.2f}" for v in usage.tolist()[:min(8, len(usage))])
-            syn_norms = synapse_stats(all_syn_outputs)
-            syn_str = " | ".join(f"L{i}:[" + ", ".join(f"{n:.3f}" for n in norms) + "]" for i, norms in enumerate(syn_norms))
-            log_str = (
-                f"step={step:5d} phase={phase} train_loss={loss.item():.4f} ce={ce.item():.4f} "
-                f"lb={lb.item():.4f} val_loss={val_loss:.4f} seq_acc={seq_acc:.3f} entropy={entropy:.3f} "
-                f"usage[:8]=[{top_usage}] synapses={syn_str}"
-            )
+            final_val_loss, final_seq_acc = val_loss, seq_acc
+            
+            if args.model_type == "sra":
+                usage = usage_stats(router_logits)
+                entropy = usage_entropy(usage)
+                top_usage = ", ".join(f"{v:.2f}" for v in usage.tolist()[:min(8, len(usage))])
+                syn_norms = synapse_stats(all_syn_outputs)
+                syn_str = " | ".join(f"L{i}:[" + ", ".join(f"{n:.3f}" for n in norms) + "]" for i, norms in enumerate(syn_norms))
+                log_str = (
+                    f"step={step:5d} phase={phase} train_loss={loss.item():.4f} ce={ce.item():.4f} "
+                    f"lb={lb.item():.4f} val_loss={val_loss:.4f} seq_acc={seq_acc:.3f} entropy={entropy:.3f} "
+                    f"usage[:8]=[{top_usage}] synapses={syn_str}"
+                )
+            else:
+                log_str = (
+                    f"step={step:5d} phase={phase} train_loss={loss.item():.4f} ce={ce.item():.4f} "
+                    f"val_loss={val_loss:.4f} seq_acc={seq_acc:.3f}"
+                )
+            
             if args.self_gen_weight > 0 and phase != "warmup":
                 log_str += f" ce_self={ce_self.item():.4f}"
-            if phase == "specialize":
+            if phase == "specialize" and args.model_type == "sra":
                 log_str += f" spec={spec_loss.item():.4f}"
             print(log_str)
             sample_x, sample_y = make_sample(args.task, args.min_len, args.max_len)
@@ -380,7 +500,23 @@ def train_single(args):
             y_in = torch.cat([y_in, nxt], dim=1)
             if nxt.item() == EOS:
                 break
-        print("x=", decode(x[0].tolist()), " target=", decode(y[0].tolist()), " pred=", decode(outs))
+        if not getattr(args, "disable_inference_print", False):
+            print("x=", decode(x[0].tolist()), " target=", decode(y[0].tolist()), " pred=", decode(outs))
+
+    total_time = time.time() - start_time
+    if device == "cuda":
+        max_mem = torch.cuda.max_memory_allocated(device) / (1024 ** 2)
+    elif device == "mps" and hasattr(torch.mps, "current_allocated_memory"):
+        max_mem = torch.mps.current_allocated_memory() / (1024 ** 2)
+    else:
+        max_mem = 0.0
+    
+    return {
+        "val_loss": final_val_loss,
+        "seq_acc": final_seq_acc,
+        "total_time": total_time,
+        "max_mem_mb": max_mem
+    }
 
 
 def decode(ids):
@@ -411,6 +547,9 @@ def train(args):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
+    p.add_argument("--model-type", choices=["sra", "transformer", "mlp"], default="sra")
+    p.add_argument("--profile", action="store_true", help="Enable memory/time profiling")
+    p.add_argument("--baseline-hidden", type=int, default=256, help="Hidden dim for transformer/mlp baselines")
     p.add_argument("--task", choices=["copy", "reverse", "paren", "addmod"], default="reverse")
     p.add_argument("--task-suite", action="store_true", help="Run the default minimal task suite sequentially: copy, reverse, paren, addmod.")
     p.add_argument("--steps", type=int, default=2000)
