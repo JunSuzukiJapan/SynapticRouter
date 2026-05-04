@@ -24,6 +24,14 @@ ID2TOK = {v: k for k, v in TOKENS.items()}
 ID2TOK.update({PAD: "<pad>", BOS: "<bos>", EOS: "<eos>", SEP: "<sep>"})
 VOCAB_SIZE = max(ID2TOK) + 1
 
+TASK_ORDER = ["copy", "reverse", "paren", "addmod"]
+TASK_DEFAULT_STEPS = {
+    "copy": 1000,
+    "reverse": 2000,
+    "paren": 3000,
+    "addmod": 1000,
+}
+
 
 def encode_symbols(symbols):
     return [TOKENS[s] for s in symbols]
@@ -279,7 +287,7 @@ def evaluate(model, task, batches, batch_size, min_len, max_len, device):
     return total_loss / max(total_tok, 1), correct_seq / max(total_seq, 1)
 
 
-def train(args):
+def train_single(args):
     device = "cuda" if torch.cuda.is_available() and not args.cpu else "cpu"
     random.seed(args.seed)
     torch.manual_seed(args.seed)
@@ -379,9 +387,32 @@ def decode(ids):
     return " ".join(ID2TOK.get(i, "?") for i in ids if i != PAD)
 
 
+def run_task_suite(args):
+    print("Running task suite:", ", ".join(TASK_ORDER))
+    for task in TASK_ORDER:
+        task_args = argparse.Namespace(**vars(args))
+        task_args.task = task
+        task_args.steps = TASK_DEFAULT_STEPS[task]
+        if args.save == "sra_model.pt":
+            task_args.save = f"sra_model_{task}.pt"
+        elif args.save.endswith(".pt"):
+            base, ext = args.save.rsplit(".", 1)
+            task_args.save = f"{base}_{task}.{ext}"
+        print(f"\n=== task suite: {task} ({task_args.steps} steps) ===")
+        train_single(task_args)
+
+
+def train(args):
+    if args.task_suite:
+        run_task_suite(args)
+        return
+    train_single(args)
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--task", choices=["copy", "reverse", "paren", "addmod"], default="reverse")
+    p.add_argument("--task-suite", action="store_true", help="Run the default minimal task suite sequentially: copy, reverse, paren, addmod.")
     p.add_argument("--steps", type=int, default=2000)
     p.add_argument("--batch-size", type=int, default=128)
     p.add_argument("--min-len", type=int, default=4)
