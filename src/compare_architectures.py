@@ -36,7 +36,7 @@ def run_comparisons(args):
 
     configs = [
         {"name": "SRA (k=2)", "model_type": "sra", "k": 2},
-        {"name": "SRA (k=16)", "model_type": "sra", "k": 16},
+        # {"name": "SRA (k=16)", "model_type": "sra", "k": 16}, # Skip to save time
         {"name": "Transformer", "model_type": "transformer", "baseline_hidden": 256},
         {"name": "MLP", "model_type": "mlp", "baseline_hidden": 256},
     ]
