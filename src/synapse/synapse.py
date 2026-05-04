@@ -1,6 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 class Synapse(nn.Module):
     def __init__(self, dim):
@@ -13,3 +16,8 @@ class Synapse(nn.Module):
 
     def forward(self, x):
         return self.net(x)
+
+    def process(self, inputs):
+        logging.info(f"Processing inputs: {inputs}")
+        logging.info(f"Specialization state: {self.specialization_state}")
+        return self.forward(inputs)
