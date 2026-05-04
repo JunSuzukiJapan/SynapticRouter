@@ -3,7 +3,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from sra_experiment import Router, TinySynapse, PAD
+from constants import PAD
+from sra_reference import Router, TinySynapse
 
 # ==============================================================================
 # 1. BatchedSRAModel (Approach 1)
