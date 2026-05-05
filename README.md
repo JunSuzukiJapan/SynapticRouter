@@ -1,4 +1,4 @@
-[English](README.md) | [日本語](README_JP.md)
+[English](README.md) | [日本語](README_JP.md) | [中文](./docs/zh/README.md) | [한국어](./docs/ko/README.md) | [Español](./docs/es/README.md) | [Français](./docs/fr/README.md) | [Deutsch](./docs/de/README.md) | [Português](./docs/pt/README.md) | [Русский](./docs/ru/README.md) | [Italiano](./docs/it/README.md) | [العربية](./docs/ar/README.md) | [हिन्दी](./docs/hi/README.md)
 
 # Synaptic Routing Architecture (SRA)
 
