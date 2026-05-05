@@ -1,0 +1,21 @@
+The quick brown fox jumps over the lazy dog.
+This is a simple sentence to test the language model.
+Artificial Intelligence is advancing at a rapid pace.
+The weather today is very sunny and beautiful.
+It is important to eat healthy food and exercise regularly.
+
+昔々あるところに、おじいさんとおばあさんが住んでいました。
+おじいさんは山へ芝刈りに、おばあさんは川へ洗濯に行きました。
+これは言語モデルの学習用のサンプルテキストです。
+今日はとても天気が良くて、散歩に最適ですね。
+人工知能技術の進歩により、様々なタスクが自動化されつつあります。
+
+In the beginning God created the heaven and the earth.
+Machine learning models require large amounts of high-quality data to perform well.
+こんにちは、世界。新しいモデルのテストをしています。
+Tokyo is the capital and most populous city of Japan.
+東京は日本の首都であり、最も人口の多い都市です。
+The Eiffel Tower is a wrought-iron lattice tower on the Champ de Mars in Paris.
+美味しいラーメンが食べたいです。
+Water is composed of two hydrogen atoms and one oxygen atom.
+水は2つの水素原子と1つの酸素原子から構成されています。

@@ -1,0 +1,40 @@
+def add(a, b):
+    return a + b
+
+class Calculator:
+    def __init__(self):
+        self.result = 0
+        
+    def add(self, val):
+        self.result += val
+        return self.result
+
+def multiply(x, y):
+    res = 0
+    for i in range(y):
+        res += x
+    return res
+
+import math
+def circle_area(radius):
+    return math.pi * radius * radius
+
+def is_prime(n):
+    if n <= 1:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quicksort(left) + middle + quicksort(right)
+
+for i in range(10):
+    print(f"Index is {i}")
