@@ -77,6 +77,10 @@ python src/compare_architectures.py --task copy --steps 500
   - A report verifying that SRA can simultaneously learn multiple algorithmic tasks without interference, and autonomously separate and modularize experts (synapses) according to the nature of the tasks.
 - [Routing Analysis in Cross-Domain Language Modeling (Code / Math / Text)](./docs/routing_analysis_language.md)
   - A report verifying the mechanism where SRA simultaneously learns domains with different grammars and vocabularies (code, math formulas, natural language), and synapses functionally differentiate (specialize) to perform inference for each domain.
+- [Routing Analysis in Multilingual Translation (Eng / Fra / Jpn) & Zero-Shot Generality](./docs/dev/multilingual_translation_routing_analysis.md)
+  - A fascinating report showing that SRA automatically assigns different translation modules based on the grammar structure (SVO vs SOV). Even more surprisingly, when asked to translate an unlearned language pair, it unconsciously uses English as a "pivot language" to solve the problem!
+- [Complete Separation of Perception and Policy in Decision Transformer (Reinforcement Learning)](./docs/dev/decision_transformer_routing_analysis.md)
+  - We gave SRA the ability to play a game. It discovered an incredible strategy on its own: it uses the *exact same "vision" module* to perceive the environment across all tasks, but switches to *completely different "brain" modules* depending on whether it needs to find treasure or run away from an enemy.
 
 ## 🤝 Contributing & License
 
