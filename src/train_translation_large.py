@@ -147,7 +147,7 @@ def train(args):
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
-    p.add_argument("--dataset", type=str, default="iwslt2017", help="HuggingFace dataset name")
+    p.add_argument("--dataset", type=str, default="opus100", help="HuggingFace dataset name")
     p.add_argument("--steps", type=int, default=10000)
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--seq-len", type=int, default=128)
