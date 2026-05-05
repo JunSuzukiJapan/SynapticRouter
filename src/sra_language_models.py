@@ -46,22 +46,28 @@ class CausalMoESRABlock(nn.Module):
         weights_flat = weights.view(B*T, -1)
         out_flat = torch.zeros_like(h_flat)
         
-        for i in range(idx_flat.size(1)): # iterate over k
-            expert_idx = idx_flat[:, i]
-            expert_weights = weights_flat[:, i].unsqueeze(-1)
+        for e in range(self.num_synapses):
+            mask = (idx_flat == e) # (B*T, k)
+            if not mask.any(): continue
             
-            w1_ex = self.w1[expert_idx] # (B*T, D, H)
-            b1_ex = self.b1[expert_idx] # (B*T, H)
-            w2_ex = self.w2[expert_idx] # (B*T, H, D)
-            b2_ex = self.b2[expert_idx] # (B*T, D)
-            state_ex = self.state[expert_idx]
+            token_indices = mask.any(dim=-1).nonzero().squeeze(-1) # (num_tokens,)
+            h_sub = h_flat[token_indices] # (num_tokens, D)
             
-            # bmm needs (B*T, 1, D) @ (B*T, D, H) -> (B*T, 1, H)
-            hidden = torch.bmm(h_flat.unsqueeze(1), w1_ex).squeeze(1) + b1_ex
-            hidden = F.gelu(hidden)
-            expert_out = torch.bmm(hidden.unsqueeze(1), w2_ex).squeeze(1) + b2_ex + state_ex
+            w1_ex = self.w1[e] # (D, H)
+            b1_ex = self.b1[e] # (H)
+            w2_ex = self.w2[e] # (H, D)
+            b2_ex = self.b2[e] # (D)
+            state_ex = self.state[e] # (D)
             
-            out_flat = out_flat + expert_out * expert_weights
+            hidden = F.gelu(torch.matmul(h_sub, w1_ex) + b1_ex)
+            expert_out = torch.matmul(hidden, w2_ex) + b2_ex + state_ex # (num_tokens, D)
+            
+            expert_weights = weights_flat[mask] # (num_tokens,)
+            out_flat[token_indices] += expert_out * expert_weights.unsqueeze(-1)
+            
+            # Workaround for MPS graph compilation crash on long loops
+            if h.device.type == "mps":
+                torch.mps.synchronize()
             
         out = out_flat.view(B, T, D)
         return base + out, logits
