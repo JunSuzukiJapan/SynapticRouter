@@ -1,4 +1,4 @@
-[English](README.md) | [日本語](README_JP.md)
+[English](../../README.md) | [日本語](../../README_JP.md)
 
 # Synaptic Routing Architecture (SRA)
 
@@ -73,13 +73,13 @@ python src/compare_architectures.py --task copy --steps 500
 
 ## 🧪 Experiments & Analysis
 
-- [Multi-Task Learning and Routing Analysis in Algorithmic Reasoning](./docs/routing_analysis_algorithmic.md)
+- [Multi-Task Learning and Routing Analysis in Algorithmic Reasoning](./routing_analysis_algorithmic.md)
   - A report verifying that SRA can simultaneously learn multiple algorithmic tasks without interference, and autonomously separate and modularize experts (synapses) according to the nature of the tasks.
-- [Routing Analysis in Cross-Domain Language Modeling (Code / Math / Text)](./docs/routing_analysis_language.md)
+- [Routing Analysis in Cross-Domain Language Modeling (Code / Math / Text)](./routing_analysis_language.md)
   - A report verifying the mechanism where SRA simultaneously learns domains with different grammars and vocabularies (code, math formulas, natural language), and synapses functionally differentiate (specialize) to perform inference for each domain.
 
 ## 🤝 Contributing & License
 
 This project is currently an experimental architecture in its early stages. Bug reports, discussions on features, and pull requests for performance improvements are very welcome via Issues and PRs!
 
-- **License**: This repository is released under the [MIT License](./LICENSE). Please refer to the `LICENSE` file for details.
+- **License**: This repository is released under the [MIT License](../../LICENSE). Please refer to the `LICENSE` file for details.
