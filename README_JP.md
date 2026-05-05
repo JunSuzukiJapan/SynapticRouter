@@ -81,4 +81,4 @@ python src/compare_architectures.py --task copy --steps 500
 
 本プロジェクトは初期段階の実験的アーキテクチャです。バグ報告や機能に関する議論、パフォーマンス改善のプルリクエストなどは、IssueやPRにて歓迎いたします！
 
-- **ライセンス**: 本リポジトリは [MIT License](./LICENSE) のもとで公開されています。詳細については `LICENSE` ファイルをご参照ください。
+- **ライセンス**: 本リポジトリは [MIT License](./LICENSE) のもとで公開されています。詳細については [`LICENSE`](./LICENSE) ファイルをご参照ください。

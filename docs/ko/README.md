@@ -80,4 +80,4 @@ python src/compare_architectures.py --task copy --steps 500
 
 이 프로젝트는 현재 초기 단계의 실험적 아키텍처입니다. 버그 보고서, 기능에 대한 논의, 성능 향상을 위한 Pull Request 등 Issue와 PR을 통한 참여를 환영합니다!
 
-- **라이선스**: 이 저장소는 [MIT 라이선스](../../LICENSE)에 따라 릴리스됩니다. 자세한 내용은 `LICENSE` 파일을 참조하십시오.
+- **라이선스**: 이 저장소는 [MIT 라이선스](../../LICENSE)에 따라 릴리스됩니다. 자세한 내용은 [`LICENSE`](../../LICENSE) 파일을 참조하십시오.

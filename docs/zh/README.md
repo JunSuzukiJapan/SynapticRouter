@@ -80,4 +80,4 @@ python src/compare_architectures.py --task copy --steps 500
 
 该项目目前是处于早期阶段的实验性架构。非常欢迎通过 Issues 和 PR 提供错误报告、功能讨论以及性能改进的 pull requests！
 
-- **许可**: 本存储库基于 [MIT 许可证](../../LICENSE) 发布。有关详细信息，请参阅 `LICENSE` 文件。
+- **许可**: 本存储库基于 [MIT 许可证](../../LICENSE) 发布。有关详细信息，请参阅 [`LICENSE`](../../LICENSE) 文件。

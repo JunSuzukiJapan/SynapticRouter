@@ -82,4 +82,4 @@ python src/compare_architectures.py --task copy --steps 500
 
 This project is currently an experimental architecture in its early stages. Bug reports, discussions on features, and pull requests for performance improvements are very welcome via Issues and PRs!
 
-- **License**: This repository is released under the [MIT License](../../LICENSE). Please refer to the `LICENSE` file for details.
+- **License**: This repository is released under the [MIT License](../../LICENSE). Please refer to the [`LICENSE`](../../LICENSE) file for details.
