@@ -8,6 +8,7 @@ __pycache__/
 
 # Synaptic Router model
 *.pt
+*.txt
 
 # Distribution / packaging
 .Python
