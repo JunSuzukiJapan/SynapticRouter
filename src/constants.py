@@ -6,6 +6,9 @@ TOKENS = {
     "0": 4, "1": 5, "2": 6, "3": 7, "4": 8, "5": 9, "6": 10, "7": 11, "8": 12, "9": 13,
     "(": 14, ")": 15, "Y": 16, "N": 17,
     "<TASK_COPY>": 18, "<TASK_REVERSE>": 19, "<TASK_PAREN>": 20, "<TASK_ADDMOD>": 21,
+    "<TASK_TREASURE>": 22, "<TASK_ESCAPE>": 23,
+    "<UP>": 24, "<DOWN>": 25, "<LEFT>": 26, "<RIGHT>": 27, "<STAY>": 28,
+    "<R_POS>": 29, "<R_NEU>": 30, "<R_NEG>": 31,
 }
 ID2TOK = {v: k for k, v in TOKENS.items()}
 ID2TOK.update({PAD: "<pad>", BOS: "<bos>", EOS: "<eos>", SEP: "<sep>"})
