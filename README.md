@@ -52,3 +52,8 @@ python src/compare_architectures.py --task copy --steps 500
 > 初期の検証（少ステップでのコピー・タスク）では、SRAがTransformerよりも早くValidation Lossを下げ、高い精度に到達する（学習効率・Sample Efficiencyが高い）兆候が確認されています。
 >
 > 今後、ステップごとの速度（スループット）やVRAM効率の改善を含む、詳細なベンチマーク結果をここに追記する予定です。
+
+## 🧪 実験・分析レポート (Experiments & Analysis)
+
+- [アルゴリズム的推論におけるマルチタスク学習とルーティング分析](./docs/routing_analysis_algorithmic.md)
+  - SRAが複数のアルゴリズムタスクを干渉なく同時学習し、タスクの性質に応じて自律的にエキスパート（シナプス）を分離・モジュール化できることを検証したレポートです。
