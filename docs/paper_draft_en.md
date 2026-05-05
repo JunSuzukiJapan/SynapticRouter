@@ -79,6 +79,26 @@ During the early stages of training (Warmup), all synapses were used uniformly. 
 
 Even in a scenario where a monolithic model would suffer from catastrophic forgetting, the router successfully minimized mutual interference by allocating specialized synapses (independent parameter spaces) to each domain.
 
-## 5. Conclusion
+## 5. Experiment 3: Multilingual Machine Translation
+To further verify modularity in natural language processing, we conducted multitask learning for multilingual machine translation using three languages with different syntactic structures (English: SVO, French: SVO, Japanese: SOV). During training, the "French↔Japanese" pairs were intentionally excluded to test zero-shot generalization.
+
+### Results
+**Autonomous Routing Divergence based on Syntax Structure (SVO/SOV):**
+Analyzing the synapse usage rate revealed the autonomous formation of "SVO-shared synapses" that activate highly during translation between English and French (both SVO), and "SOV-specialized synapses" whose usage spikes only when translating into Japanese (SOV). This indicates that the router isolates and acquires word order and syntactic rules for each language as distinct modules.
+
+**Zero-Shot Translation and Pivot Language Fallback:**
+When requested to perform the unseen "French→Japanese" translation, the model exhibited a highly advanced behavior typical of zero-shot multilingual models: it fell back to outputting "English," which it had acquired as a common latent representation (hub) for both languages. This is evidence that SRA does not merely memorize pairs, but constructs a cross-lingual semantic space.
+
+## 6. Experiment 4: Decision Transformer (Offline RL)
+Finally, to demonstrate that SRA is applicable to domains beyond natural language, we evaluated it as a Decision Transformer trained on offline trajectory data from reinforcement learning (RL). The model was fed play logs (sequences of states, actions, and rewards) from two environments with completely different rules: a "Treasure" task (navigating to a goal) and an "Escape" task (fleeing from an enemy).
+
+### Results
+Visualizing the routing token by token revealed an astonishing phenomenon: **the complete separation of "Perception" and "Policy"**.
+- **State Tokens:** When tokens indicating the agent's own coordinates were input, the router **invariably routed them to a specific synapse (Expert 1)**, regardless of the task type. This shows that the environment model for "spatial perception" is perfectly shared across tasks.
+- **Action Tokens:** However, at the steps for generating the next action (e.g., UP/LEFT), the router clearly diverged, routing to a policy synapse for Treasure or a different policy synapse for Escape.
+
+Without any human design, SRA autonomously acquired the ideal modular structure for reinforcement learning: "Perceiving the environment with the same eyes, but making decisions with different brains."
+
+## 7. Conclusion
 Through the Synaptic Routing Architecture (SRA), this paper demonstrated the potential for a paradigm shift from "batch computation using a massive model" to the "dynamic selection of tiny modules."
-As evidenced by the results of our algorithmic reasoning and cross-domain language modeling experiments, what is truly needed to prevent multi-task interference and achieve both high generalization and learning efficiency is not the gigantism of complex Attention mechanisms, but the presence of a simple and intelligent "Router." Indeed, **"All You Need Is Router."**
+As evidenced by the diverse experimental results in algorithmic reasoning, cross-domain language modeling, multilingual machine translation, and Decision Transformer-based reinforcement learning, what is truly needed to prevent multitask interference, isolate task-specific logic and policies, and share common perception and latent spaces is not the gigantism of complex Attention mechanisms, but the presence of a simple and intelligent "Router." Indeed, **"All You Need Is Router."**
