@@ -65,10 +65,6 @@ class CausalMoESRABlock(nn.Module):
             expert_weights = weights_flat[mask] # (num_tokens,)
             out_flat[token_indices] += expert_out * expert_weights.unsqueeze(-1)
             
-            # Workaround for MPS graph compilation crash on long loops
-            if h.device.type == "mps":
-                torch.mps.synchronize()
-            
         out = out_flat.view(B, T, D)
         return base + out, logits
 

@@ -214,10 +214,6 @@ class MoESRABlock(nn.Module):
             expert_weights = weights_flat[mask] # (num_tokens,)
             out_flat[token_indices] += expert_out * expert_weights.unsqueeze(-1)
             
-            # Workaround for MPS graph compilation crash on long loops
-            if h.device.type == "mps":
-                torch.mps.synchronize()
-            
         out = out_flat.view(B, T, D)
         # Dummy syn_outputs for stats to avoid breaking logging
         dummy_syn_outs = [torch.zeros(B, T, D, device=h.device) for _ in range(self.num_synapses)]
@@ -313,10 +309,6 @@ class SeqSRABlock(nn.Module):
             y_full = torch.zeros_like(h)
             y_full[b_indices] = y_sub.detach()
             syn_outputs.append(y_full)
-            
-            # Workaround for MPS graph compilation crash on long loops
-            if h.device.type == "mps":
-                torch.mps.synchronize()
             
         logits_expanded = logits.unsqueeze(1).expand(B, T, self.num_synapses)
         return base + out, logits_expanded, syn_outputs

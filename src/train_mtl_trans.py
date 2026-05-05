@@ -45,6 +45,12 @@ def prepare_translation_batch(tokenizer, batch_size, seq_len, device):
     for i in range(batch_size):
         src_lang = random.choice(langs)
         tgt_lang = random.choice([l for l in langs if l != src_lang])
+        
+        # ZERO-SHOT TEST: Exclude fra<->jpn during training
+        while (src_lang == "fra" and tgt_lang == "jpn") or (src_lang == "jpn" and tgt_lang == "fra"):
+            src_lang = random.choice(langs)
+            tgt_lang = random.choice([l for l in langs if l != src_lang])
+            
         batch_pairs.append(f"{src_lang}->{tgt_lang}")
         
         pair = random.choice(PARALLEL_DATA)
@@ -224,9 +230,12 @@ def train(args):
     model.eval()
     test_cases = [
         ("eng", "jpn", "I eat apples"),
-        ("jpn", "fra", "私 は りんご を 食べる"),
-        ("fra", "eng", "Je mange des pommes"),
+        ("jpn", "eng", "私 は りんご を 食べる"),
         ("eng", "fra", "She reads books"), 
+        ("fra", "eng", "Elle lit des livres"),
+        # Zero-shot tests:
+        ("jpn", "fra", "彼 は 車 を 運転 する"),
+        ("fra", "jpn", "Il conduit une voiture"),
     ]
     
     for src_lang, tgt_lang, text in test_cases:
