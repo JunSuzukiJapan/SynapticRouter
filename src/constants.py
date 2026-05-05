@@ -5,6 +5,7 @@ SEP = 3
 TOKENS = {
     "0": 4, "1": 5, "2": 6, "3": 7, "4": 8, "5": 9, "6": 10, "7": 11, "8": 12, "9": 13,
     "(": 14, ")": 15, "Y": 16, "N": 17,
+    "<TASK_COPY>": 18, "<TASK_REVERSE>": 19, "<TASK_PAREN>": 20, "<TASK_ADDMOD>": 21,
 }
 ID2TOK = {v: k for k, v in TOKENS.items()}
 ID2TOK.update({PAD: "<pad>", BOS: "<bos>", EOS: "<eos>", SEP: "<sep>"})

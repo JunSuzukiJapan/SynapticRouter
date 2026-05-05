@@ -19,14 +19,17 @@ from constants import (
 )
 
 
-def make_sample(task: str, min_len: int, max_len: int, mod: int = 10) -> Tuple[list, list]:
+def make_sample(task: str, min_len: int, max_len: int, mod: int = 10, use_task_token: bool = False) -> Tuple[list, list]:
     n = random.randint(min_len, max_len)
+    
+    task_token = [TOKENS[f"<TASK_{task.upper()}>"]] if use_task_token else []
+    
     if task == "copy":
         seq = [str(random.randint(0, mod - 1)) for _ in range(n)]
-        return [BOS] + encode_symbols(seq) + [SEP], encode_symbols(seq) + [EOS]
+        return [BOS] + task_token + encode_symbols(seq) + [SEP], encode_symbols(seq) + [EOS]
     if task == "reverse":
         seq = [str(random.randint(0, mod - 1)) for _ in range(n)]
-        return [BOS] + encode_symbols(seq) + [SEP], encode_symbols(list(reversed(seq))) + [EOS]
+        return [BOS] + task_token + encode_symbols(seq) + [SEP], encode_symbols(list(reversed(seq))) + [EOS]
     if task == "paren":
         seq = [random.choice(["(", ")"]) for _ in range(n)]
         bal = 0
@@ -36,11 +39,11 @@ def make_sample(task: str, min_len: int, max_len: int, mod: int = 10) -> Tuple[l
             if bal < 0:
                 ok = False
         ok = ok and bal == 0
-        return [BOS] + encode_symbols(seq) + [SEP], [TOKENS["Y"] if ok else TOKENS["N"], EOS]
+        return [BOS] + task_token + encode_symbols(seq) + [SEP], [TOKENS["Y"] if ok else TOKENS["N"], EOS]
     if task == "addmod":
         a = random.randint(0, mod - 1)
         b = random.randint(0, mod - 1)
-        return [BOS, TOKENS[str(a)], TOKENS[str(b)], SEP], [TOKENS[str((a + b) % mod)], EOS]
+        return [BOS] + task_token + [TOKENS[str(a)], TOKENS[str(b)], SEP], [TOKENS[str((a + b) % mod)], EOS]
     raise ValueError(f"unknown task: {task}")
 
 
@@ -55,6 +58,18 @@ def make_batch(task: str, batch_size: int, min_len: int, max_len: int, device: s
         y[i, :len(yi)] = torch.tensor(yi)
     return x.to(device), y.to(device)
 
+
+def make_multitask_batch(tasks: list, batch_size: int, min_len: int, max_len: int, device: str) -> Tuple[torch.Tensor, torch.Tensor, list]:
+    batch_tasks = [random.choice(tasks) for _ in range(batch_size)]
+    pairs = [make_sample(t, min_len, max_len, use_task_token=True) for t in batch_tasks]
+    max_x = max(len(x) for x, _ in pairs)
+    max_y = max(len(y) for _, y in pairs)
+    x = torch.full((batch_size, max_x), PAD, dtype=torch.long)
+    y = torch.full((batch_size, max_y), PAD, dtype=torch.long)
+    for i, (xi, yi) in enumerate(pairs):
+        x[i, :len(xi)] = torch.tensor(xi)
+        y[i, :len(yi)] = torch.tensor(yi)
+    return x.to(device), y.to(device), batch_tasks
 
 from sra_reference import (
     TinySynapse, Router, SRABlock, SRAModel,
