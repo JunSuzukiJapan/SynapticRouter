@@ -10,6 +10,12 @@ En lugar de un Transformer masivo y estático, SRA enruta dinámicamente las ent
 En los últimos años, mientras que los modelos de IA se han vuelto cada vez más masivos, las redes monolíticas enfrentan desafíos significativos, como "la escalada de recursos computacionales" y el "olvido catastrófico durante el aprendizaje multitarea".
 SRA intenta resolver estos problemas utilizando un **enfoque disperso: "llamar y combinar dinámicamente solo los módulos minúsculos necesarios (sinapsis) dependiendo de la entrada"**. Esto permite aprender múltiples tareas con diferentes características dentro de la misma red sin interferencia, con el objetivo de lograr tanto la escalabilidad como una alta eficiencia de aprendizaje.
 
+## 💡 Idea Básica
+
+Los modelos de IA típicos (como los Transformers) intentan procesar todo usando un solo "cerebro" gigante. Sin embargo, con este enfoque, la carga computacional se vuelve demasiado pesada cada vez que el modelo se hace más inteligente o más grande. Por lo tanto, SRA adopta un sistema donde **se preparan muchos "pequeños cerebros expertos (que SRA llama 'sinapsis')", y solo se llama a los expertos necesarios dependiendo del problema en cuestión**.
+
+La clave aquí es el mecanismo que decide "a qué experto llamar". SRA tiene un "enrutador (guía)" que selecciona instantáneamente al experto que parece más capaz al observar los datos de entrada. A medida que cada experto se vuelve más inteligente (aprende), este enrutador aprende simultáneamente "a quién es el correcto elegir", creciendo para poder hacer asignaciones óptimas automáticamente.
+
 ## 🧠 Descripción de la Arquitectura
 
 SRA consta principalmente de los siguientes componentes:

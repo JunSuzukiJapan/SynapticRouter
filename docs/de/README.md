@@ -10,6 +10,12 @@ Anstelle eines massiven, statischen Transformers leitet SRA Eingaben dynamisch a
 Da KI-Modelle immer massiver werden, stehen monolithische Netzwerke vor Problemen wie "steigenden Rechenressourcen" und dem "katastrophalen Vergessen beim Multitasking-Lernen".
 SRA löst dies mit einem **spärlichen Ansatz: "Dynamisches Aufrufen und Kombinieren nur der erforderlichen winzigen Module (Synapsen) je nach Eingabe."**
 
+## 💡 Grundidee
+
+Typische KI-Modelle (wie Transformer) versuchen, alles mit einem einzigen, riesigen „Gehirn“ zu verarbeiten. Bei diesem Ansatz wird die Rechenlast jedoch jedes Mal viel zu schwer, wenn das Modell intelligenter oder größer gemacht wird. Daher verwendet SRA ein System, bei dem **viele „kleine Expertengehirne (die SRA als ‚Synapsen‘ bezeichnet)“ vorbereitet werden und je nach vorliegendem Problem nur die benötigten Experten aufgerufen werden**.
+
+Der Schlüssel hier ist der Mechanismus, der entscheidet, „welcher Experte aufgerufen werden soll“. SRA verfügt über einen „Router (Leitfaden)“, der sofort den fähigsten Experten auswählt, indem er die Eingabedaten betrachtet. Während jeder Experte intelligenter wird (lernt), lernt dieser Router gleichzeitig, „wer der Richtige ist“, und wächst heran, um optimale Zuweisungen automatisch vornehmen zu können.
+
 ## 🧠 Architekturübersicht
 
 1. **Synapse (Synapsenmodul)**

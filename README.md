@@ -10,6 +10,12 @@ Instead of a massive, static Transformer, SRA dynamically routes inputs to appro
 In recent years, while AI models have become increasingly massive, monolithic networks face significant challenges, such as "escalating computational resources" and "catastrophic forgetting during multi-task learning".
 SRA attempts to solve these issues using a **sparse approach: "dynamically calling and combining only the necessary tiny modules (synapses) depending on the input."** This enables learning multiple tasks with different characteristics within the same network without interference, aiming to achieve both scalability and high learning efficiency.
 
+## 💡 Basic Idea
+
+Typical AI models (like Transformers) try to process everything using a single, giant "brain." However, with this approach, the computational burden becomes far too heavy every time the model is made smarter or larger. Therefore, SRA adopts a system where **many "small expert brains (which SRA calls 'synapses')" are prepared, and only the necessary experts are called upon depending on the problem at hand**.
+
+The key here is the mechanism that decides "which expert to call." SRA has a "router (guide)," which instantly selects the most capable-looking expert by looking at the input data. As each expert becomes smarter (learns), this router simultaneously learns "who is the right one to choose," growing to be able to make optimal assignments automatically.
+
 ## 🧠 Architecture Overview
 
 SRA primarily consists of the following components:
