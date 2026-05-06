@@ -10,6 +10,12 @@ Au lieu d'un Transformer massif et statique, SRA achemine dynamiquement les entr
 Face à la croissance des modèles d'IA, les réseaux monolithiques rencontrent des problèmes tels que "l'augmentation des ressources de calcul" et "l'oubli catastrophique lors de l'apprentissage multi-tâches".
 SRA résout ces problèmes par une **approche clairsemée : "appeler et combiner dynamiquement uniquement les modules nécessaires (synapses) en fonction de l'entrée."** Cela permet d'apprendre plusieurs tâches dans le même réseau sans interférence.
 
+## 💡 Idée de Base
+
+Les modèles d'IA classiques (comme les Transformers) tentent de tout traiter à l'aide d'un seul "cerveau" géant. Cependant, avec cette approche, la charge de calcul devient beaucoup trop lourde chaque fois que le modèle est rendu plus intelligent ou plus grand. Par conséquent, SRA adopte un système où **de nombreux "petits cerveaux experts (que SRA appelle 'synapses')" sont préparés, et seuls les experts nécessaires sont appelés en fonction du problème en cours**.
+
+La clé ici est le mécanisme qui décide "quel expert appeler". SRA possède un "routeur (guide)", qui sélectionne instantanément l'expert qui semble le plus capable en examinant les données d'entrée. Au fur et à mesure que chaque expert devient plus intelligent (apprend), ce routeur apprend simultanément "qui est le bon à choisir", évoluant pour être capable de faire des affectations optimales automatiquement.
+
 ## 🧠 Vue d'ensemble de l'Architecture
 
 1. **Synapse (Module Synaptique)**
