@@ -87,6 +87,9 @@ python src/compare_architectures.py --task copy --steps 500
   - A fascinating report showing that SRA automatically assigns different translation modules based on the grammar structure (SVO vs SOV). Even more surprisingly, when asked to translate an unlearned language pair, it unconsciously uses English as a "pivot language" to solve the problem!
 - [Complete Separation of Perception and Policy in Decision Transformer (Reinforcement Learning)](./docs/dev/decision_transformer_routing_analysis.md)
   - We gave SRA the ability to play a game. It discovered an incredible strategy on its own: it uses the *exact same "vision" module* to perceive the environment across all tasks, but switches to *completely different "brain" modules* depending on whether it needs to find treasure or run away from an enemy.
+- [Verification of Practical Multilingual Translation using SRA Encoder-Decoder](./docs/dev/sra_seq2seq_translation_analysis.md)
+  - A report demonstrating that by extending SRA to an Encoder-Decoder architecture and training for 30,000 steps on a real corpus (opus100), it can translate practical expressions like "Merci beaucoup." and "Good morning." with BLEU=1.0. The introduction of Cross-Attention caused a leap from Decoder-only (BLEU=0) to an overall average BLEU of 0.27, and achieved a near-practical accuracy of BLEU=0.56 in the FR→EN direction.
+
 
 ## 🤝 Contributing & License
 

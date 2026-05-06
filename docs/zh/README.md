@@ -81,6 +81,13 @@ python src/compare_architectures.py --task copy --steps 500
   - 验证 SRA 可以同时学习多个算法任务而不受干扰，并根据任务性质自主分离和模块化专家（突触）的报告。
 - [跨领域语言建模中的路由分析 (代码 / 数学 / 文本)](./routing_analysis_language.md)
   - 验证 SRA 同时学习具有不同语法和词汇的领域（代码、数学公式、自然语言），并且突触功能分化（专业化）以对每个领域执行推理的机制的报告。
+- [多语言机器翻译中的路由分析 (英/法/日) 与零样本泛化](../dev/multilingual_translation_routing_analysis.md)
+  - 一份引人入胜的报告，展示了SRA如何根据语法结构（SVO或SOV）自动分配不同的翻译模块。更令人惊讶的是，在翻译未学习过的语言对时，它会无意识地使用英语作为“枢纽语言”来解决问题！
+- [Decision Transformer（强化学习）中感知与策略的完全分离](../dev/decision_transformer_routing_analysis.md)
+  - 我们让 SRA 玩了一个游戏。结果发现它自主获得了一种类似生命的模块化结构：在所有任务中共享“视觉（感知）”模块来观察环境，但根据任务（寻宝或逃跑）完全不同地切换决定如何行动的“大脑（策略）”模块。
+- [基于 SRA Encoder-Decoder 的实用级多语言翻译验证](../dev/sra_seq2seq_translation_analysis.md)
+  - 一份报告，证明通过将 SRA 扩展为 Encoder-Decoder 架构并在真实语料库 (opus100) 上进行 30,000 步的训练，它可以以 BLEU=1.0 的分数翻译“Merci beaucoup.”和“Good morning.”等实用表达。Cross-Attention 的引入使得模型从仅 Decoder (BLEU=0) 飞跃到整体平均 BLEU 为 0.27，并在 FR→EN 方向上实现了接近实用的 BLEU=0.56 准确率。
+
 
 ## 🤝 贡献与许可
 

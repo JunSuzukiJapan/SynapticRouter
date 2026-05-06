@@ -22,3 +22,10 @@ A chave aqui é o mecanismo que decide "qual especialista chamar". A SRA tem um 
 ## 🧪 Experimentos e Análise
 - [Análise de Aprendizado Multitarefa e Roteamento](./routing_analysis_algorithmic.md)
 - [Análise de Roteamento em Modelagem de Linguagem Interdomínio](./routing_analysis_language.md)
+- [Análise de Roteamento em Tradução Multilíngue (Ing / Fra / Jap) e Generalização Zero-Shot](../dev/multilingual_translation_routing_analysis.md)
+  - Um relatório fascinante mostrando como o SRA atribui automaticamente diferentes módulos de tradução com base na estrutura gramatical (SVO vs SOV). Ainda mais surpreendente, ao traduzir um par de idiomas não aprendido, ele usa inconscientemente o inglês como uma "língua pivô"!
+- [Separação Completa de Percepção e Política no Decision Transformer (Aprendizado por Reforço)](../dev/decision_transformer_routing_analysis.md)
+  - Demos ao SRA a habilidade de jogar um jogo. Ele descobriu uma estrutura modular incrível por conta própria: usa exatamente o mesmo módulo de "visão" para perceber o ambiente em todas as tarefas, mas muda para módulos de "cérebro" completamente diferentes dependendo se precisa encontrar um tesouro ou fugir.
+- [Verificação de Tradução Multilíngue Prática usando SRA Encoder-Decoder](../dev/sra_seq2seq_translation_analysis.md)
+  - Um relatório demonstrando que, ao estender o SRA para uma arquitetura Encoder-Decoder e treinar por 30.000 passos em um corpus real (opus100), ele pode traduzir expressões práticas como "Merci beaucoup." e "Good morning." com BLEU=1.0. A introdução da Cross-Attention causou um salto do Decoder-only (BLEU=0) para um BLEU médio geral de 0,27, e alcançou uma precisão quase prática de BLEU=0,56 na direção FR→EN.
+

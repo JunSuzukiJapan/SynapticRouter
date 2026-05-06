@@ -45,6 +45,13 @@ python src/sra_experiment.py --task reverse --steps 2000
 
 - [Apprentissage Multi-tâches et Analyse de Routage](./routing_analysis_algorithmic.md)
 - [Analyse de Routage en Modélisation de Langage Multi-domaine](./routing_analysis_language.md)
+- [Analyse de Routage en Traduction Multilingue (Ang / Fra / Jap) et Généralisation Zero-Shot](../dev/multilingual_translation_routing_analysis.md)
+  - Un rapport fascinant montrant comment SRA attribue automatiquement différents modules de traduction en fonction de la structure grammaticale (SVO vs SOV). Plus surprenant encore, lorsqu'on lui demande de traduire une paire de langues non apprise, il utilise inconsciemment l'anglais comme "langue pivot" !
+- [Séparation Complète de la Perception et de la Politique dans Decision Transformer (Apprentissage par Renforcement)](../dev/decision_transformer_routing_analysis.md)
+  - Nous avons fait jouer SRA à un jeu. Il a découvert de lui-même une structure modulaire incroyable : il utilise exactement le même module de "vision" pour percevoir l'environnement dans toutes les tâches, mais bascule vers des modules de "cerveau" complètement différents selon qu'il doit trouver un trésor ou s'enfuir.
+- [Vérification de la Traduction Multilingue Pratique avec SRA Encoder-Decoder](../dev/sra_seq2seq_translation_analysis.md)
+  - Un rapport démontrant qu'en étendant SRA à une architecture Encoder-Decoder et en l'entraînant pendant 30 000 étapes sur un corpus réel (opus100), il peut traduire des expressions pratiques comme "Merci beaucoup." et "Good morning." avec un BLEU=1.0. L'introduction de Cross-Attention a permis de passer de Decoder-only (BLEU=0) à un BLEU moyen global de 0,27, et a atteint une précision presque pratique de BLEU=0,56 dans la direction FR→EN.
+
 
 ## 🤝 Contribution et Licence
 

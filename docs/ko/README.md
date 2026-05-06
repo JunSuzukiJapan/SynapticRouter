@@ -81,6 +81,13 @@ python src/compare_architectures.py --task copy --steps 500
   - SRA가 간섭 없이 여러 알고리즘 작업을 동시에 학습하고 작업 특성에 따라 전문가(시냅스)를 자율적으로 분리 및 모듈화할 수 있음을 검증한 보고서.
 - [교차 도메인 언어 모델링에서의 라우팅 분석 (Code / Math / Text)](./routing_analysis_language.md)
   - SRA가 서로 다른 문법 및 어휘를 가진 도메인(코드, 수학 공식, 자연어)을 동시에 학습하고 시냅스가 기능적으로 분화(특성화)하여 각 도메인에 대한 추론을 수행하는 메커니즘을 검증한 보고서.
+- [다국어 기계 번역에서의 라우팅 분석(영/불/일) 및 제로샷 일반화](../dev/multilingual_translation_routing_analysis.md)
+  - 구문 구조(SVO 및 SOV)에 따라 모델이 자율적으로 번역 모듈을 전환하는 현상과 학습하지 않은 언어 쌍을 번역할 때 무의식적으로 영어를 '피벗 언어'로 활용하는 놀라운 일반화 능력에 대해 설명합니다.
+- [Decision Transformer(강화 학습)에서의 인식과 정책의 완전한 분리](../dev/decision_transformer_routing_analysis.md)
+  - SRA에게 게임을 플레이하게 한 결과, 환경을 보기 위한 '인식(시각)' 모듈은 모든 작업에서 공유하면서 어떻게 움직일지 결정하는 '정책(두뇌)' 모듈은 작업(보물 찾기 또는 도망)에 따라 완전히 다르게 사용하는 등 생명체와 같은 모듈 구조를 자율적으로 획득했음을 보여주는 흥미로운 보고서입니다.
+- [SRA Encoder-Decoder를 통한 실용 수준의 다국어 번역 검증](../dev/sra_seq2seq_translation_analysis.md)
+  - SRA를 Encoder-Decoder 형태로 확장하고 실제 코퍼스(opus100)를 사용한 30,000 스텝의 학습을 통해 "Merci beaucoup.", "Good morning."과 같은 실용적인 표현을 BLEU=1.0으로 번역할 수 있음을 입증한 보고서입니다. Cross-Attention의 도입으로 Decoder-only(BLEU=0)에서 전체 평균 BLEU=0.27로 비약적으로 향상되었으며, FR→EN 방향에서는 실용성에 근접한 BLEU=0.56의 정확도를 달성했습니다.
+
 
 ## 🤝 기여 및 라이선스 (Contributing & License)
 
