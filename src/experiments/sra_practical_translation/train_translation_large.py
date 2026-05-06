@@ -1,7 +1,12 @@
+import sys
 import os
 import argparse
 import math
 import time
+
+# src/ を sys.path に追加して共通モジュールを参照
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+
 import torch
 import torch.nn.functional as F
 

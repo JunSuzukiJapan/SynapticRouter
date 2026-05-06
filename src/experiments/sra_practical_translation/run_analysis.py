@@ -1,26 +1,27 @@
 """
-学習済みモデルのシナプス使用率とコサイン類似度を数値で出力する分析スクリプト
+学習済みモデルのシナプス使用率とコサイン類似度を数値で出力する分析スクリプト (v2対応)
 """
+import sys
+import os
 import torch
 import torch.nn.functional as F
 import tiktoken
 import numpy as np
-import sys
-import os
 
-sys.path.insert(0, os.path.dirname(__file__))
+# src/ を sys.path に追加して共通モジュールを参照
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from sra_language_models import MoESRALanguageModel
 
 tokenizer = tiktoken.get_encoding("cl100k_base")
 vocab_size = tokenizer.n_vocab + 100
 
 model = MoESRALanguageModel(
-    vocab_size=vocab_size, dim=128, layers=2,
-    num_synapses=8, k=2, syn_hidden=256,
-    pad_idx=0, max_seq_len=64
+    vocab_size=vocab_size, dim=256, layers=4,
+    num_synapses=16, k=4, syn_hidden=512,
+    pad_idx=0, max_seq_len=96
 )
 
-ckpt_path = os.path.join(os.path.dirname(__file__), "..", "sra_translation_local.pt")
+ckpt_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "sra_translation_v2.pt")
 ckpt = torch.load(ckpt_path, map_location="cpu")
 state = ckpt["model_state_dict"] if "model_state_dict" in ckpt else ckpt
 model.load_state_dict(state)
@@ -34,7 +35,7 @@ TEST_SENTENCES = {
     "fr": ["Je mange des pommes.", "Elle lit des livres.", "Ils jouent aux jeux.", "Le chien chasse le chat."]
 }
 langs = list(TEST_SENTENCES.keys())
-num_layers = 2
+num_layers = 4
 
 layer_usage = {lang: [] for lang in langs}
 with torch.no_grad():
@@ -42,7 +43,7 @@ with torch.no_grad():
         lang_usages = []
         for text in sentences:
             tokens = tokenizer.encode(f"{LANG_TAGS[lang]} {text}", allowed_special="all")
-            tokens = tokens[:64]
+            tokens = tokens[:96]
             x = torch.tensor([tokens], dtype=torch.long)
             _, router_logits = model(x, dense=False)
             seq_usages = []
@@ -82,7 +83,7 @@ for layer_idx in range(num_layers):
         p = np.clip(usage, 1e-9, 1.0)
         p = p / p.sum()
         entropy = -(p * np.log(p)).sum()
-        max_entropy = np.log(8)
+        max_entropy = np.log(16)
         print(f"  {lang.upper()}: entropy={entropy:.4f} (max={max_entropy:.4f}, ratio={entropy/max_entropy:.2%})")
 
 print("\nDone.")

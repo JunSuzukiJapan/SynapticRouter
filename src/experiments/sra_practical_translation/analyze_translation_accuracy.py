@@ -4,28 +4,30 @@
 - 日英仏の全方向ペアをテスト
 - 簡易BLEUおよびトークン一致率を計算
 """
-import torch
-import torch.nn.functional as F
-import tiktoken
-import numpy as np
 import sys
 import os
 import re
 
-sys.path.insert(0, os.path.dirname(__file__))
+import torch
+import torch.nn.functional as F
+import tiktoken
+import numpy as np
+
+# src/ を sys.path に追加して共通モジュールを参照
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from sra_language_models import MoESRALanguageModel
 
 # ============================================================
 # 設定
 # ============================================================
 DEVICE = "cpu"  # 推論はCPUで十分（MPS対応でも可）
-SEQ_LEN = 64
-DIM = 128
-LAYERS = 2
-NUM_SYNAPSES = 8
-K = 2
-SYN_HIDDEN = 256
-MAX_NEW_TOKENS = 40
+SEQ_LEN = 96
+DIM = 256
+LAYERS = 4
+NUM_SYNAPSES = 16
+K = 4
+SYN_HIDDEN = 512
+MAX_NEW_TOKENS = 60
 
 LANG_TAGS = {"en": "[ENG]", "ja": "[JPN]", "fr": "[FRA]"}
 TARGET_TAGS = {"en": "[TARGET_ENG]", "ja": "[TARGET_JPN]", "fr": "[TARGET_FRA]"}
@@ -70,7 +72,7 @@ model = MoESRALanguageModel(
     pad_idx=0, max_seq_len=SEQ_LEN
 ).to(DEVICE)
 
-ckpt_path = os.path.join(os.path.dirname(__file__), "..", "sra_translation_local.pt")
+ckpt_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", "sra_translation_v2.pt")
 ckpt = torch.load(ckpt_path, map_location=DEVICE)
 state = ckpt["model_state_dict"] if "model_state_dict" in ckpt else ckpt
 model.load_state_dict(state)
