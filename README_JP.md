@@ -86,6 +86,8 @@ python src/compare_architectures.py --task copy --steps 500
   - 言語の構文構造（SVOやSOV）に応じてモデルが自律的に翻訳モジュールを切り替える現象や、未学習の言語ペアを翻訳する際に「英語」を中継地点（ピボット言語）として無意識に利用する驚くべき汎化能力について解説しています。
 - [Decision Transformer（強化学習）における知覚と方策の完全分離](./docs/dev/decision_transformer_routing_analysis.md)
   - SRAにゲームをプレイさせた結果、環境を見るための「知覚（視覚）」モジュールは全タスクで共有しつつ、どう動くかを決める「方策（脳）」モジュールはタスク（宝探し or 逃亡）ごとに完全に使い分けるという、生命のようなモジュール構造を自律的に獲得したことを示す興味深いレポートです。
+- [SRA Encoder-Decoder による実用レベル多言語翻訳の検証](./docs/dev/sra_seq2seq_translation_analysis.md)
+  - SRAを Encoder-Decoder 型に拡張し、実コーパス（opus100）を用いた 30,000 ステップの学習で「Merci beaucoup.」「Good morning.」などの実用表現を BLEU=1.0 で翻訳できることを実証したレポートです。Cross-Attention の導入により Decoder-only（BLEU=0）から全体平均 BLEU=0.27 へと飛躍し、FR→EN 方向では BLEU=0.56 という実用に迫る精度を達成しました。
 
 ## 🤝 コントリビュートとライセンス (Contributing & License)
 
