@@ -181,11 +181,15 @@ def run_inference(args):
     EOS = sp["[EOS]"]
     PAD = sp["[PAD]"]
 
+    _LANG_CODE = {"en": "ENG", "ja": "JPN", "fr": "FRA"}
+
     def translate(src_lang, tgt_lang, src_text):
-        src_tag = [sp[f"[{src_lang.upper()}]"]]
+        src_code = _LANG_CODE[src_lang]
+        tgt_code = _LANG_CODE[tgt_lang]
+        src_tag = [sp[f"[{src_code}]"]]
         src_ids = src_tag + tokenizer.encode(src_text)
         src_tensor = torch.tensor([src_ids], dtype=torch.long, device=device)
-        bos_id = sp[f"[TARGET_{tgt_lang.upper()}]"]
+        bos_id = sp[f"[TARGET_{tgt_code}]"]
 
         if args.beam_width > 1:
             gen_ids = beam_decode(

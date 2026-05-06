@@ -99,15 +99,19 @@ def evaluate(model, loader, device, step):
     tokenizer = loader.tokenizer
     sp = loader.sp
 
+    _LANG_CODE = {"en": "ENG", "ja": "JPN", "fr": "FRA"}
+
     model.eval()
     bleus = []
     samples = []
     for src_lang, tgt_lang, src_text, ref_text in EVAL_PAIRS:
-        src_tag = [sp[f"[{src_lang.upper()}]"]]
+        src_code = _LANG_CODE[src_lang]
+        tgt_code = _LANG_CODE[tgt_lang]
+        src_tag = [sp[f"[{src_code}]"]]
         src_ids = src_tag + tokenizer.encode(src_text)
         src_tensor = torch.tensor([src_ids], dtype=torch.long, device=device)
 
-        bos_id = sp[f"[TARGET_{tgt_lang.upper()}]"]
+        bos_id = sp[f"[TARGET_{tgt_code}]"]
         eos_id = sp["[EOS]"]
 
         gen = model.greedy_decode(src_tensor, bos_id=bos_id, eos_id=eos_id, max_len=80)
