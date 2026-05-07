@@ -32,11 +32,12 @@ La chiave qui è il meccanismo che decide "quale esperto chiamare". SRA ha un "r
 
 ---
 
-### 🔌 6. Esperimento di Hot-Swap Dinamico delle Sinapsi
+### 🔌 6. Esperimento di Hot-Swap Sinaptico Dinamico e Limiti di Apprendimento del Router
 **File:** [`06_hotswap_experiment_demo_it.ipynb`](./06_hotswap_experiment_demo_it.ipynb)
 
-Dimostra il vero potere della SRA: "aggiungere e sostituire sinapsi come plugin".
-Eseguiamo un esperimento in cui i pesi di un modello di traduzione spagnolo addestrato indipendentemente (Modello 2) vengono fusi in un modello di traduzione francese/tedesco in esecuzione (Modello 1). Otterrai profonde intuizioni sulla modularità dell'architettura e sul perché condividere le rappresentazioni di base (Attention/Embedding) è cruciale.
+Dimostra il vero potere della SRA: "aggiunta e rimozione dinamica di sinapsi come plugin (Hot-Swap)".
+Eseguiamo un esperimento in cui una sinapsi specifica per lo spagnolo viene fusa in un modello di traduzione francese/tedesco in esecuzione.
+In questo notebook imparerai l'**importanza cruciale della condivisione e del congelamento dello spazio di conoscenza del modello base (livelli di incorporamento/attenzione, ecc.)** per stabilire un hot-swap. Allo stesso tempo, affronterai la **maggiore barriera della SRA (il problema del gradiente evanescente)**: l'instradamento rigido standard (Top-k) non può apprendere (differenziare) retroattivamente l'instradamento delle sinapsi aggiunte. Questa limitazione funge da prefigurazione critica per la successiva sezione "Gumbel-Softmax (Super Router)".
 
 [![Apri in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_it.ipynb)
 

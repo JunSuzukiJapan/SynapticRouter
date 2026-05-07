@@ -70,11 +70,12 @@ python src/sra_experiment.py --task reverse --steps 2000
 
 ---
 
-### 🔌 6. Experimento de Hot-Swap Dinámico de Sinapsis
+### 🔌 6. Experimento de Hot-Swap Sináptico Dinámico y Límites de Aprendizaje del Enrutador
 **Archivo:** [`06_hotswap_experiment_demo_es.ipynb`](./06_hotswap_experiment_demo_es.ipynb)
 
-Demuestra el verdadero poder de SRA: "agregar y reemplazar sinapsis como complementos".
-Realizamos un experimento en el que los pesos de un modelo de traducción al español entrenado independientemente (Modelo 2) se fusionan en un modelo de traducción al francés/alemán en ejecución (Modelo 1). Obtendrá conocimientos profundos sobre la modularidad de la arquitectura y por qué es crucial compartir las representaciones base (Atención/Incrustación).
+Demuestra el verdadero poder de SRA: "adición y eliminación dinámica de sinapsis como complementos (Hot-Swap)".
+Realizamos un experimento donde una sinapsis específica del español se fusiona en un modelo de traducción francés/alemán en ejecución.
+En este cuaderno, aprenderá la **importancia crucial de compartir y congelar el espacio de conocimiento del modelo base (capas de incrustación/atención, etc.)** para establecer un intercambio en caliente. Al mismo tiempo, se enfrentará a la **mayor barrera de SRA (el problema del gradiente desvaneciente)**: el enrutamiento duro estándar (Top-k) no puede aprender (diferenciar) retroactivamente el enrutamiento de las sinapsis agregadas. Esta limitación sirve como un presagio crítico para la siguiente sección "Gumbel-Softmax (Super Router)".
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_es.ipynb)
 

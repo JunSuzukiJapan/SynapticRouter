@@ -67,11 +67,12 @@ python src/sra_experiment.py --task reverse --steps 2000
 
 ---
 
-### 🔌 6. Experiment zum Dynamischen Synapsen-Hot-Swap
+### 🔌 6. Dynamisches Synapsen-Hot-Swap-Experiment und Router-Lernlimits
 **Datei:** [`06_hotswap_experiment_demo_de.ipynb`](./06_hotswap_experiment_demo_de.ipynb)
 
-Demonstriert die wahre Kraft von SRA: "Hinzufügen und Ersetzen von Synapsen als Plugins".
-Wir führen ein Experiment durch, bei dem die Gewichte eines unabhängig trainierten spanischen Übersetzungsmodells (Modell 2) in ein laufendes französisch/deutsches Übersetzungsmodell (Modell 1) integriert werden. Sie erhalten tiefe Einblicke in die Modularität der Architektur und warum die gemeinsame Nutzung der Basisrepräsentationen (Attention/Embedding) so wichtig ist.
+Demonstriert die wahre Kraft von SRA: "dynamisches Hinzufügen und Entfernen von Synapsen als Plugins (Hot-Swap)".
+Wir führen ein Experiment durch, bei dem eine spanischspezifische Synapse in ein laufendes Französisch/Deutsch-Übersetzungsmodell integriert wird.
+In diesem Notizbuch lernen Sie die **entscheidende Bedeutung des Teilens und Einfrierens des Wissensraums des Basismodells (Embedding-/Attention-Schichten usw.)** kennen, um einen Hot-Swap herzustellen. Gleichzeitig werden Sie mit der **größten Barriere von SRA (dem Problem des verschwindenden Gradienten)** konfrontiert: Standard-Hard-Routing (Top-k) kann das Routing hinzugefügter Synapsen nicht nachträglich lernen (differenzieren). Diese Einschränkung dient als wichtige Vorahnung für den folgenden Abschnitt "Gumbel-Softmax (Super Router)".
 
 [![In Colab öffnen](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_de.ipynb)
 

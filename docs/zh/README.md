@@ -103,11 +103,12 @@ python src/compare_architectures.py --task copy --steps 500
 
 ---
 
-### 🔌 6. 动态突触热插拔实验
+### 🔌 6. 动态突触热插拔实验与路由器学习限制
 **文件:** [`06_hotswap_experiment_demo_zh-cn.ipynb`](./06_hotswap_experiment_demo_zh-cn.ipynb)
 
-展示了 SRA 的真正威力：“作为插件添加和替换突触”。
-我们进行了一项实验，将独立训练的西班牙语翻译模型（模型 2）的权重合并到正在运行的法语/德语翻译模型（模型 1）中。您将深入了解该架构的模块化特性，以及为什么共享基础表示（Attention/Embedding）至关重要。
+展示了 SRA 的真正威力：“作为插件动态添加和移除突触 (Hot-Swap)”。
+我们将进行一项实验，将特定于西班牙语的突触合并到正在运行的法语/德语翻译模型中。
+在这个笔记本中，您将了解到**共享和冻结基础模型知识空间（嵌入/注意力层等）的至关重要性**以建立热插拔。同时，您将面临**SRA 的最大障碍（梯度消失问题）**：标准硬路由 (Top-k) 无法追溯学习（微分）添加突触的路由。这一限制为后续的“Gumbel-Softmax (Super Router)”部分做了关键的铺垫。
 
 [![在 Colab 中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_zh-cn.ipynb)
 

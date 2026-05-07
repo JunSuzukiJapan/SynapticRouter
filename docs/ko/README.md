@@ -103,11 +103,12 @@ python src/compare_architectures.py --task copy --steps 500
 
 ---
 
-### 🔌 6. 동적 시냅스 핫스왑 실험
+### 🔌 6. 시냅스 동적 핫스왑 실험 및 라우터 학습 한계
 **파일:** [`06_hotswap_experiment_demo_ko.ipynb`](./06_hotswap_experiment_demo_ko.ipynb)
 
-SRA의 진정한 힘인 "플러그인으로서의 시냅스 추가 및 교체"를 보여줍니다.
-독립적으로 훈련된 스페인어 번역 모델(Model 2)의 가중치를 실행 중인 프랑스어/독일어 번역 모델(Model 1)에 병합하는 실험을 수행합니다. 아키텍처의 모듈성과 기본 표현(Attention/Embedding)을 공유하는 것이 왜 중요한지에 대한 깊은 통찰력을 얻을 수 있습니다.
+SRA의 진정한 힘인 "플러그인으로서의 시냅스 동적 추가 및 제거(Hot-Swap)"를 시연합니다.
+실행 중인 프랑스어/독일어 번역 모델에 스페인어 전용 시냅스를 병합하는 실험을 수행합니다.
+이 노트북에서는 핫스왑을 설정하기 위해 **기본 모델의 지식 공간(임베딩/어텐션 레이어 등)을 공유하고 고정하는 것의 중요성**을 배웁니다. 동시에 SRA의 **가장 큰 장벽(기울기 소실 문제)**에 직면하게 됩니다. 표준 하드 라우팅(Top-k)은 추가된 시냅스의 라우팅을 소급하여 학습(미분)할 수 없습니다. 이 한계는 다음 "Gumbel-Softmax(Super Router)" 섹션에 대한 중요한 복선 역할을 합니다.
 
 [![Colab에서 열기](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_ko.ipynb)
 
