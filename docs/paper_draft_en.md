@@ -102,3 +102,29 @@ Without any human design, SRA autonomously acquired the ideal modular structure 
 ## 7. Conclusion
 Through the Synaptic Routing Architecture (SRA), this paper demonstrated the potential for a paradigm shift from "batch computation using a massive model" to the "dynamic selection of tiny modules."
 As evidenced by the diverse experimental results in algorithmic reasoning, cross-domain language modeling, multilingual machine translation, and Decision Transformer-based reinforcement learning, what is truly needed to prevent multitask interference, isolate task-specific logic and policies, and share common perception and latent spaces is not the gigantism of complex Attention mechanisms, but the presence of a simple and intelligent "Router." Indeed, **"All You Need Is Router."**
+
+## Appendix: Interactive Demos
+
+We have prepared Jupyter Notebook demos where you can interactively run and experience the SRA architecture and experimental results discussed in this paper directly in your browser. Feel free to try them out by opening Google Colab from the badges below.
+
+- **1. Basic Structure and Routing Validation**<br>
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart.ipynb)
+- **2. Single-Task Learning and Routing Specialization**<br>
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo.ipynb)
+- **3. Multitask Learning and Task-Specific Routing**<br>
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo.ipynb)
+- **4. Decision Transformer: Separation of Perception and Action**<br>
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo.ipynb)
+- **5. [Must-See] Synapse Lesion Experiment**<br>
+  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo.ipynb)
+
+## Appendix: Detailed Technical Reports
+
+For more detailed raw data, logs, and the architectural design process regarding the experiments in this paper, please refer to the following technical reports (Markdown) in the repository.
+
+- **[SRA GPU Optimization & Benchmarking Report](./dev/SRA_GPU_Optimization_Report.md)**
+  - Performance comparison (training speed, VRAM consumption, accuracy progression) between Baselines (Transformer/MLP) and SRA, along with validation results of three different SRA implementation approaches (Batched/MoE/Seq).
+- **[Multilingual Translation Routing Analysis](./dev/multilingual_translation_routing_analysis.md)**
+  - Analysis of autonomous synaptic branching based on SVO/SOV syntactic structures in multilingual machine translation (English, French, Japanese) and routing behavior during zero-shot translation.
+- **[Decision Transformer Routing Analysis](./dev/decision_transformer_routing_analysis.md)**
+  - Analysis of offline reinforcement learning in GridWorld tasks. Details on the separation of policy synapses per task and the separation of perception and action based on "State, Reward, and Action" tokens.
