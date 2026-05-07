@@ -30,6 +30,27 @@
 3. **مساحة المشبك:** تنظيم ذاتي حسب "التشابه الوظيفي".
 4. **قاعدة التعلم المحلي:** تستخدم قواعد محلية لتحقيق التوازن.
 
+
+---
+
+### 🔌 6. تجربة التبديل السريع الديناميكي للمشابك
+**الملف:** [`06_hotswap_experiment_demo_ar.ipynb`](./06_hotswap_experiment_demo_ar.ipynb)
+
+يوضح القوة الحقيقية لـ SRA: "إضافة واستبدال المشابك كمكونات إضافية".
+نجري تجربة حيث يتم دمج أوزان نموذج ترجمة إسباني تم تدريبه بشكل مستقل (النموذج 2) في نموذج ترجمة فرنسي/ألماني قيد التشغيل (النموذج 1). ستحصل على رؤى عميقة حول نمطية البنية ولماذا تعتبر مشاركة التمثيلات الأساسية (الاهتمام/التضمين) أمرًا بالغ الأهمية.
+
+[![فتح في Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_ar.ipynb)
+
+---
+
+### 👑 7. تكامل النموذج عبر Super Router و Gumbel-Softmax
+**الملف:** [`07_super_router_gumbel_demo_ar.ipynb`](./07_super_router_gumbel_demo_ar.ipynb)
+
+نبني "موجه فائق" يجمع نماذج متخصصة متعددة (نموذج FR/DE ونموذج ES) ويوجه المعالجة ديناميكيًا بناءً على الإدخال.
+يوضح هذا مشكلة "التوجيه الكسول" للتوجيه المرن البسيط ويوضح كيف يحقق استخدام Gumbel-Softmax **توجيهًا صلبًا مثاليًا**، مما يقلل حساب النموذج غير الضروري بنسبة 100٪.
+
+[![فتح في Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_ar.ipynb)
+
 ## 🧪 التجارب والتحليل
 - [التعلم متعدد المهام وتحليل التوجيه](./routing_analysis_algorithmic.md)
 - [تحليل التوجيه في نمذجة اللغة عبر المجالات](./routing_analysis_language.md)

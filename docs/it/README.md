@@ -29,6 +29,27 @@ La chiave qui è il meccanismo che decide "quale esperto chiamare". SRA ha un "r
 3. **Spazio Sinaptico:** Auto-organizzazione per "similarità funzionale".
 4. **Regola di Apprendimento Locale:** Utilizza regole locali (Hebbian, STDP) per il bilanciamento.
 
+
+---
+
+### 🔌 6. Esperimento di Hot-Swap Dinamico delle Sinapsi
+**File:** [`06_hotswap_experiment_demo_it.ipynb`](./06_hotswap_experiment_demo_it.ipynb)
+
+Dimostra il vero potere della SRA: "aggiungere e sostituire sinapsi come plugin".
+Eseguiamo un esperimento in cui i pesi di un modello di traduzione spagnolo addestrato indipendentemente (Modello 2) vengono fusi in un modello di traduzione francese/tedesco in esecuzione (Modello 1). Otterrai profonde intuizioni sulla modularità dell'architettura e sul perché condividere le rappresentazioni di base (Attention/Embedding) è cruciale.
+
+[![Apri in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_it.ipynb)
+
+---
+
+### 👑 7. Integrazione di Modelli tramite Super Router e Gumbel-Softmax
+**File:** [`07_super_router_gumbel_demo_it.ipynb`](./07_super_router_gumbel_demo_it.ipynb)
+
+Costruiamo un "Super Router" che raggruppa più modelli specializzati (un modello FR/DE e un modello ES) e instrada dinamicamente l'elaborazione in base all'input.
+Questo dimostra il problema del "Lazy Routing" del semplice Soft Routing e mostra come l'utilizzo di Gumbel-Softmax ottenga un **Hard Routing perfetto**, tagliando del 100% i calcoli inutili del modello.
+
+[![Apri in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_it.ipynb)
+
 ## 🧪 Esperimenti e Analisi
 - [Apprendimento Multitasking e Analisi del Routing](./routing_analysis_algorithmic.md)
 - [Analisi del Routing nella Modellazione del Linguaggio Cross-Domain](./routing_analysis_language.md)

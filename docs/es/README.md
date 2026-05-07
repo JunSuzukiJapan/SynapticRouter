@@ -67,6 +67,27 @@ python src/sra_experiment.py --task reverse --steps 2000
   - Un informe que demuestra que al extender SRA a una arquitectura Encoder-Decoder y entrenar durante 30,000 pasos en un corpus real (opus100), puede traducir expresiones prácticas como "Merci beaucoup." y "Good morning." con BLEU=1.0. La introducción de Cross-Attention causó un salto de Decoder-only (BLEU=0) a un BLEU promedio general de 0.27, y logró una precisión cercana a la práctica de BLEU=0.56 en la dirección FR→EN.
 
 
+
+---
+
+### 🔌 6. Experimento de Hot-Swap Dinámico de Sinapsis
+**Archivo:** [`06_hotswap_experiment_demo_es.ipynb`](./06_hotswap_experiment_demo_es.ipynb)
+
+Demuestra el verdadero poder de SRA: "agregar y reemplazar sinapsis como complementos".
+Realizamos un experimento en el que los pesos de un modelo de traducción al español entrenado independientemente (Modelo 2) se fusionan en un modelo de traducción al francés/alemán en ejecución (Modelo 1). Obtendrá conocimientos profundos sobre la modularidad de la arquitectura y por qué es crucial compartir las representaciones base (Atención/Incrustación).
+
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_es.ipynb)
+
+---
+
+### 👑 7. Integración de Modelos mediante Super Router y Gumbel-Softmax
+**Archivo:** [`07_super_router_gumbel_demo_es.ipynb`](./07_super_router_gumbel_demo_es.ipynb)
+
+Construimos un "Super Router" que agrupa múltiples modelos especializados (un modelo FR/DE y un modelo ES) y enruta el procesamiento dinámicamente según la entrada.
+Esto demuestra el problema de "Enrutamiento perezoso" (Lazy Routing) del Enrutamiento Suave simple (Soft Routing) y muestra cómo el uso de Gumbel-Softmax logra un **Enrutamiento Duro perfecto**, reduciendo el cálculo innecesario del modelo en un 100%.
+
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_es.ipynb)
+
 ## 🤝 Contribución y Licencia
 
 Licencia: [MIT License](../../LICENSE).

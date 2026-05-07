@@ -100,6 +100,27 @@ python src/compare_architectures.py --task copy --steps 500
   - 一份报告，证明通过将 SRA 扩展为 Encoder-Decoder 架构并在真实语料库 (opus100) 上进行 30,000 步的训练，它可以以 BLEU=1.0 的分数翻译“Merci beaucoup.”和“Good morning.”等实用表达。Cross-Attention 的引入使得模型从仅 Decoder (BLEU=0) 飞跃到整体平均 BLEU 为 0.27，并在 FR→EN 方向上实现了接近实用的 BLEU=0.56 准确率。
 
 
+
+---
+
+### 🔌 6. 动态突触热插拔实验
+**文件:** [`06_hotswap_experiment_demo_zh-cn.ipynb`](./06_hotswap_experiment_demo_zh-cn.ipynb)
+
+展示了 SRA 的真正威力：“作为插件添加和替换突触”。
+我们进行了一项实验，将独立训练的西班牙语翻译模型（模型 2）的权重合并到正在运行的法语/德语翻译模型（模型 1）中。您将深入了解该架构的模块化特性，以及为什么共享基础表示（Attention/Embedding）至关重要。
+
+[![在 Colab 中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_zh-cn.ipynb)
+
+---
+
+### 👑 7. 基于超级路由器的模型集成与 Gumbel-Softmax
+**文件:** [`07_super_router_gumbel_demo_zh-cn.ipynb`](./07_super_router_gumbel_demo_zh-cn.ipynb)
+
+我们构建了一个“超级路由器（Super Router）”，它将多个专业模型（法语/德语模型和西班牙语模型）捆绑在一起，并根据输入动态路由处理。
+这演示了简单软路由（Soft Routing）的“懒惰路由（Lazy Routing）”问题，并展示了如何使用 Gumbel-Softmax 实现**完美的硬路由（Hard Routing）**，从而 100% 减少不必要的模型计算。
+
+[![在 Colab 中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_zh-cn.ipynb)
+
 ## 🤝 贡献与许可
 
 该项目目前是处于早期阶段的实验性架构。非常欢迎通过 Issues 和 PR 提供错误报告、功能讨论以及性能改进的 pull requests！

@@ -100,6 +100,27 @@ python src/compare_architectures.py --task copy --steps 500
   - SRA를 Encoder-Decoder 형태로 확장하고 실제 코퍼스(opus100)를 사용한 30,000 스텝의 학습을 통해 "Merci beaucoup.", "Good morning."과 같은 실용적인 표현을 BLEU=1.0으로 번역할 수 있음을 입증한 보고서입니다. Cross-Attention의 도입으로 Decoder-only(BLEU=0)에서 전체 평균 BLEU=0.27로 비약적으로 향상되었으며, FR→EN 방향에서는 실용성에 근접한 BLEU=0.56의 정확도를 달성했습니다.
 
 
+
+---
+
+### 🔌 6. 동적 시냅스 핫스왑 실험
+**파일:** [`06_hotswap_experiment_demo_ko.ipynb`](./06_hotswap_experiment_demo_ko.ipynb)
+
+SRA의 진정한 힘인 "플러그인으로서의 시냅스 추가 및 교체"를 보여줍니다.
+독립적으로 훈련된 스페인어 번역 모델(Model 2)의 가중치를 실행 중인 프랑스어/독일어 번역 모델(Model 1)에 병합하는 실험을 수행합니다. 아키텍처의 모듈성과 기본 표현(Attention/Embedding)을 공유하는 것이 왜 중요한지에 대한 깊은 통찰력을 얻을 수 있습니다.
+
+[![Colab에서 열기](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_ko.ipynb)
+
+---
+
+### 👑 7. 슈퍼 라우터 및 Gumbel-Softmax를 통한 모델 통합
+**파일:** [`07_super_router_gumbel_demo_ko.ipynb`](./07_super_router_gumbel_demo_ko.ipynb)
+
+여러 전문 모델(FR/DE 모델 및 ES 모델)을 묶고 입력에 따라 처리를 동적으로 라우팅하는 "슈퍼 라우터(Super Router)"를 구축합니다.
+이는 단순한 소프트 라우팅(Soft Routing)의 "게으른 라우팅(Lazy Routing)" 문제를 시연하고, Gumbel-Softmax를 사용하여 **완벽한 하드 라우팅(Hard Routing)**을 달성하여 불필요한 모델 계산을 100% 줄이는 방법을 보여줍니다.
+
+[![Colab에서 열기](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_ko.ipynb)
+
 ## 🤝 기여 및 라이선스 (Contributing & License)
 
 이 프로젝트는 현재 초기 단계의 실험적 아키텍처입니다. 버그 보고서, 기능에 대한 논의, 성능 향상을 위한 Pull Request 등 Issue와 PR을 통한 참여를 환영합니다!

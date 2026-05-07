@@ -30,6 +30,27 @@ A chave aqui é o mecanismo que decide "qual especialista chamar". A SRA tem um 
 3. **Espaço da Sinapse:** Auto-organiza as sinapses por "similaridade funcional".
 4. **Regra de Aprendizado Local:** Usa regras locais (Hebbian, STDP) para balanceamento.
 
+
+---
+
+### 🔌 6. Experimento de Hot-Swap Dinâmico de Sinapses
+**Arquivo:** [`06_hotswap_experiment_demo_pt.ipynb`](./06_hotswap_experiment_demo_pt.ipynb)
+
+Demonstra o verdadeiro poder da SRA: "adicionar e substituir sinapses como plugins".
+Realizamos um experimento onde os pesos de um modelo de tradução de espanhol treinado independentemente (Modelo 2) são mesclados em um modelo de tradução de francês/alemão em execução (Modelo 1). Você obterá insights profundos sobre a modularidade da arquitetura e por que compartilhar as representações base (Atenção/Incorporação) é crucial.
+
+[![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_pt.ipynb)
+
+---
+
+### 👑 7. Integração de Modelos via Super Router e Gumbel-Softmax
+**Arquivo:** [`07_super_router_gumbel_demo_pt.ipynb`](./07_super_router_gumbel_demo_pt.ipynb)
+
+Construímos um "Super Router" que agrupa vários modelos especializados (um modelo FR/DE e um modelo ES) e roteia dinamicamente o processamento com base na entrada.
+Isso demonstra o problema de "Lazy Routing" do Soft Routing simples e mostra como o uso do Gumbel-Softmax alcança um **Hard Routing perfeito**, cortando em 100% o cálculo desnecessário do modelo.
+
+[![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_pt.ipynb)
+
 ## 🧪 Experimentos e Análise
 - [Análise de Aprendizado Multitarefa e Roteamento](./routing_analysis_algorithmic.md)
 - [Análise de Roteamento em Modelagem de Linguagem Interdomínio](./routing_analysis_language.md)

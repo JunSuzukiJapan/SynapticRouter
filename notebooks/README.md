@@ -52,6 +52,27 @@ From a multitask-trained model, we **intentionally destroy (set to zero) the wei
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_en.ipynb)
 
+
+---
+
+### 🔌 6. Dynamic Synaptic Hot-Swap Experiment
+**File:** [`06_hotswap_experiment_demo_en.ipynb`](./06_hotswap_experiment_demo_en.ipynb)
+
+Demonstrates the true power of SRA: "adding and replacing synapses as plugins".
+We perform an experiment where weights from an independently trained Spanish translation model (Model 2) are merged into a running French/German translation model (Model 1). You will gain deep insights into the modularity of the architecture and why sharing the base representations (Attention/Embedding) is crucial.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_en.ipynb)
+
+---
+
+### 👑 7. Model Integration via Super Router and Gumbel-Softmax
+**File:** [`07_super_router_gumbel_demo_en.ipynb`](./07_super_router_gumbel_demo_en.ipynb)
+
+We build a "Super Router" that bundles multiple specialized models (a FR/DE model and an ES model) and dynamically routes processing based on the input.
+This demonstrates the "Lazy Routing" problem of simple Soft Routing and shows how using Gumbel-Softmax achieves **perfect Hard Routing**, cutting unnecessary model computation by 100%.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_en.ipynb)
+
 ## 🚀 How to Run
 
 1. **Running on Google Colab (Recommended)**:
