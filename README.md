@@ -5,6 +5,15 @@
 Synaptic Routing Architecture (SRA) is a novel dynamic, sparse, and modular neural network architecture inspired by the biological brain (synapses).
 Instead of a massive, static Transformer, SRA dynamically routes inputs to appropriate "synapses" (tiny modules) to achieve more efficient learning and structural intelligence.
 
+## 🎮 Interactive Demos (Jupyter Notebooks)
+
+We have prepared Jupyter Notebooks where you can interactively experience SRA's "task-specific brain usage" and "robustness" right in your browser. You can run them in seconds on Google Colab, so please give them a try!
+
+- [List of 5 demos from basics to multitask (`notebooks/README.md`)](./notebooks/README.md)
+  - 🟢 **Basic**: SRA structure and routing visualization
+  - 🔴 **Multitask**: Multitask learning and synapse switching per task (✨Recommended)
+  - 🧠 **Lesion**: Experiment proving that destroying specific synapses does not affect other tasks (✨Must-See)
+
 ## 🎯 Motivation
 
 In recent years, while AI models have become increasingly massive, monolithic networks face significant challenges, such as "escalating computational resources" and "catastrophic forgetting during multi-task learning".
