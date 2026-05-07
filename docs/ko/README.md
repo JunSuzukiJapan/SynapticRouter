@@ -1,5 +1,16 @@
 # Synaptic Routing Architecture (SRA)
 
+## 🎮 대화형 데모(Jupyter 노트북)
+
+SRA의 "작업별 두뇌 사용"과 "강건함"을 브라우저에서 바로 대화형으로 경험할 수 있는 Jupyter 노트북을 준비했습니다.Google Colab에서 몇 초 만에 실행할 수 있으니 꼭 사용해 보세요!
+
+- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_ko.ipynb)
+- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_ko.ipynb)
+- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_ko.ipynb)
+- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_ko.ipynb)
+- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_ko.ipynb)
+
+
 Synaptic Routing Architecture (SRA)는 생물학적 뇌(시냅스)에서 영감을 받은 새롭고 동적이며 희소하고 모듈화된 신경망 아키텍처입니다.
 거대하고 정적인 Transformer 대신, SRA는 입력을 적절한 "시냅스"(작은 모듈)로 동적으로 라우팅하여 더 효율적인 학습과 구조적 지능을 달성합니다.
 

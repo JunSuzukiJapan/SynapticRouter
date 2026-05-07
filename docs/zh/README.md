@@ -1,5 +1,16 @@
 # Synaptic Routing Architecture (SRA)
 
+## 🎮 交互式演示（Jupyter Notebooks）
+
+我们准备了 Jupyter Notebooks，您可以直接在浏览器中交互式体验 SRA 的“特定任务的大脑使用”和“鲁棒性”。您可以在 Google Colab 上几秒钟内运行它们，所以请尝试一下！
+
+- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_zh.ipynb)
+- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_zh.ipynb)
+- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_zh.ipynb)
+- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_zh.ipynb)
+- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_zh.ipynb)
+
+
 Synaptic Routing Architecture (SRA) 是一种受生物大脑（突触）启发的全新动态、稀疏、模块化神经网络架构。
 与庞大且静态的 Transformer 不同，SRA 将输入动态路由到合适的“突触”（微小模块），从而实现更高效的学习和结构化智能。
 

@@ -2,6 +2,17 @@
 
 # Synaptic Routing Architecture (SRA)
 
+## 🎮 Demonstrações interativas (Jupyter Notebooks)
+
+Preparamos Jupyter Notebooks onde você pode experimentar interativamente o "uso do cérebro específico de tarefas" e a "robustez" do SRA diretamente no seu navegador.Você pode executá-los em segundos no Google Colab, então experimente!
+
+- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_pt.ipynb)
+- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_pt.ipynb)
+- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_pt.ipynb)
+- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_pt.ipynb)
+- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_pt.ipynb)
+
+
 A Synaptic Routing Architecture (SRA) é uma arquitetura de rede neural dinâmica, esparsa e modular inspirada no cérebro biológico (sinapses).
 
 ## 🎯 Motivação

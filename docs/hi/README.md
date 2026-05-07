@@ -2,6 +2,17 @@
 
 # सिनैप्टिक राउटिंग आर्किटेक्चर (SRA)
 
+## 🎮 इंटरएक्टिव डेमो (ज्यूपिटर नोटबुक)
+
+हमने ज्यूपिटर नोटबुक तैयार की है जहां आप सीधे अपने ब्राउज़र में एसआरए के "कार्य-विशिष्ट मस्तिष्क उपयोग" और "मजबूती" का अनुभव कर सकते हैं।आप उन्हें Google Colab पर कुछ ही सेकंड में चला सकते हैं, इसलिए कृपया उन्हें आज़माएँ!
+
+- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_hi.ipynb)
+- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_hi.ipynb)
+- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_hi.ipynb)
+- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_hi.ipynb)
+- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_hi.ipynb)
+
+
 सिनैप्टिक राउटिंग आर्किटेक्चर (SRA) जैविक मस्तिष्क (सिनैप्स) से प्रेरित एक नया गतिशील, विरल (sparse) और मॉड्यूलर न्यूरल नेटवर्क आर्किटेक्चर है।
 
 ## 🎯 प्रेरणा

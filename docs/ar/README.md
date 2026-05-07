@@ -2,6 +2,17 @@
 
 # بنية التوجيه التشابكي (SRA)
 
+## 🎮 عروض توضيحية تفاعلية (دفاتر Jupyter)
+
+لقد قمنا بإعداد دفاتر Jupyter Notebooks حيث يمكنك تجربة "استخدام العقل الخاص بمهمة محددة" و"المتانة" الخاصة بـ SRA بشكل تفاعلي في متصفحك مباشرةً.يمكنك تشغيلها في ثوانٍ على Google Colab، لذا يرجى تجربتها!
+
+- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_ar.ipynb)
+- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_ar.ipynb)
+- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_ar.ipynb)
+- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_ar.ipynb)
+- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_ar.ipynb)
+
+
 بنية التوجيه التشابكي (SRA) هي بنية شبكة عصبية ديناميكية ومتناثرة (sparse) ومعيارية جديدة مستوحاة من الدماغ البيولوجي (المشابك العصبية).
 
 ## 🎯 الدوافع
