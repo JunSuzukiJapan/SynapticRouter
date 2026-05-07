@@ -1,67 +1,67 @@
 # Synaptic Routing Architecture (SRA) Interactive Demos
 
-このディレクトリには、SRA（Synaptic Routing Architecture）の仕組みをブラウザ上で直感的に理解し、気楽に試していただくための Jupyter Notebook が用意されています。
+This directory contains Jupyter Notebooks designed to help you intuitively understand and easily experiment with the Synaptic Routing Architecture (SRA) right in your browser.
 
-これらのノートブックは、GPU環境をお持ちでない方でも **Google Colab** を使って数分で実行・体験できるように設計されています。
+These notebooks are designed to be run in a few minutes using **Google Colab**, even if you don't have a local GPU environment.
 
-## 📓 ノートブック一覧
+## 📓 Notebook List
 
-### 🟢 1. 基礎構造とルーティングの確認
-**ファイル:** [`01_sra_quickstart.ipynb`](./01_sra_quickstart.ipynb)
+### 🟢 1. Basic Structure and Routing Validation
+**File:** [`01_sra_quickstart_en.ipynb`](./01_sra_quickstart_en.ipynb)
 
-SRAの基本的なモデル構造を初期化し、ランダムなデータを入力した際の「ルーティング（どの専門家が選ばれるか）」をヒートマップで可視化します。「とりあえずSRAを動かしてみたい」という方向けの最もシンプルな入門用デモです。
+Initializes the basic SRA model structure and visualizes the "routing" (which expert is selected) as a heatmap when random data is input. This is the simplest introductory demo for those who just want to see SRA in action.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart.ipynb)
-
----
-
-### 🔵 2. シングルタスクの学習とルーティングの特化
-**ファイル:** [`02_learning_and_routing_demo.ipynb`](./02_learning_and_routing_demo.ipynb)
-
-SRAに「Copyタスク（入力をそのまま出力する）」を実際に学習させます。数秒の学習の前後でルーティングのヒートマップを描画し、**学習が進むにつれてルーターが特定の専門家（シナプス）を意図的に選ぶように変化する（特化する）様子**を視覚的に体験できます。
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart_en.ipynb)
 
 ---
 
-### 🔴 3. マルチタスク学習とタスクによる使い分け
-**ファイル:** [`03_multitask_routing_demo.ipynb`](./03_multitask_routing_demo.ipynb)
+### 🔵 2. Single-Task Learning and Routing Specialization
+**File:** [`02_learning_and_routing_demo_en.ipynb`](./02_learning_and_routing_demo_en.ipynb)
 
-SRA最大の強みである**「マルチタスク学習における専門家（シナプス）の使い分け」**をデモします。
-1つのモデルに対して `copy` と `reverse` という相反するタスクを同時に学習させます。学習後、入力されたタスクに応じてルーターが**全く異なるシナプスの経路を選択する様子**を並べて比較します。SRAのダイナミックな挙動を実感したい方に最適です。
+Actually trains SRA on a "Copy task" (outputting the input exactly as is). It draws routing heatmaps before and after a few seconds of training, allowing you to visually experience how the router **increasingly favors specific experts (synapses) intentionally as training progresses (specialization)**.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo.ipynb)
-
----
-
-### 🕹️ 4. Decision Transformerと知覚・行動の分離
-**ファイル:** [`04_decision_transformer_routing_demo.ipynb`](./04_decision_transformer_routing_demo.ipynb)
-
-SRAを強化学習のエージェント（Decision Transformer）として使い、GridWorld（迷路）の「宝探し」と「逃走」タスクを解かせます。
-**「タスク（目的）による脳の使い分け」**に加えて、入力されるトークンが「状態（State）」「報酬（Reward）」「行動（Action）」のどれであるかによって**「知覚シナプス」と「行動シナプス」が自動的に分離して形成される様子**をヒートマップで確認できます。
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo_en.ipynb)
 
 ---
 
-### 🧠 5. 【必見】シナプス破壊（Lesion）実験
-**ファイル:** [`05_lesion_experiment_demo.ipynb`](./05_lesion_experiment_demo.ipynb)
+### 🔴 3. Multitask Learning and Task-Specific Routing (✨ Recommended)
+**File:** [`03_multitask_routing_demo_en.ipynb`](./03_multitask_routing_demo_en.ipynb)
 
-SRAのネットワークが「機能ごとに完全にモジュール化されている」ことを証明するハッカー的な実験デモです。
-マルチタスク学習済みのモデルから、**特定のタスク（Reverse）で使われている専門家（シナプス）の重みを意図的にゼロに破壊**します。すると、Reverseタスクだけが解けなくなり、**別のシナプスを使っているCopyタスクは100%の正解率を維持し続ける（無傷である）**という驚異的な堅牢性をインタラクティブに体験できます。
+Demonstrates SRA's greatest strength: **"Switching experts (synapses) in multitask learning."**
+It trains a single model simultaneously on two conflicting tasks: `copy` and `reverse`. After training, it compares side-by-side how the router **selects completely different synaptic pathways** depending on the input task. Ideal for experiencing SRA's dynamic behavior.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo_en.ipynb)
 
-## 🚀 実行方法
+---
 
-1. **Google Colabで実行する場合（推奨）**:
-   各項目の下にある `Open In Colab` バッジをクリックしてください。ブラウザ上で実行環境が立ち上がり、上から順番にセルを実行するだけで体験できます。
+### 🕹️ 4. Decision Transformer: Separation of Perception and Action
+**File:** [`04_decision_transformer_routing_demo_en.ipynb`](./04_decision_transformer_routing_demo_en.ipynb)
 
-2. **ローカル環境で実行する場合**:
+Uses SRA as a reinforcement learning agent (Decision Transformer) to solve "Treasure" and "Escape" tasks in a GridWorld.
+In addition to the **"switching brains based on task (objective),"** you can verify via heatmaps how **"perception synapses" and "action synapses" are automatically separated and formed** depending on whether the input token is a "State," "Reward," or "Action."
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo_en.ipynb)
+
+---
+
+### 🧠 5. [Must-See] Synapse Lesion Experiment
+**File:** [`05_lesion_experiment_demo_en.ipynb`](./05_lesion_experiment_demo_en.ipynb)
+
+A hacker-style experimental demo proving that SRA's network is "completely modularized by function."
+From a multitask-trained model, we **intentionally destroy (set to zero) the weights of an expert (synapse) used in a specific task (Reverse)**. You can interactively experience its astonishing robustness: while the Reverse task becomes unsolvable, **the Copy task, which uses different synapses, maintains a 100% accuracy rate (remains completely unscathed)**.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_en.ipynb)
+
+## 🚀 How to Run
+
+1. **Running on Google Colab (Recommended)**:
+   Click the `Open In Colab` badge below each item. An execution environment will launch in your browser, and you can experience the demo just by running the cells in order from top to bottom.
+
+2. **Running on a Local Environment**:
    ```bash
    git clone https://github.com/JunSuzukiJapan/SynapticRouter.git
    cd SynapticRouter
    pip install -r requirements.txt
    jupyter lab
    ```
-   として、ブラウザから `notebooks/` 以下のファイルを開いて実行してください。
+   Then, open and run the files under `notebooks/` from your browser.
