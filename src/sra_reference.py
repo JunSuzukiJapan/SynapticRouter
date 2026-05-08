@@ -39,16 +39,41 @@ class Router(nn.Module):
         super().__init__()
         self.k = k
         self.num_synapses = num_synapses
-        # Initialize with orthogonal matrix to balance initial routing
+        self.dim = dim
         self.synapse_emb = nn.Parameter(torch.zeros(num_synapses, dim))
         nn.init.orthogonal_(self.synapse_emb)
         self.synapse_emb.data = self.synapse_emb.data / math.sqrt(dim)
         self.scale = math.sqrt(dim)
 
+    def add_synapses(self, num_new: int):
+        if not hasattr(self, "frozen_synapse_emb"):
+            self.register_buffer("frozen_synapse_emb", self.synapse_emb.data.clone())
+        else:
+            self.frozen_synapse_emb = torch.cat([self.frozen_synapse_emb, self.synapse_emb.data.clone()], dim=0)
+            
+        new_emb = torch.zeros(num_new, self.dim, device=self.synapse_emb.device)
+        nn.init.orthogonal_(new_emb)
+        new_emb = new_emb / self.scale
+        self.synapse_emb = nn.Parameter(new_emb)
+        self.num_synapses += num_new
+
+    def get_full_emb(self):
+        if hasattr(self, "frozen_synapse_emb"):
+            return torch.cat([self.frozen_synapse_emb, self.synapse_emb], dim=0)
+        return self.synapse_emb
+
     def forward(self, h, k_override=None):
         # h: (B, T, D)
         k = self.k if k_override is None else k_override
-        logits = torch.einsum("btd,nd->btn", h, self.synapse_emb) / self.scale
+        full_emb = self.get_full_emb()
+        
+        # Phase 2 Fix: Cosine Similarity Routing
+        # By normalizing both the input and the router embeddings, we ensure that new synapses 
+        # cannot arbitrarily grow their weight magnitudes to hijack routing from older domains.
+        h_norm = F.normalize(h, p=2, dim=-1)
+        emb_norm = F.normalize(full_emb, p=2, dim=-1)
+        logits = torch.einsum("btd,nd->btn", h_norm, emb_norm) * self.scale
+        
         vals, idx = torch.topk(logits, k, dim=-1)
         weights = F.softmax(vals, dim=-1)
         return idx, weights, logits

@@ -38,6 +38,34 @@ class CausalMoESRABlock(nn.Module):
         self.b2 = nn.Parameter(torch.zeros(num_synapses, dim))
         self.state = nn.Parameter(torch.zeros(num_synapses, dim))
 
+    def add_synapses(self, num_new: int):
+        self.router.add_synapses(num_new)
+        
+        attrs = ["w1", "b1", "w2", "b2", "state"]
+        for attr in attrs:
+            param = getattr(self, attr)
+            frozen_attr = f"frozen_{attr}"
+            
+            if not hasattr(self, frozen_attr):
+                self.register_buffer(frozen_attr, param.data.clone())
+            else:
+                existing = getattr(self, frozen_attr)
+                setattr(self, frozen_attr, torch.cat([existing, param.data.clone()], dim=0))
+                
+        self.w1 = nn.Parameter(torch.randn(num_new, self.dim, self.syn_hidden, device=self.w1.device) / math.sqrt(self.dim))
+        self.b1 = nn.Parameter(torch.zeros(num_new, self.syn_hidden, device=self.b1.device))
+        self.w2 = nn.Parameter(torch.randn(num_new, self.syn_hidden, self.dim, device=self.w2.device) / math.sqrt(self.syn_hidden))
+        self.b2 = nn.Parameter(torch.zeros(num_new, self.dim, device=self.b2.device))
+        self.state = nn.Parameter(torch.zeros(num_new, self.dim, device=self.state.device))
+        
+        self.num_synapses += num_new
+
+    def get_full_param(self, attr):
+        frozen_attr = f"frozen_{attr}"
+        if hasattr(self, frozen_attr):
+            return torch.cat([getattr(self, frozen_attr), getattr(self, attr)], dim=0)
+        return getattr(self, attr)
+
     def _moe_forward(self, h_flat, idx_flat, weights_flat):
         """
         Expert ごとに matmul を実行するメモリ効率版。
@@ -61,9 +89,15 @@ class CausalMoESRABlock(nn.Module):
             idx_sub = idx_flat[token_mask]              # (M, k)
             w_sub = weights_flat[token_mask]            # (M, k)
 
+            full_w1 = self.get_full_param("w1")
+            full_b1 = self.get_full_param("b1")
+            full_w2 = self.get_full_param("w2")
+            full_b2 = self.get_full_param("b2")
+            full_state = self.get_full_param("state")
+
             # Expert MLP: h_sub → hidden → expert_out
-            hidden = F.gelu(h_sub @ self.w1[e] + self.b1[e])   # (M, H)
-            expert_out_raw = hidden @ self.w2[e] + self.b2[e] + self.state[e]  # (M, D)
+            hidden = F.gelu(h_sub @ full_w1[e] + full_b1[e])   # (M, H)
+            expert_out_raw = hidden @ full_w2[e] + full_b2[e] + full_state[e]  # (M, D)
             
             # API Standardization Phase 1: L2 Normalization
             # L2 norm keeps the vector length to 1, then we scale by sqrt(dim) to match expected variance
@@ -120,6 +154,20 @@ class MoESRALanguageModel(nn.Module):
         ])
         self.norm = nn.LayerNorm(dim)
         self.out = nn.Linear(dim, vocab_size)
+
+    def add_synapses(self, num_new: int, freeze_base: bool = True):
+        for block in self.blocks:
+            block.add_synapses(num_new)
+            
+        if freeze_base:
+            self.embed.requires_grad_(False)
+            self.pos.requires_grad_(False)
+            self.norm.requires_grad_(False)
+            self.out.requires_grad_(False)
+            for block in self.blocks:
+                block.attn.requires_grad_(False)
+                block.norm1.requires_grad_(False)
+                block.norm2.requires_grad_(False)
 
     def forward(self, x, dense=False):
         B, T = x.shape
