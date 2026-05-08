@@ -106,6 +106,54 @@ def usage_stats(router_logits):
     return (hist / hist.sum()).cpu()
 
 
+@torch.no_grad()
+def find_unshared_synapses(model, data_dict, target_domain, other_domains, get_batch_func, max_seq_len=64, eval_batches=5, threshold=0.01):
+    """
+    Finds synapses that are used by target_domain but NOT used by other_domains.
+    Returns a list of integer indices representing those unshared synapses.
+    """
+    model.eval()
+    
+    def get_usage(domain):
+        total_usage = None
+        for _ in range(eval_batches):
+            x, y = get_batch_func(data_dict, 32, max_seq_len, domain)
+            if hasattr(x, 'to'):
+                device = next(model.parameters()).device
+                x = x.to(device)
+            try:
+                # MoESRALanguageModel signature
+                logits, router_logits = model(x)
+            except Exception:
+                # SRAModel signature
+                device = next(model.parameters()).device
+                y = y.to(device)
+                y_in = torch.cat([torch.full((y.size(0), 1), BOS, dtype=torch.long, device=device), y[:, :-1]], dim=1)
+                logits, router_logits, _ = model(x, y_in)
+            
+            # Combine all layers router logits
+            batch_usage = sum(usage_stats([rl]) for rl in router_logits) / len(router_logits)
+            total_usage = batch_usage if total_usage is None else total_usage + batch_usage
+            
+        return total_usage / eval_batches
+
+    target_usage = get_usage(target_domain)
+    other_usages = [get_usage(d) for d in other_domains]
+        
+    unshared = []
+    for i in range(len(target_usage)):
+        if target_usage[i] > threshold:
+            is_shared = False
+            for ou in other_usages:
+                if ou[i] > threshold:
+                    is_shared = True
+                    break
+            if not is_shared:
+                unshared.append(i)
+                
+    return unshared
+
+
 def usage_entropy(usage):
     p = usage.clamp(min=1e-9)
     return -(p * torch.log(p)).sum().item()

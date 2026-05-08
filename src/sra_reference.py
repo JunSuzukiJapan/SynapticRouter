@@ -62,6 +62,40 @@ class Router(nn.Module):
             return torch.cat([self.frozen_synapse_emb, self.synapse_emb], dim=0)
         return self.synapse_emb
 
+    def clear_synapses(self, indices_to_clear: list[int]):
+        """Zero-clears the specified synapses, making them empty slots."""
+        n_frozen = self.frozen_synapse_emb.size(0) if hasattr(self, "frozen_synapse_emb") else 0
+        for idx in indices_to_clear:
+            if idx < 0 or idx >= self.num_synapses:
+                continue
+            if idx < n_frozen:
+                self.frozen_synapse_emb.data[idx].zero_()
+            else:
+                self.synapse_emb.data[idx - n_frozen].zero_()
+
+    def pop_synapses(self, num_drop: int):
+        """Physically removes the last num_drop synapses."""
+        if num_drop <= 0:
+            return
+        assert num_drop < self.num_synapses, "Cannot drop all synapses."
+        self.num_synapses -= num_drop
+        
+        n_frozen = self.frozen_synapse_emb.size(0) if hasattr(self, "frozen_synapse_emb") else 0
+        n_active = self.synapse_emb.size(0)
+        
+        if num_drop <= n_active:
+            if num_drop == n_active:
+                self.synapse_emb = nn.Parameter(torch.empty(0, self.dim, device=self.synapse_emb.device))
+            else:
+                self.synapse_emb = nn.Parameter(self.synapse_emb.data[:-num_drop])
+        else:
+            self.synapse_emb = nn.Parameter(torch.empty(0, self.dim, device=self.synapse_emb.device))
+            drop_from_frozen = num_drop - n_active
+            if drop_from_frozen == n_frozen:
+                self.register_buffer("frozen_synapse_emb", torch.empty(0, self.dim, device=self.frozen_synapse_emb.device))
+            else:
+                self.register_buffer("frozen_synapse_emb", self.frozen_synapse_emb[:-drop_from_frozen].clone())
+
     def forward(self, h, k_override=None, allowed_mask=None):
         # h: (B, T, D)
         k = self.k if k_override is None else k_override
@@ -73,6 +107,11 @@ class Router(nn.Module):
         h_norm = F.normalize(h, p=2, dim=-1)
         emb_norm = F.normalize(full_emb, p=2, dim=-1)
         logits = torch.einsum("btd,nd->btn", h_norm, emb_norm) * self.scale
+        
+        # Mask out zero-cleared synapses so they are never routed to
+        is_cleared = (full_emb == 0).all(dim=-1)
+        if is_cleared.any():
+            logits = logits.masked_fill(is_cleared.view(1, 1, -1), float('-inf'))
         
         # Phase 3: Metadata-driven Zero-Shot routing (Hard Masking)
         if allowed_mask is not None:

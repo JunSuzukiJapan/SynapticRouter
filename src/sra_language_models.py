@@ -66,6 +66,54 @@ class CausalMoESRABlock(nn.Module):
             return torch.cat([getattr(self, frozen_attr), getattr(self, attr)], dim=0)
         return getattr(self, attr)
 
+    def clear_synapses(self, indices_to_clear: list[int]):
+        """Zero-clears the specified synapses, making them empty slots."""
+        self.router.clear_synapses(indices_to_clear)
+        attrs = ["w1", "b1", "w2", "b2", "state"]
+        for attr in attrs:
+            param = getattr(self, attr)
+            frozen_attr = f"frozen_{attr}"
+            n_frozen = getattr(self, frozen_attr).size(0) if hasattr(self, frozen_attr) else 0
+            
+            for idx in indices_to_clear:
+                if idx < 0 or idx >= self.num_synapses:
+                    continue
+                if idx < n_frozen:
+                    getattr(self, frozen_attr).data[idx].zero_()
+                else:
+                    param.data[idx - n_frozen].zero_()
+
+    def pop_synapses(self, num_drop: int):
+        """Physically removes the last num_drop synapses."""
+        if num_drop <= 0:
+            return
+        assert num_drop < self.num_synapses, "Cannot drop all synapses."
+        
+        self.router.pop_synapses(num_drop)
+        self.num_synapses -= num_drop
+        
+        attrs = ["w1", "b1", "w2", "b2", "state"]
+        for attr in attrs:
+            param = getattr(self, attr)
+            frozen_attr = f"frozen_{attr}"
+            
+            n_frozen = getattr(self, frozen_attr).size(0) if hasattr(self, frozen_attr) else 0
+            n_active = param.size(0)
+            
+            if num_drop <= n_active:
+                if num_drop == n_active:
+                    setattr(self, attr, nn.Parameter(torch.empty((0,) + param.shape[1:], device=param.device)))
+                else:
+                    setattr(self, attr, nn.Parameter(param.data[:-num_drop]))
+            else:
+                setattr(self, attr, nn.Parameter(torch.empty((0,) + param.shape[1:], device=param.device)))
+                drop_from_frozen = num_drop - n_active
+                frozen_tensor = getattr(self, frozen_attr)
+                if drop_from_frozen == n_frozen:
+                    self.register_buffer(frozen_attr, torch.empty((0,) + frozen_tensor.shape[1:], device=frozen_tensor.device))
+                else:
+                    self.register_buffer(frozen_attr, frozen_tensor[:-drop_from_frozen].clone())
+
     def _moe_forward(self, h_flat, idx_flat, weights_flat):
         """
         Expert ごとに matmul を実行するメモリ効率版。
@@ -168,6 +216,14 @@ class MoESRALanguageModel(nn.Module):
                 block.attn.requires_grad_(False)
                 block.norm1.requires_grad_(False)
                 block.norm2.requires_grad_(False)
+
+    def clear_synapses(self, indices_to_clear: list[int]):
+        for block in self.blocks:
+            block.clear_synapses(indices_to_clear)
+
+    def pop_synapses(self, num_drop: int):
+        for block in self.blocks:
+            block.pop_synapses(num_drop)
 
     def forward(self, x, dense=False, allowed_synapses_mask=None):
         B, T = x.shape
