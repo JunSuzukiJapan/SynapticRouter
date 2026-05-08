@@ -120,9 +120,15 @@ class Router(nn.Module):
                 allowed_mask = allowed_mask.unsqueeze(1)
             logits = logits.masked_fill(~allowed_mask, float('-inf'))
             
-        vals, idx = torch.topk(logits, k, dim=-1)
-        weights = F.softmax(vals, dim=-1)
-        return idx, weights, logits
+        if self.training and k == 1:
+            weights_full = F.gumbel_softmax(logits, tau=1.0, hard=True, dim=-1)
+            idx = weights_full.argmax(dim=-1, keepdim=True)
+            weights = weights_full.gather(dim=-1, index=idx)
+            return idx, weights, logits
+        else:
+            vals, idx = torch.topk(logits, k, dim=-1)
+            weights = F.softmax(vals, dim=-1)
+            return idx, weights, logits
 
 
 class SRABlock(nn.Module):
