@@ -84,11 +84,20 @@ SRA（Synaptic Routing Architecture）を用いて小規模な言語モデル（
 ---
 
 ### 📚 9. SRAによるマルチドメインLLMの学習と専門化
-**ファイル:** [`08_sra_llm_demo_multidomain.ipynb`](./08_sra_llm_demo_multidomain.ipynb)
+**ファイル:** [`09_sra_llm_demo_multidomain.ipynb`](./09_sra_llm_demo_multidomain.ipynb)
 
 SRAの得意とする「複数ドメイン（Code, Math, Text）の同時学習」を小規模なLLMで体験します。ドメインごとにSRAが自動的にシナプスを分業（専門化）させる様子をヒートマップで確認でき、SRAの効率的なマルチタスク学習の仕組みを実証します。
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_multidomain.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain.ipynb)
+
+---
+
+### 💻 10. 実践的プラグイン・ホットスワップ（Zero-Shot Hot-Swap）
+**ファイル:** [`10_hotswap_plugins_demo.ipynb`](./10_hotswap_plugins_demo.ipynb)
+
+複数の開発チームが「コード用プラグイン」「数学用プラグイン」を完全に独立して並行学習させ、それを本番環境のベースモデルに「事後的に物理合体（Hot-Swap）」させる一連のワークフローを実証します。合体後もすべてのドメインのLossが独立学習時と全く同一（Zero Forgetting）であることを証明しています。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo.ipynb)
 
 ## 🚀 実行方法
 
