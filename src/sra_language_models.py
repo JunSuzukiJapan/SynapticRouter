@@ -63,7 +63,11 @@ class CausalMoESRABlock(nn.Module):
 
             # Expert MLP: h_sub → hidden → expert_out
             hidden = F.gelu(h_sub @ self.w1[e] + self.b1[e])   # (M, H)
-            expert_out = hidden @ self.w2[e] + self.b2[e] + self.state[e]  # (M, D)
+            expert_out_raw = hidden @ self.w2[e] + self.b2[e] + self.state[e]  # (M, D)
+            
+            # API Standardization Phase 1: L2 Normalization
+            # L2 norm keeps the vector length to 1, then we scale by sqrt(dim) to match expected variance
+            expert_out = F.normalize(expert_out_raw, p=2, dim=-1) * math.sqrt(self.dim)
 
             # このExpertへの重みを取り出して加算（同一トークンが複数スロットで同Expertを選ぶ場合も合算）
             coeff = (w_sub * (idx_sub == e).float()).sum(dim=-1, keepdim=True)  # (M, 1)
