@@ -74,6 +74,33 @@ This demonstrates the "Lazy Routing" problem of simple Soft Routing and shows ho
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_en.ipynb)
 
+---
+
+### 📖 8. SRA LLM Construction and Training (TinyShakespeare)
+**File:** [`08_sra_llm_demo_shakespeare.ipynb`](./08_sra_llm_demo_shakespeare.ipynb)
+
+Experience building and training a small-scale language model (Tiny LLM) from scratch using SRA. We use Shakespeare texts and visualize how SRA routes (specializes synapses) according to text patterns.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare.ipynb)
+
+---
+
+### 📚 9. SRA Multidomain LLM Training and Specialization
+**File:** [`09_sra_llm_demo_multidomain.ipynb`](./09_sra_llm_demo_multidomain.ipynb)
+
+Experience simultaneous learning of multiple domains (Code, Math, Text) on a small LLM. SRA automatically delegates tasks to different synapses per domain, demonstrating its powerful multitask efficiency.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain.ipynb)
+
+---
+
+### 💻 10. Practical Plugin Hot-Swap (Zero-Shot Hot-Swap)
+**File:** [`10_hotswap_plugins_demo.ipynb`](./10_hotswap_plugins_demo.ipynb)
+
+A practical demo where multiple teams independently train "Code" and "Math" plugins parallel to a "Text" base model. We then physically merge these tensor weights (Hot-Swap) into the base model, demonstrating mathematically ZERO catastrophic forgetting!
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo.ipynb)
+
 ## 🚀 How to Run
 
 1. **Running on Google Colab (Recommended)**:
