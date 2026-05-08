@@ -89,6 +89,44 @@ Esto demuestra el problema de "Enrutamiento perezoso" (Lazy Routing) del Enrutam
 
 [![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_es.ipynb)
 
+---
+
+### 📖 8. Demostración de SRA LLM (Shakespeare)
+**File:** [`08_sra_llm_demo_shakespeare_es.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_es.ipynb)
+
+Este es un tutorial que utiliza datos de Shakespeare a pequeña escala para entrenar SRA como un modelo generativo específico de decodificador (LLM). Después del aprendizaje, se utiliza un mapa de calor para visualizar por qué sinapsis pasó cada token del texto generado.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_es.ipynb)
+
+---
+
+### 🌐 9. Demostración de LLM multidominio de SRA (código, matemáticas, texto)
+**File:** [`09_sra_llm_demo_multidomain_es.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_es.ipynb)
+
+Experimente la especialidad de SRA de "aprendizaje simultáneo de múltiples dominios (código, matemáticas, texto)" en un LLM a pequeña escala. Puede verificar cómo el modelo divide (especializa) automáticamente las sinapsis en función de los datos.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_es.ipynb)
+
+---
+
+### 💻 10. Práctico intercambio en caliente de complementos (Zero-Shot)
+**File:** [`10_hotswap_plugins_demo_es.ipynb`](../../notebooks/10_hotswap_plugins_demo_es.ipynb)
+
+Demostraremos un flujo de trabajo en el que varios equipos de desarrollo aprenden de forma independiente complementos para "código" y "matemáticas" y los "fusionan físicamente (intercambian en caliente)" en el modelo base del entorno de producción después del hecho. Se ha demostrado que incluso después de la fusión, las pérdidas de todos los dominios son exactamente las mismas que durante el aprendizaje independiente (Zero Forgetting).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_es.ipynb)
+
+---
+
+### 🗑️ 11. Eliminación sináptica dinámica
+**File:** [`11_synapse_deletion_demo_es.ipynb`](../../notebooks/11_synapse_deletion_demo_es.ipynb)
+
+Demostramos la función de SRA, "deleción de sinapsis". Puede experimentar tanto la ``eliminación de complementos (pop_synapses)'', que elimina físicamente las sinapsis agregadas más tarde desde el final, como la ``purga de un dominio específico (clear_synapses)'', que borra y deshabilita de forma segura las sinapsis que no se comparten.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_es.ipynb)
+
+
+
 ## 🤝 Contribución y Licencia
 
 Licencia: [MIT License](../../LICENSE).

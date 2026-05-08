@@ -62,3 +62,39 @@
 - [التحقق من الترجمة العملية متعددة اللغات باستخدام SRA Encoder-Decoder](../dev/sra_seq2seq_translation_analysis.md)
   - تقرير يوضح أنه من خلال توسيع SRA إلى بنية Encoder-Decoder والتدريب لمدة 30,000 خطوة على مجموعة نصوص حقيقية (opus100)، فإنه يمكنه ترجمة التعبيرات العملية مثل "Merci beaucoup." و "Good morning." بدقة BLEU=1.0. أدى إدخال الاهتمام المتبادل (Cross-Attention) إلى قفزة من Decoder-only (BLEU=0) إلى متوسط عام BLEU يبلغ 0.27، وحقق دقة عملية تقريبية تبلغ BLEU=0.56 في الاتجاه من الفرنسية إلى الإنجليزية.
 
+---
+
+### 📖 8. عرض SRA LLM (شكسبير)
+**File:** [`08_sra_llm_demo_shakespeare_ar.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_ar.ipynb)
+
+هذا برنامج تعليمي يستخدم بيانات شكسبير على نطاق صغير لتدريب SRA كنموذج توليدي خاص بوحدة فك التشفير (LLM). بعد التعلم، يتم استخدام الخريطة الحرارية لتصور المشبك الذي تم تمريره من خلال كل رمز مميز للنص الذي تم إنشاؤه.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_ar.ipynb)
+
+---
+
+### 🌐 9. عرض SRA متعدد المجالات LLM (الرمز، الرياضيات، النص)
+**File:** [`09_sra_llm_demo_multidomain_ar.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_ar.ipynb)
+
+اختبر تخصص SRA في "التعلم المتزامن لمجالات متعددة (الرمز والرياضيات والنص)" في برنامج LLM صغير الحجم. يمكنك التحقق من كيفية قيام النموذج تلقائيًا بتقسيم (تخصيص) المشابك العصبية بناءً على البيانات.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_ar.ipynb)
+
+---
+
+### 💻 10. التبديل السريع للمكونات الإضافية العملية (اللقطة الصفرية)
+**File:** [`10_hotswap_plugins_demo_ar.ipynb`](../../notebooks/10_hotswap_plugins_demo_ar.ipynb)
+
+سنعرض سير العمل الذي تتعلم فيه فرق التطوير المتعددة بشكل مستقل المكونات الإضافية لـ "الكود" و"الرياضيات" و"دمجها فعليًا (التبديل السريع)" في النموذج الأساسي لبيئة الإنتاج بعد حدوثها. لقد ثبت أنه حتى بعد الدمج، تكون خسائر جميع المجالات هي نفسها تمامًا كما كانت أثناء التعلم المستقل (صفر نسيان).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_ar.ipynb)
+
+---
+
+### 🗑️ 11. الحذف التشابكي الديناميكي
+**File:** [`11_synapse_deletion_demo_ar.ipynb`](../../notebooks/11_synapse_deletion_demo_ar.ipynb)
+
+نعرض وظيفة SRA، "حذف المشبك العصبي". يمكنك تجربة كل من ``إزالة المكونات الإضافية (pop_synapses)''، والتي تحذف فعليًا المشابك العصبية التي تمت إضافتها لاحقًا من النهاية، و``تطهير مجال معين (clear_synapses)''، الذي يقوم بمسح وتعطيل المشابك العصبية التي لم تتم مشاركتها بشكل آمن.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_ar.ipynb)
+

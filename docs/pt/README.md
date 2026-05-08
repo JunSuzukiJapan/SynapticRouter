@@ -62,3 +62,39 @@ Isso demonstra o problema de "Lazy Routing" do Soft Routing simples e mostra com
 - [Verificação de Tradução Multilíngue Prática usando SRA Encoder-Decoder](../dev/sra_seq2seq_translation_analysis.md)
   - Um relatório demonstrando que, ao estender o SRA para uma arquitetura Encoder-Decoder e treinar por 30.000 passos em um corpus real (opus100), ele pode traduzir expressões práticas como "Merci beaucoup." e "Good morning." com BLEU=1.0. A introdução da Cross-Attention causou um salto do Decoder-only (BLEU=0) para um BLEU médio geral de 0,27, e alcançou uma precisão quase prática de BLEU=0,56 na direção FR→EN.
 
+---
+
+### 📖 8. Demonstração SRA LLM (Shakespeare)
+**File:** [`08_sra_llm_demo_shakespeare_pt.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_pt.ipynb)
+
+Este é um tutorial que usa dados de Shakespeare em pequena escala para treinar SRA como um modelo generativo específico do decodificador (LLM). Após o aprendizado, um mapa de calor é utilizado para visualizar por qual sinapse passou cada token do texto gerado.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_pt.ipynb)
+
+---
+
+### 🌐 9. Demonstração LLM de vários domínios SRA (código, matemática, texto)
+**File:** [`09_sra_llm_demo_multidomain_pt.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_pt.ipynb)
+
+Experimente a especialidade da SRA de ``aprendizagem simultânea de múltiplos domínios (Código, Matemática, Texto)'' em um LLM de pequena escala. Você pode verificar como o modelo divide (especializa) automaticamente as sinapses com base nos dados.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_pt.ipynb)
+
+---
+
+### 💻 10. Plugin Prático Hot-Swap (Zero-Shot)
+**File:** [`10_hotswap_plugins_demo_pt.ipynb`](../../notebooks/10_hotswap_plugins_demo_pt.ipynb)
+
+Demonstraremos um fluxo de trabalho no qual várias equipes de desenvolvimento aprendem independentemente plug-ins para "código" e "matemática" e os "mesclam fisicamente (troca a quente)" no modelo base do ambiente de produção após o fato. Está comprovado que mesmo após a fusão, as perdas de todos os domínios são exatamente as mesmas que durante a aprendizagem independente (Esquecimento Zero).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_pt.ipynb)
+
+---
+
+### 🗑️ 11. Exclusão sináptica dinâmica
+**File:** [`11_synapse_deletion_demo_pt.ipynb`](../../notebooks/11_synapse_deletion_demo_pt.ipynb)
+
+Demonstramos a função do SRA, “exclusão de sinapses”. Você pode experimentar tanto a ``remoção de plug-ins (pop_synapses)'', que exclui fisicamente as sinapses adicionadas posteriormente a partir do final, quanto a ``limpeza de um domínio específico (clear_synapses)'', que limpa e desativa com segurança as sinapses que não são compartilhadas.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_pt.ipynb)
+

@@ -122,6 +122,44 @@ python src/compare_architectures.py --task copy --steps 500
 
 [![在 Colab 中打开](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_zh-cn.ipynb)
 
+---
+
+### 📖 8.SRA LLM 演示（莎士比亚）
+**File:** [`08_sra_llm_demo_shakespeare_zh-cn.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_zh-cn.ipynb)
+
+这是一个使用小规模莎士比亚数据将 SRA 训练为特定于解码器的生成模型 (LLM) 的教程。学习后，使用热图可视化生成文本的每个标记经过哪个突触。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_zh-cn.ipynb)
+
+---
+
+### 🌐 9. SRA 多领域 LLM 演示（代码、数学、文本）
+**File:** [`09_sra_llm_demo_multidomain_zh-cn.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_zh-cn.ipynb)
+
+在小规模法学硕士中体验 SRA 的“同时学习多个领域（代码、数学、文本）”的特色。您可以验证模型如何根据数据自动划分（专门化）突触。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_zh-cn.ipynb)
+
+---
+
+### 💻 10.实用插件热插拔（零射击）
+**File:** [`10_hotswap_plugins_demo_zh-cn.ipynb`](../../notebooks/10_hotswap_plugins_demo_zh-cn.ipynb)
+
+我们将演示一个工作流程，其中多个开发团队独立学习“代码”和“数学”插件，并在事后将它们“物理合并（热插拔）”到生产环境的基础模型中。事实证明，即使在合并之后，所有域的损失也与独立学习期间完全相同（零遗忘）。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_zh-cn.ipynb)
+
+---
+
+### 🗑️ 11.动态突触删除
+**File:** [`11_synapse_deletion_demo_zh-cn.ipynb`](../../notebooks/11_synapse_deletion_demo_zh-cn.ipynb)
+
+我们演示了 SRA 的功能“突触删除”。您可以体验“删除插件 (pop_synapses)”（物理删除后来从末尾添加的突触）和“清除特定域 (clear_synapses)”（安全地清除和禁用不共享的突触）。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_zh-cn.ipynb)
+
+
+
 ## 🤝 贡献与许可
 
 该项目目前是处于早期阶段的实验性架构。非常欢迎通过 Issues 和 PR 提供错误报告、功能讨论以及性能改进的 pull requests！

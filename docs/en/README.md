@@ -100,6 +100,44 @@ This demonstrates the "Lazy Routing" problem of simple Soft Routing and shows ho
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_en.ipynb)
 
+---
+
+### 📖 8. SRA LLM Demo (Shakespeare)
+**File:** [`08_sra_llm_demo_shakespeare_en.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_en.ipynb)
+
+This is a tutorial that uses small-scale Shakespeare data to train SRA as a decoder-specific generative model (LLM). After learning, a heat map is used to visualize which synapse each token of the generated text passed through.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_en.ipynb)
+
+---
+
+### 🌐 9. SRA Multi-domain LLM Demo (Code, Math, Text)
+**File:** [`09_sra_llm_demo_multidomain_en.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_en.ipynb)
+
+Experience SRA's specialty of ``simultaneous learning of multiple domains (Code, Math, Text)'' in a small-scale LLM. You can verify how the model automatically divides (specializes) synapses based on data.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_en.ipynb)
+
+---
+
+### 💻 10. Practical Plugin Hot-Swap (Zero-Shot)
+**File:** [`10_hotswap_plugins_demo_en.ipynb`](../../notebooks/10_hotswap_plugins_demo_en.ipynb)
+
+We will demonstrate a workflow in which multiple development teams independently learn plug-ins for "code" and "mathematics" and "physically merge (hot-swap)" them into the base model of the production environment after the fact. It has been proven that even after merging, the losses of all domains are exactly the same as during independent learning (Zero Forgetting).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_en.ipynb)
+
+---
+
+### 🗑️ 11. Dynamic Synaptic Deletion
+**File:** [`11_synapse_deletion_demo_en.ipynb`](../../notebooks/11_synapse_deletion_demo_en.ipynb)
+
+We demonstrate the function of SRA, "synapse deletion." You can experience both ``removal of plug-ins (pop_synapses)'', which physically deletes synapses added later from the end, and ``purge of a specific domain (clear_synapses)'', which safely clears and disables synapses that are not shared.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_en.ipynb)
+
+
+
 ## 🤝 Contributing & License
 
 This project is currently an experimental architecture in its early stages. Bug reports, discussions on features, and pull requests for performance improvements are very welcome via Issues and PRs!

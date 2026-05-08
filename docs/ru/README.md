@@ -61,3 +61,40 @@ SRA решает проблемы огромных монолитных моде
   - Мы дали SRA возможность поиграть в игру. Он самостоятельно открыл невероятную модульную структуру: он использует абсолютно один и тот же модуль "зрения" для восприятия среды во всех задачах, но переключается на совершенно разные модули "мозга" в зависимости от того, нужно ли ему найти сокровище или убежать.
 - [Проверка практического многоязычного перевода с использованием SRA Encoder-Decoder](../dev/sra_seq2seq_translation_analysis.md)
   - Отчет, демонстрирующий, что за счет расширения SRA до архитектуры Encoder-Decoder и обучения в течение 30 000 шагов на реальном корпусе (opus100) модель может переводить практические выражения, такие как "Merci beaucoup." и "Good morning.", с BLEU=1.0. Внедрение Cross-Attention привело к скачку от Decoder-only (BLEU=0) до общего среднего BLEU 0,27 и достигло почти практической точности BLEU=0,56 в направлении FR→EN.
+
+---
+
+### 📖 8. Демо SRA LLM (Шекспир)
+**File:** [`08_sra_llm_demo_shakespeare_ru.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_ru.ipynb)
+
+Это учебное пособие, в котором используются мелкомасштабные данные Шекспира для обучения SRA как генеративной модели (LLM), специфичной для декодера. После обучения используется тепловая карта для визуализации того, через какой синапс прошел каждый токен сгенерированного текста.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_ru.ipynb)
+
+---
+
+### 🌐 9. Демонстрация многодоменного LLM SRA (код, математика, текст)
+**File:** [`09_sra_llm_demo_multidomain_ru.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_ru.ipynb)
+
+Испытайте специальность SRA по «одновременному изучению нескольких предметных областей (код, математика, текст)» в небольшом LLM. Вы можете проверить, как модель автоматически разделяет (специализирует) синапсы на основе данных.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_ru.ipynb)
+
+---
+
+### 💻 10. Практичная горячая замена плагина (Zero-Shot)
+**File:** [`10_hotswap_plugins_demo_ru.ipynb`](../../notebooks/10_hotswap_plugins_demo_ru.ipynb)
+
+Мы продемонстрируем рабочий процесс, в котором несколько команд разработчиков независимо изучают плагины для «кода» и «математики» и «физически объединяют (горячую замену)» их в базовую модель производственной среды постфактум. Доказано, что даже после слияния потери всех доменов точно такие же, как и при независимом обучении (Zero Forgetting).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_ru.ipynb)
+
+---
+
+### 🗑️ 11. Динамическое синаптическое удаление
+**File:** [`11_synapse_deletion_demo_ru.ipynb`](../../notebooks/11_synapse_deletion_demo_ru.ipynb)
+
+Мы демонстрируем функцию SRA, «удаление синапса». Вы можете испытать как «удаление плагинов (pop_synapses)», которое физически удаляет синапсы, добавленные позже, с конца, так и «очистку определенного домена (clear_synapses)», которая безопасно очищает и отключает синапсы, которые не являются общими.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_ru.ipynb)
+

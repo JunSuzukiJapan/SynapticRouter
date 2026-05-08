@@ -62,3 +62,39 @@ SRA की वास्तविक शक्ति को प्रदर्श
 - [SRA एनकोडर-डिकोडर का उपयोग करके व्यावहारिक बहुभाषी अनुवाद का सत्यापन](../dev/sra_seq2seq_translation_analysis.md)
   - एक रिपोर्ट जो प्रदर्शित करती है कि SRA को एनकोडर-डिकोडर आर्किटेक्चर में विस्तारित करके और वास्तविक कॉर्पस (opus100) पर 30,000 चरणों के लिए प्रशिक्षण देकर, यह BLEU=1.0 के साथ "Merci beaucoup." और "Good morning." जैसे व्यावहारिक भावों का अनुवाद कर सकता है। क्रॉस-अटेंशन की शुरुआत ने डिकोडर-ओनली (BLEU=0) से 0.27 के समग्र औसत BLEU तक छलांग लगाई, और FR→EN दिशा में BLEU=0.56 की लगभग-व्यावहारिक सटीकता प्राप्त की।
 
+---
+
+### 📖 8. एसआरए एलएलएम डेमो (शेक्सपियर)
+**File:** [`08_sra_llm_demo_shakespeare_hi.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_hi.ipynb)
+
+यह एक ट्यूटोरियल है जो एसआरए को डिकोडर-विशिष्ट जेनरेटर मॉडल (एलएलएम) के रूप में प्रशिक्षित करने के लिए छोटे पैमाने के शेक्सपियर डेटा का उपयोग करता है। सीखने के बाद, एक हीट मैप का उपयोग यह देखने के लिए किया जाता है कि उत्पन्न पाठ का प्रत्येक टोकन किस सिनैप्स से होकर गुजरा है।
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_hi.ipynb)
+
+---
+
+### 🌐 9. एसआरए मल्टी-डोमेन एलएलएम डेमो (कोड, गणित, टेक्स्ट)
+**File:** [`09_sra_llm_demo_multidomain_hi.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_hi.ipynb)
+
+छोटे पैमाने के एलएलएम में ``एक साथ कई डोमेन (कोड, गणित, पाठ) सीखने'' की एसआरए की विशेषता का अनुभव करें। आप सत्यापित कर सकते हैं कि मॉडल डेटा के आधार पर स्वचालित रूप से सिनैप्स को कैसे विभाजित (विशेषीकृत) करता है।
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_hi.ipynb)
+
+---
+
+### 💻 10. प्रैक्टिकल प्लगइन हॉट-स्वैप (जीरो-शॉट)
+**File:** [`10_hotswap_plugins_demo_hi.ipynb`](../../notebooks/10_hotswap_plugins_demo_hi.ipynb)
+
+हम एक वर्कफ़्लो प्रदर्शित करेंगे जिसमें कई विकास टीमें स्वतंत्र रूप से "कोड" और "गणित" के लिए प्लग-इन सीखती हैं और तथ्य के बाद उन्हें उत्पादन वातावरण के बेस मॉडल में "भौतिक रूप से मर्ज (हॉट-स्वैप)" करती हैं। यह सिद्ध हो चुका है कि विलय के बाद भी, सभी डोमेन के नुकसान बिल्कुल वही हैं जो स्वतंत्र सीखने (शून्य भूलने) के दौरान होते हैं।
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_hi.ipynb)
+
+---
+
+### 🗑️ 11. डायनामिक सिनैप्टिक डिलीशन
+**File:** [`11_synapse_deletion_demo_hi.ipynb`](../../notebooks/11_synapse_deletion_demo_hi.ipynb)
+
+हम एसआरए के कार्य को प्रदर्शित करते हैं, "सिनैप्स विलोपन।" आप ``प्लग-इन को हटाने (पॉप_सिनैप्स)'' दोनों का अनुभव कर सकते हैं, जो अंत में बाद में जोड़े गए सिनैप्स को भौतिक रूप से हटा देता है, और ``एक विशिष्ट डोमेन को शुद्ध करता है (क्लियर_सिनैप्स)'', जो साझा नहीं किए गए सिनैप्स को सुरक्षित रूप से साफ़ और अक्षम करता है।
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_hi.ipynb)
+

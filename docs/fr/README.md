@@ -86,6 +86,44 @@ Cela démontre le problème du "Routage Paresseux" du routage doux simple (Soft 
 
 [![Ouvrir dans Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_fr.ipynb)
 
+---
+
+### 📖 8. Démo SRA LLM (Shakespeare)
+**File:** [`08_sra_llm_demo_shakespeare_fr.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_fr.ipynb)
+
+Il s'agit d'un didacticiel qui utilise des données Shakespeare à petite échelle pour former SRA en tant que modèle génératif spécifique au décodeur (LLM). Après l'apprentissage, une carte thermique est utilisée pour visualiser par quelle synapse chaque jeton du texte généré est transmis.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_fr.ipynb)
+
+---
+
+### 🌐 9. Démo LLM multi-domaines SRA (Code, Mathématiques, Texte)
+**File:** [`09_sra_llm_demo_multidomain_fr.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_fr.ipynb)
+
+Découvrez la spécialité de SRA « apprentissage simultané de plusieurs domaines (code, mathématiques, texte) » dans un LLM à petite échelle. Vous pouvez vérifier comment le modèle divise (spécialise) automatiquement les synapses en fonction des données.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_fr.ipynb)
+
+---
+
+### 💻 10. Plugin pratique Hot-Swap (Zero-Shot)
+**File:** [`10_hotswap_plugins_demo_fr.ipynb`](../../notebooks/10_hotswap_plugins_demo_fr.ipynb)
+
+Nous démontrerons un flux de travail dans lequel plusieurs équipes de développement apprennent indépendamment des plug-ins pour le « code » et les « mathématiques » et les « fusionnent physiquement (échange à chaud) » dans le modèle de base de l'environnement de production après coup. Il a été prouvé que même après la fusion, les pertes de tous les domaines sont exactement les mêmes que lors d'un apprentissage indépendant (Zéro Oubli).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_fr.ipynb)
+
+---
+
+### 🗑️ 11. Suppression synaptique dynamique
+**File:** [`11_synapse_deletion_demo_fr.ipynb`](../../notebooks/11_synapse_deletion_demo_fr.ipynb)
+
+Nous démontrons la fonction de la SRA, « suppression des synapses ». Vous pouvez expérimenter à la fois la « suppression des plug-ins (pop_synapses) », qui supprime physiquement les synapses ajoutées plus tard depuis la fin, et la « purge d'un domaine spécifique (clear_synapses) », qui efface et désactive en toute sécurité les synapses qui ne sont pas partagées.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_fr.ipynb)
+
+
+
 ## 🤝 Contribution et Licence
 
 Licence : [MIT License](../../LICENSE).

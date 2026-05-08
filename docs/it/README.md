@@ -60,3 +60,40 @@ Questo dimostra il problema del "Lazy Routing" del semplice Soft Routing e mostr
   - Abbiamo fatto giocare SRA a un gioco. Ha scoperto da solo una struttura modulare incredibile: utilizza esattamente lo stesso modulo di "visione" per percepire l'ambiente in tutte le attività, ma passa a moduli "cervello" completamente diversi a seconda che debba trovare un tesoro o fuggire.
 - [Verifica della Traduzione Multilingue Pratica con SRA Encoder-Decoder](../dev/sra_seq2seq_translation_analysis.md)
   - Un rapporto che dimostra che estendendo SRA a un'architettura Encoder-Decoder e addestrandolo per 30.000 passaggi su un corpus reale (opus100), può tradurre espressioni pratiche come "Merci beaucoup." e "Good morning." con BLEU=1.0. L'introduzione della Cross-Attention ha causato un salto dal solo Decoder (BLEU=0) a un BLEU medio complessivo di 0,27 e ha raggiunto un'accuratezza quasi pratica di BLEU=0,56 nella direzione FR→EN.
+
+---
+
+### 📖 8. Demo SRA LLM (Shakespeare)
+**File:** [`08_sra_llm_demo_shakespeare_it.ipynb`](../../notebooks/08_sra_llm_demo_shakespeare_it.ipynb)
+
+Questo è un tutorial che utilizza dati Shakespeare su piccola scala per addestrare SRA come modello generativo specifico del decodificatore (LLM). Dopo l'apprendimento, viene utilizzata una mappa termica per visualizzare tramite quale sinapsi è passato ciascun token del testo generato.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_it.ipynb)
+
+---
+
+### 🌐 9. Demo LLM multidominio SRA (codice, matematica, testo)
+**File:** [`09_sra_llm_demo_multidomain_it.ipynb`](../../notebooks/09_sra_llm_demo_multidomain_it.ipynb)
+
+Sperimenta la specialità di SRA dell'"apprendimento simultaneo di più domini (codice, matematica, testo)" in un LLM su piccola scala. Puoi verificare come il modello divide (specializza) automaticamente le sinapsi in base ai dati.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_it.ipynb)
+
+---
+
+### 💻 10. Pratico plug-in hot-swap (Zero-Shot)
+**File:** [`10_hotswap_plugins_demo_it.ipynb`](../../notebooks/10_hotswap_plugins_demo_it.ipynb)
+
+Dimostreremo un flusso di lavoro in cui più team di sviluppo apprendono in modo indipendente i plug-in per "codice" e "matematica" e li "uniscono fisicamente (hot-swap)" nel modello base dell'ambiente di produzione dopo il fatto. È stato dimostrato che anche dopo la fusione, le perdite di tutti i domini sono esattamente le stesse dell'apprendimento indipendente (Zero Forgetting).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_it.ipynb)
+
+---
+
+### 🗑️ 11. Cancellazione sinaptica dinamica
+**File:** [`11_synapse_deletion_demo_it.ipynb`](../../notebooks/11_synapse_deletion_demo_it.ipynb)
+
+Dimostriamo la funzione di SRA, "eliminazione delle sinapsi". Puoi sperimentare sia la "rimozione dei plug-in (pop_synapses)", che elimina fisicamente le sinapsi aggiunte successivamente dalla fine, sia l'"eliminazione di un dominio specifico (clear_synapses)", che cancella e disabilita in modo sicuro le sinapsi che non sono condivise.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_it.ipynb)
+
