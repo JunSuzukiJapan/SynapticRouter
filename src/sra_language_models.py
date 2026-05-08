@@ -109,7 +109,7 @@ class CausalMoESRABlock(nn.Module):
 
         return out_flat
 
-    def forward(self, h, dense=False, key_padding_mask=None):
+    def forward(self, h, dense=False, key_padding_mask=None, allowed_synapses_mask=None):
         base = h
         B, T, D = h.shape
 
@@ -128,7 +128,7 @@ class CausalMoESRABlock(nn.Module):
         # 2. MoE Routing
         h_routed = self.norm2(h)
         k_override = self.num_synapses if dense else self.k
-        idx, weights, logits = self.router(h_routed, k_override=k_override)
+        idx, weights, logits = self.router(h_routed, k_override=k_override, allowed_mask=allowed_synapses_mask)
 
         # 3. ベクトル化 Expert 計算
         h_flat = h_routed.view(B * T, D)
@@ -169,7 +169,7 @@ class MoESRALanguageModel(nn.Module):
                 block.norm1.requires_grad_(False)
                 block.norm2.requires_grad_(False)
 
-    def forward(self, x, dense=False):
+    def forward(self, x, dense=False, allowed_synapses_mask=None):
         B, T = x.shape
         mask = (x == self.pad_idx) if self.pad_idx is not None else None
 
@@ -178,7 +178,7 @@ class MoESRALanguageModel(nn.Module):
 
         router_logits = []
         for block in self.blocks:
-            h, logits = block(h, dense=dense, key_padding_mask=mask)
+            h, logits = block(h, dense=dense, key_padding_mask=mask, allowed_synapses_mask=allowed_synapses_mask)
             router_logits.append(logits)
 
         h = self.norm(h)

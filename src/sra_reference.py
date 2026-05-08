@@ -62,7 +62,7 @@ class Router(nn.Module):
             return torch.cat([self.frozen_synapse_emb, self.synapse_emb], dim=0)
         return self.synapse_emb
 
-    def forward(self, h, k_override=None):
+    def forward(self, h, k_override=None, allowed_mask=None):
         # h: (B, T, D)
         k = self.k if k_override is None else k_override
         full_emb = self.get_full_emb()
@@ -74,6 +74,13 @@ class Router(nn.Module):
         emb_norm = F.normalize(full_emb, p=2, dim=-1)
         logits = torch.einsum("btd,nd->btn", h_norm, emb_norm) * self.scale
         
+        # Phase 3: Metadata-driven Zero-Shot routing (Hard Masking)
+        if allowed_mask is not None:
+            # allowed_mask shape should be (B, num_synapses) or (B, 1, num_synapses)
+            if allowed_mask.dim() == 2:
+                allowed_mask = allowed_mask.unsqueeze(1)
+            logits = logits.masked_fill(~allowed_mask, float('-inf'))
+            
         vals, idx = torch.topk(logits, k, dim=-1)
         weights = F.softmax(vals, dim=-1)
         return idx, weights, logits
