@@ -4,6 +4,24 @@
 Synaptic Routing Architecture (SRA) は、生物の脳（シナプス）の仕組みから着想を得た、新しい動的・スパース（疎）なモジュール型ニューラルネットワーク・アーキテクチャです。
 巨大で静的なTransformerに代わり、入力を適切な「シナプス（極小モジュール）」へ動的にルーティングすることで、より効率的な学習と構造的な知能の実現を目指しています。
 
+## 🎮 インタラクティブ・デモ (Jupyter Notebooks)
+
+SRAの「タスクに応じた脳の使い分け」や「堅牢性」を、ブラウザ上で今すぐ体験できるJupyter Notebookを用意しています。Google Colabで数秒で実行できますので、ぜひお試しください。
+
+| # | デモ | 説明 | Colab |
+|---|------|------|-------|
+| 🟢 1 | [SRA クイックスタート](../../notebooks/01_sra_quickstart.ipynb) | SRAの構造とルーティングの可視化 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart.ipynb) |
+| 🔵 2 | [学習とルーティング](../../notebooks/02_learning_and_routing_demo.ipynb) | シングルタスクの学習とルーティングの特化 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo.ipynb) |
+| 🔴 3 | [マルチタスク・ルーティング](../../notebooks/03_multitask_routing_demo.ipynb) ✨ | マルチタスク学習とタスクごとのシナプス使い分け | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo.ipynb) |
+| 🕹️ 4 | [Decision Transformer](../../notebooks/04_decision_transformer_routing_demo.ipynb) | 強化学習における知覚と行動の分離 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo.ipynb) |
+| 🧠 5 | [シナプス破壊実験](../../notebooks/05_lesion_experiment_demo.ipynb) ✨ | 特定シナプス破壊が他タスクに影響しないことを証明 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo.ipynb) |
+| 🔌 6 | [ホットスワップ実験](../../notebooks/06_hotswap_experiment_demo.ipynb) | シナプスの動的ホットスワップとRouterの学習限界 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo.ipynb) |
+| 👑 7 | [Super Router (Gumbel)](../../notebooks/07_super_router_gumbel_demo.ipynb) | Gumbel-Softmaxによるモデル統合とHard Routing | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo.ipynb) |
+| 📖 8 | [SRA LLM (Shakespeare)](../../notebooks/08_sra_llm_demo_shakespeare.ipynb) | SRAによるTiny LLMの構築と学習 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare.ipynb) |
+| 📚 9 | [マルチドメインLLM](../../notebooks/09_sra_llm_demo_multidomain.ipynb) | 複数ドメイン（Code/Math/Text）の同時学習 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain.ipynb) |
+| 💻 10 | [プラグイン・ホットスワップ](../../notebooks/10_hotswap_plugins_demo.ipynb) | Zero-Shot Hot-Swap（破局的忘却ゼロ） | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo.ipynb) |
+| 🗑️ 11 | [シナプス削除](../../notebooks/11_synapse_deletion_demo.ipynb) | シナプスの動的削除（pop & clear） | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo.ipynb) |
+
 ## 🎯 背景と目的 (Motivation)
 
 近年、AIモデルの巨大化が進む一方で、単一の巨大なネットワーク（モノリシックなモデル）では「計算リソースの増大」や「複数タスク学習時の干渉・破局的忘却（Catastrophic Forgetting）」といった課題が顕在化しています。

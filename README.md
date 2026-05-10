@@ -9,10 +9,21 @@ Instead of a massive, static Transformer, SRA dynamically routes inputs to appro
 
 We have prepared Jupyter Notebooks where you can interactively experience SRA's "task-specific brain usage" and "robustness" right in your browser. You can run them in seconds on Google Colab, so please give them a try!
 
-- [List of 5 demos from basics to multitask (`notebooks/README.md`)](./notebooks/README.md)
-  - 🟢 **Basic**: SRA structure and routing visualization
-  - 🔴 **Multitask**: Multitask learning and synapse switching per task (✨Recommended)
-  - 🧠 **Lesion**: Experiment proving that destroying specific synapses does not affect other tasks (✨Must-See)
+| # | Demo | Description | Colab |
+|---|------|-------------|-------|
+| 🟢 1 | [SRA Quickstart](./notebooks/01_sra_quickstart_en.ipynb) | Basic SRA structure and routing visualization | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart_en.ipynb) |
+| 🔵 2 | [Learning & Routing](./notebooks/02_learning_and_routing_demo_en.ipynb) | Single-task learning and routing specialization | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo_en.ipynb) |
+| 🔴 3 | [Multitask Routing](./notebooks/03_multitask_routing_demo_en.ipynb) ✨ | Multitask learning and synapse switching per task | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo_en.ipynb) |
+| 🕹️ 4 | [Decision Transformer](./notebooks/04_decision_transformer_routing_demo_en.ipynb) | Separation of perception and action in RL | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo_en.ipynb) |
+| 🧠 5 | [Lesion Experiment](./notebooks/05_lesion_experiment_demo_en.ipynb) ✨ | Proving functional modularity by destroying synapses | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_en.ipynb) |
+| 🔌 6 | [Hot-Swap Experiment](./notebooks/06_hotswap_experiment_demo_en.ipynb) | Dynamic synaptic hot-swap and router learning limits | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_en.ipynb) |
+| 👑 7 | [Super Router (Gumbel)](./notebooks/07_super_router_gumbel_demo_en.ipynb) | Model integration via Gumbel-Softmax hard routing | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_en.ipynb) |
+| 📖 8 | [SRA LLM (Shakespeare)](./notebooks/08_sra_llm_demo_shakespeare_en.ipynb) | Build and train a Tiny LLM with SRA | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_en.ipynb) |
+| 📚 9 | [Multidomain LLM](./notebooks/09_sra_llm_demo_multidomain_en.ipynb) | Multi-domain (Code/Math/Text) simultaneous learning | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_en.ipynb) |
+| 💻 10 | [Plugin Hot-Swap](./notebooks/10_hotswap_plugins_demo_en.ipynb) | Zero-shot hot-swap with zero catastrophic forgetting | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_en.ipynb) |
+| 🗑️ 11 | [Synapse Deletion](./notebooks/11_synapse_deletion_demo_en.ipynb) | Dynamic synapse deletion (pop & clear) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_en.ipynb) |
+
+> 📓 For detailed descriptions of each notebook, see [`notebooks/README.md`](./notebooks/README.md).
 
 ## 🎯 Motivation
 

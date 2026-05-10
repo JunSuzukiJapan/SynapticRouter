@@ -6,11 +6,19 @@
 
 Hemos preparado Jupyter Notebooks donde puedes experimentar interactivamente el "uso del cerebro específico para cada tarea" y la "robustez" de SRA directamente en tu navegador. Puedes ejecutarlos en segundos en Google Colab, ¡así que pruébalos!
 
-- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_es.ipynb)
-- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_es.ipynb)
-- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_es.ipynb)
-- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_es.ipynb)
-- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_es.ipynb)
+| # | Demo | Descripción | Colab |
+|---|------|-------------|-------|
+| 🟢 1 | [SRA Quickstart](../../notebooks/01_sra_quickstart_es.ipynb) | Estructura básica de SRA y visualización de routing | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart_es.ipynb) |
+| 🔵 2 | [Aprendizaje y Routing](../../notebooks/02_learning_and_routing_demo_es.ipynb) | Aprendizaje de tarea única y especialización de routing | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo_es.ipynb) |
+| 🔴 3 | [Routing Multitarea](../../notebooks/03_multitask_routing_demo_es.ipynb) ✨ | Aprendizaje multitarea y conmutación de sinapsis | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo_es.ipynb) |
+| 🕹️ 4 | [Decision Transformer](../../notebooks/04_decision_transformer_routing_demo_es.ipynb) | Separación de percepción y acción en RL | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo_es.ipynb) |
+| 🧠 5 | [Experimento Lesión](../../notebooks/05_lesion_experiment_demo_es.ipynb) ✨ | Prueba de modularidad funcional destruyendo sinapsis | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_es.ipynb) |
+| 🔌 6 | [Experimento Hot-Swap](../../notebooks/06_hotswap_experiment_demo_es.ipynb) | Hot-swap sináptico dinámico y límites del router | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_es.ipynb) |
+| 👑 7 | [Super Router (Gumbel)](../../notebooks/07_super_router_gumbel_demo_es.ipynb) | Integración de modelos via Gumbel-Softmax | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_es.ipynb) |
+| 📖 8 | [SRA LLM (Shakespeare)](../../notebooks/08_sra_llm_demo_shakespeare_es.ipynb) | Construir y entrenar un Tiny LLM con SRA | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_es.ipynb) |
+| 📚 9 | [LLM Multidominio](../../notebooks/09_sra_llm_demo_multidomain_es.ipynb) | Aprendizaje simultáneo multidominio (Code/Math/Text) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_es.ipynb) |
+| 💻 10 | [Plugin Hot-Swap](../../notebooks/10_hotswap_plugins_demo_es.ipynb) | Hot-swap zero-shot (sin olvido catastrófico) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_es.ipynb) |
+| 🗑️ 11 | [Eliminación de Sinapsis](../../notebooks/11_synapse_deletion_demo_es.ipynb) | Eliminación dinámica de sinapsis (pop & clear) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_es.ipynb) |
 
 
 Synaptic Routing Architecture (SRA) es una novedosa arquitectura de red neuronal dinámica, dispersa y modular inspirada en el cerebro biológico (sinapsis).

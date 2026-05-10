@@ -4,11 +4,19 @@
 
 SRA의 "작업별 두뇌 사용"과 "강건함"을 브라우저에서 바로 대화형으로 경험할 수 있는 Jupyter 노트북을 준비했습니다.Google Colab에서 몇 초 만에 실행할 수 있으니 꼭 사용해 보세요!
 
-- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_ko.ipynb)
-- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_ko.ipynb)
-- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_ko.ipynb)
-- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_ko.ipynb)
-- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_ko.ipynb)
+| # | 데모 | 설명 | Colab |
+|---|------|------|-------|
+| 🟢 1 | [SRA 퀵스타트](../../notebooks/01_sra_quickstart_ko.ipynb) | 기본 SRA 구조 및 라우팅 시각화 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart_ko.ipynb) |
+| 🔵 2 | [학습 및 라우팅](../../notebooks/02_learning_and_routing_demo_ko.ipynb) | 단일 작업 학습 및 라우팅 특화 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo_ko.ipynb) |
+| 🔴 3 | [멀티태스크 라우팅](../../notebooks/03_multitask_routing_demo_ko.ipynb) ✨ | 멀티태스크 학습 및 작업별 시냅스 전환 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo_ko.ipynb) |
+| 🕹️ 4 | [Decision Transformer](../../notebooks/04_decision_transformer_routing_demo_ko.ipynb) | 강화 학습에서의 인식과 행동 분리 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo_ko.ipynb) |
+| 🧠 5 | [시냅스 손상 실험](../../notebooks/05_lesion_experiment_demo_ko.ipynb) ✨ | 특정 시냅스 파괴가 다른 작업에 영향을 주지 않음을 증명 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_ko.ipynb) |
+| 🔌 6 | [핫스왑 실험](../../notebooks/06_hotswap_experiment_demo_ko.ipynb) | 동적 시냅스 핫스왑 및 라우터 학습 한계 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_ko.ipynb) |
+| 👑 7 | [Super Router (Gumbel)](../../notebooks/07_super_router_gumbel_demo_ko.ipynb) | Gumbel-Softmax를 통한 모델 통합 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_ko.ipynb) |
+| 📖 8 | [SRA LLM (Shakespeare)](../../notebooks/08_sra_llm_demo_shakespeare_ko.ipynb) | SRA로 Tiny LLM 구축 및 학습 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_ko.ipynb) |
+| 📚 9 | [멀티도메인 LLM](../../notebooks/09_sra_llm_demo_multidomain_ko.ipynb) | 다중 도메인(Code/Math/Text) 동시 학습 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_ko.ipynb) |
+| 💻 10 | [플러그인 핫스왑](../../notebooks/10_hotswap_plugins_demo_ko.ipynb) | 제로샷 핫스왑 (제로 망각) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_ko.ipynb) |
+| 🗑️ 11 | [시냅스 삭제](../../notebooks/11_synapse_deletion_demo_ko.ipynb) | 동적 시냅스 삭제 (pop & clear) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_ko.ipynb) |
 
 
 Synaptic Routing Architecture (SRA)는 생물학적 뇌(시냅스)에서 영감을 받은 새롭고 동적이며 희소하고 모듈화된 신경망 아키텍처입니다.

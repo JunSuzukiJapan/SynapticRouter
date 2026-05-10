@@ -4,11 +4,19 @@
 
 我们准备了 Jupyter Notebooks，您可以直接在浏览器中交互式体验 SRA 的“特定任务的大脑使用”和“鲁棒性”。您可以在 Google Colab 上几秒钟内运行它们，所以请尝试一下！
 
-- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_zh.ipynb)
-- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_zh.ipynb)
-- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_zh.ipynb)
-- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_zh.ipynb)
-- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_zh.ipynb)
+| # | 演示 | 描述 | Colab |
+|---|------|------|-------|
+| 🟢 1 | [SRA 快速入门](../../notebooks/01_sra_quickstart_zh-cn.ipynb) | 基本 SRA 结构和路由可视化 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart_zh-cn.ipynb) |
+| 🔵 2 | [学习与路由](../../notebooks/02_learning_and_routing_demo_zh-cn.ipynb) | 单任务学习和路由特化 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo_zh-cn.ipynb) |
+| 🔴 3 | [多任务路由](../../notebooks/03_multitask_routing_demo_zh-cn.ipynb) ✨ | 多任务学习和按任务切换突触 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo_zh-cn.ipynb) |
+| 🕹️ 4 | [Decision Transformer](../../notebooks/04_decision_transformer_routing_demo_zh-cn.ipynb) | 强化学习中感知与行动的分离 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo_zh-cn.ipynb) |
+| 🧠 5 | [突触损毁实验](../../notebooks/05_lesion_experiment_demo_zh-cn.ipynb) ✨ | 证明破坏特定突触不影响其他任务 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_zh-cn.ipynb) |
+| 🔌 6 | [热插拔实验](../../notebooks/06_hotswap_experiment_demo_zh-cn.ipynb) | 动态突触热插拔与路由器学习限制 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_zh-cn.ipynb) |
+| 👑 7 | [Super Router (Gumbel)](../../notebooks/07_super_router_gumbel_demo_zh-cn.ipynb) | 基于 Gumbel-Softmax 的模型集成 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_zh-cn.ipynb) |
+| 📖 8 | [SRA LLM (Shakespeare)](../../notebooks/08_sra_llm_demo_shakespeare_zh-cn.ipynb) | 使用 SRA 构建和训练 Tiny LLM | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_zh-cn.ipynb) |
+| 📚 9 | [多领域 LLM](../../notebooks/09_sra_llm_demo_multidomain_zh-cn.ipynb) | 多领域（Code/Math/Text）同时学习 | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_zh-cn.ipynb) |
+| 💻 10 | [插件热插拔](../../notebooks/10_hotswap_plugins_demo_zh-cn.ipynb) | 零射击热插拔（零遗忘） | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_zh-cn.ipynb) |
+| 🗑️ 11 | [突触删除](../../notebooks/11_synapse_deletion_demo_zh-cn.ipynb) | 动态突触删除（pop & clear） | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_zh-cn.ipynb) |
 
 
 Synaptic Routing Architecture (SRA) 是一种受生物大脑（突触）启发的全新动态、稀疏、模块化神经网络架构。

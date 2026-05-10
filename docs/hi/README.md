@@ -6,11 +6,19 @@
 
 हमने ज्यूपिटर नोटबुक तैयार की है जहां आप सीधे अपने ब्राउज़र में एसआरए के "कार्य-विशिष्ट मस्तिष्क उपयोग" और "मजबूती" का अनुभव कर सकते हैं।आप उन्हें Google Colab पर कुछ ही सेकंड में चला सकते हैं, इसलिए कृपया उन्हें आज़माएँ!
 
-- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_hi.ipynb)
-- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_hi.ipynb)
-- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_hi.ipynb)
-- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_hi.ipynb)
-- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_hi.ipynb)
+| # | डेमो | विवरण | Colab |
+|---|------|-------|-------|
+| 🟢 1 | [SRA क्विकस्टार्ट](../../notebooks/01_sra_quickstart_hi.ipynb) | मूल SRA संरचना और रूटिंग विज़ुअलाइज़ेशन | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart_hi.ipynb) |
+| 🔵 2 | [सीखना और रूटिंग](../../notebooks/02_learning_and_routing_demo_hi.ipynb) | एकल-कार्य शिक्षा और रूटिंग विशेषज्ञता | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo_hi.ipynb) |
+| 🔴 3 | [मल्टीटास्क रूटिंग](../../notebooks/03_multitask_routing_demo_hi.ipynb) ✨ | मल्टीटास्क शिक्षा और सिनैप्स स्विचिंग | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo_hi.ipynb) |
+| 🕹️ 4 | [Decision Transformer](../../notebooks/04_decision_transformer_routing_demo_hi.ipynb) | RL में धारणा और क्रिया का पृथक्करण | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo_hi.ipynb) |
+| 🧠 5 | [लीजन प्रयोग](../../notebooks/05_lesion_experiment_demo_hi.ipynb) ✨ | सिनैप्स को नष्ट करके कार्यात्मक मॉड्यूलरिटी का प्रमाण | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_hi.ipynb) |
+| 🔌 6 | [हॉट-स्वैप प्रयोग](../../notebooks/06_hotswap_experiment_demo_hi.ipynb) | गतिशील सिनैप्टिक हॉट-स्वैप और राउटर शिक्षा सीमाएँ | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_hi.ipynb) |
+| 👑 7 | [Super Router (Gumbel)](../../notebooks/07_super_router_gumbel_demo_hi.ipynb) | Gumbel-Softmax के माध्यम से मॉडल एकीकरण | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_hi.ipynb) |
+| 📖 8 | [SRA LLM (Shakespeare)](../../notebooks/08_sra_llm_demo_shakespeare_hi.ipynb) | SRA के साथ Tiny LLM बनाएं और प्रशिक्षित करें | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_hi.ipynb) |
+| 📚 9 | [मल्टीडोमेन LLM](../../notebooks/09_sra_llm_demo_multidomain_hi.ipynb) | बहु-डोमेन (Code/Math/Text) एक साथ सीखना | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_hi.ipynb) |
+| 💻 10 | [प्लगइन हॉट-स्वैप](../../notebooks/10_hotswap_plugins_demo_hi.ipynb) | ज़ीरो-शॉट हॉट-स्वैप (शून्य विनाशकारी भूलना) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_hi.ipynb) |
+| 🗑️ 11 | [सिनैप्स हटाना](../../notebooks/11_synapse_deletion_demo_hi.ipynb) | गतिशील सिनैप्स हटाना (pop & clear) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_hi.ipynb) |
 
 
 सिनैप्टिक राउटिंग आर्किटेक्चर (SRA) जैविक मस्तिष्क (सिनैप्स) से प्रेरित एक नया गतिशील, विरल (sparse) और मॉड्यूलर न्यूरल नेटवर्क आर्किटेक्चर है।

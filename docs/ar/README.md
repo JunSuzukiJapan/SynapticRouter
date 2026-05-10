@@ -6,11 +6,19 @@
 
 لقد قمنا بإعداد دفاتر Jupyter Notebooks حيث يمكنك تجربة "استخدام العقل الخاص بمهمة محددة" و"المتانة" الخاصة بـ SRA بشكل تفاعلي في متصفحك مباشرةً.يمكنك تشغيلها في ثوانٍ على Google Colab، لذا يرجى تجربتها!
 
-- [01 SRA Quickstart](../../notebooks/01_sra_quickstart_ar.ipynb)
-- [02 Learning and Routing Demo](../../notebooks/02_learning_and_routing_demo_ar.ipynb)
-- [03 Multitask Routing Demo](../../notebooks/03_multitask_routing_demo_ar.ipynb)
-- [04 Decision Transformer Routing Demo](../../notebooks/04_decision_transformer_routing_demo_ar.ipynb)
-- [05 Lesion Experiment Demo](../../notebooks/05_lesion_experiment_demo_ar.ipynb)
+| # | العرض التوضيحي | الوصف | Colab |
+|---|------|------|-------|
+| 🟢 1 | [البداية السريعة SRA](../../notebooks/01_sra_quickstart_ar.ipynb) | بنية SRA الأساسية وتصور التوجيه | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart_ar.ipynb) |
+| 🔵 2 | [التعلم والتوجيه](../../notebooks/02_learning_and_routing_demo_ar.ipynb) | تعلم مهمة واحدة وتخصص التوجيه | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo_ar.ipynb) |
+| 🔴 3 | [التوجيه متعدد المهام](../../notebooks/03_multitask_routing_demo_ar.ipynb) ✨ | التعلم متعدد المهام وتبديل المشابك | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo_ar.ipynb) |
+| 🕹️ 4 | [Decision Transformer](../../notebooks/04_decision_transformer_routing_demo_ar.ipynb) | فصل الإدراك والعمل في RL | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo_ar.ipynb) |
+| 🧠 5 | [تجربة الآفة](../../notebooks/05_lesion_experiment_demo_ar.ipynb) ✨ | إثبات النمذجة الوظيفية بتدمير المشابك | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo_ar.ipynb) |
+| 🔌 6 | [تجربة التبديل السريع](../../notebooks/06_hotswap_experiment_demo_ar.ipynb) | التبديل السريع الديناميكي وحدود تعلم الموجه | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/06_hotswap_experiment_demo_ar.ipynb) |
+| 👑 7 | [Super Router (Gumbel)](../../notebooks/07_super_router_gumbel_demo_ar.ipynb) | تكامل النموذج عبر Gumbel-Softmax | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_ar.ipynb) |
+| 📖 8 | [SRA LLM (Shakespeare)](../../notebooks/08_sra_llm_demo_shakespeare_ar.ipynb) | بناء وتدريب Tiny LLM مع SRA | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/08_sra_llm_demo_shakespeare_ar.ipynb) |
+| 📚 9 | [LLM متعدد المجالات](../../notebooks/09_sra_llm_demo_multidomain_ar.ipynb) | التعلم المتزامن متعدد المجالات (Code/Math/Text) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/09_sra_llm_demo_multidomain_ar.ipynb) |
+| 💻 10 | [التبديل السريع للمكونات](../../notebooks/10_hotswap_plugins_demo_ar.ipynb) | تبديل سريع بدون تعلم مسبق (صفر نسيان) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_ar.ipynb) |
+| 🗑️ 11 | [حذف المشابك](../../notebooks/11_synapse_deletion_demo_ar.ipynb) | حذف المشابك الديناميكي (pop & clear) | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_ar.ipynb) |
 
 
 بنية التوجيه التشابكي (SRA) هي بنية شبكة عصبية ديناميكية ومتناثرة (sparse) ومعيارية جديدة مستوحاة من الدماغ البيولوجي (المشابك العصبية).
