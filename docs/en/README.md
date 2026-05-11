@@ -156,6 +156,12 @@ We demonstrate the function of SRA, "synapse deletion." You can experience both 
 
 
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🤝 Contributing & License
 
 This project is currently an experimental architecture in its early stages. Bug reports, discussions on features, and pull requests for performance improvements are very welcome via Issues and PRs!

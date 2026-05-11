@@ -95,6 +95,12 @@ python src/compare_architectures.py --task copy --steps 500
 - [異種ドメイン言語モデリングにおけるルーティング分析 (Code / Math / Text)](./routing_analysis_language.md)
   - SRAを用いて文法・語彙の異なるドメイン（コード、数式、自然言語）を同時学習させ、各ドメインごとにシナプスが機能分化（専門化）して推論するメカニズムを検証したレポートです。
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🤝 コントリビュートとライセンス (Contributing & License)
 
 本プロジェクトは初期段階の実験的アーキテクチャです。バグ報告や機能に関する議論、パフォーマンス改善のプルリクエストなどは、IssueやPRにて歓迎いたします！

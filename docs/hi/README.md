@@ -60,6 +60,12 @@ SRA की वास्तविक शक्ति को प्रदर्श
 
 [![Colab में खोलें](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_hi.ipynb)
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🧪 प्रयोग और विश्लेषण
 - [मल्टीटास्क लर्निंग और राउटिंग विश्लेषण](./routing_analysis_algorithmic.md)
 - [क्रॉस-डोमेन लैंग्वेज मॉडलिंग में राउटिंग विश्लेषण](./routing_analysis_language.md)

@@ -60,6 +60,12 @@ SRA решает проблемы огромных монолитных моде
 
 [![Открыть в Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_ru.ipynb)
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🧪 Эксперименты и анализ
 - [Анализ многозадачного обучения и маршрутизации](./routing_analysis_algorithmic.md)
 - [Анализ маршрутизации в кросс-доменном языковом моделировании](./routing_analysis_language.md)

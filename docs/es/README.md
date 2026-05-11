@@ -135,6 +135,12 @@ Demostramos la función de SRA, "deleción de sinapsis". Puede experimentar tant
 
 
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🤝 Contribución y Licencia
 
 Licencia: [MIT License](../../LICENSE).

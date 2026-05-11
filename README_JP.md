@@ -109,6 +109,12 @@ python src/compare_architectures.py --task copy --steps 500
 - [SRA Encoder-Decoder による実用レベル多言語翻訳の検証](./docs/dev/sra_seq2seq_translation_analysis.md)
   - SRAを Encoder-Decoder 型に拡張し、実コーパス（opus100）を用いた 30,000 ステップの学習で「Merci beaucoup.」「Good morning.」などの実用表現を BLEU=1.0 で翻訳できることを実証したレポートです。Cross-Attention の導入により Decoder-only（BLEU=0）から全体平均 BLEU=0.27 へと飛躍し、FR→EN 方向では BLEU=0.56 という実用に迫る精度を達成しました。
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: 動的モジュール経路による破局的忘却の克服](docs/ja/paper_draft.md)
+- [Hotswappable LLM: SRAによるZero-Shotモジュール合成と外科的知識削除](docs/ja/paper_hotswap.md)
+
 ## 🤝 コントリビュートとライセンス (Contributing & License)
 
 本プロジェクトは初期段階の実験的アーキテクチャです。バグ報告や機能に関する議論、パフォーマンス改善のプルリクエストなどは、IssueやPRにて歓迎いたします！

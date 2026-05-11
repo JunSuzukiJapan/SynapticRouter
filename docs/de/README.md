@@ -132,6 +132,12 @@ Wir demonstrieren die Funktion von SRA, „Synapsenlöschung“. Sie können sow
 
 
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🤝 Beitrag & Lizenz
 
 Lizenz: [MIT License](../../LICENSE).

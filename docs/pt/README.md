@@ -60,6 +60,12 @@ Isso demonstra o problema de "Lazy Routing" do Soft Routing simples e mostra com
 
 [![Abrir no Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_pt.ipynb)
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🧪 Experimentos e Análise
 - [Análise de Aprendizado Multitarefa e Roteamento](./routing_analysis_algorithmic.md)
 - [Análise de Roteamento em Modelagem de Linguagem Interdomínio](./routing_analysis_language.md)

@@ -132,6 +132,12 @@ Nous démontrons la fonction de la SRA, « suppression des synapses ». Vous p
 
 
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🤝 Contribution et Licence
 
 Licence : [MIT License](../../LICENSE).

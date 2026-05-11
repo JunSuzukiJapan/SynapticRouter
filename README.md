@@ -111,6 +111,12 @@ python src/compare_architectures.py --task copy --steps 500
   - A report demonstrating that by extending SRA to an Encoder-Decoder architecture and training for 30,000 steps on a real corpus (opus100), it can translate practical expressions like "Merci beaucoup." and "Good morning." with BLEU=1.0. The introduction of Cross-Attention caused a leap from Decoder-only (BLEU=0) to an overall average BLEU of 0.27, and achieved a near-practical accuracy of BLEU=0.56 in the FR→EN direction.
 
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](docs/paper_draft_en.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](docs/paper_hotswap_en.md)
+
 ## 🤝 Contributing & License
 
 This project is currently an experimental architecture in its early stages. Bug reports, discussions on features, and pull requests for performance improvements are very welcome via Issues and PRs!

@@ -60,6 +60,12 @@
 
 [![فتح في Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/07_super_router_gumbel_demo_ar.ipynb)
 
+
+## 📄 Research Papers
+
+- [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways](./paper_draft.md)
+- [Hotswappable LLM: Zero-Shot Module Composition and Surgical Knowledge Deletion](./paper_hotswap.md)
+
 ## 🧪 التجارب والتحليل
 - [التعلم متعدد المهام وتحليل التوجيه](./routing_analysis_algorithmic.md)
 - [تحليل التوجيه في نمذجة اللغة عبر المجالات](./routing_analysis_language.md)
