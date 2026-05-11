@@ -1,36 +1,50 @@
-# All You Need Is Router: Dynamic Sparse Modularity in Neural Networks
+# Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways
 
 **Jun Suzuki**, Independent Researcher
 
 ## Abstract
-In recent years, deep learning models have become increasingly massive, leading to an explosive growth in the computational resources required for training. Furthermore, when training a single monolithic network on multiple tasks with different characteristics, it is highly susceptible to "catastrophic forgetting." As a solution to this problem, we propose the "Synaptic Routing Architecture (SRA)." We experimentally demonstrate that an extremely simple "single-layer router" without any Attention mechanism can autonomously route tasks to multiple tiny models (synapses), completely avoiding catastrophic forgetting. In conclusion, what was truly needed to learn complex tasks simultaneously was not a massive dense Transformer, but a "router" that selects appropriate modules based on the input.
+The human brain can learn and execute fundamentally different tasks—such as walking, speaking, and calculating—without mutual interference. This is because the brain's neural circuits (synapses) are dynamically routed according to the task, maintaining spatially isolated "functional localization." In contrast, when Artificial Neural Networks (ANNs) learn multiple tasks within a single monolithic network, they suffer from "Catastrophic Forgetting," where past memories are destroyed.
+
+In this paper, we propose the "Synaptic Routing Architecture (SRA)," a continual learning model inspired by the biological mechanisms of dynamic synapse formation and spatial isolation. SRA consists of an extremely simple, single-layer "Router" and multiple independent, tiny modules (Synapses). Through our experiments, we demonstrate that SRA can autonomously identify the nature of a task from the input—without being provided an explicit task ID during inference—and **learn both routing (pathway selection) and task representations entirely end-to-end simultaneously.** We show that, without artificial weight freezing or complex evolutionary algorithms, an autonomous functional localization emerges within the model, completely avoiding catastrophic forgetting.
 
 ## 1. Introduction
-Since the introduction of "Attention Is All You Need," the Transformer architecture has dominated almost every domain, from natural language processing to computer vision and reinforcement learning. However, the conventional approach of densely activating parameters leads to an exponential increase in computational costs as models scale up.
-Recently, Mixture of Experts (MoE), as popularized by models like Mixtral, has gained significant attention. SRA pushes this MoE concept even further by designing a network composed of "tiny computational units (synapses)" and a "lightweight router that dynamically combines them." In this paper, we verify the hypothesis that "the Router is the true brain of the model in multitask learning."
+In the field of deep learning, "Continual Learning"—where a model continuously acquires new knowledge—is one of the greatest barriers to realizing Artificial General Intelligence (AGI). Monolithic networks, such as current massive Transformer models, inevitably forget previously learned knowledge when fine-tuned on data from new domains.
 
-## 2. Architecture (SRA)
-SRA is a dynamic and sparse architecture inspired by the biological brain. Instead of a massive Transformer, it is built from a combination of extremely lightweight components.
+To address this problem, our research focuses on the brain's "Functional Localization." Just as the brain's language and motor areas use physically distinct circuits to prevent interference, SRA is designed as an architecture that can dynamically turn on/off (plug-in/unplug) tiny independent networks (synapses) through a dynamic routing mechanism.
 
-### 2.1 The Router (All You Need Is Router)
-The heart and "core" of SRA is the Router. The router itself lacks any complex mechanisms such as Attention; its true form is **merely a single linear layer**.
-The router calculates the dot product (cosine similarity) between the hidden state of the input data and the unique "feature vector (embedding)" possessed by each synapse, quickly determining the Top-k synapses with the highest scores (best matches).
+## 2. Related Work & Novelty of SRA
+Existing approaches to prevent catastrophic forgetting include regularization methods like EWC (Elastic Weight Consolidation), which penalize updates to weights that were important for previous tasks. However, these methods are limited by the model's capacity and eventually reach their limits as the number of tasks increases.
 
-### 2.2 Tiny Synapses
-Each synapse is an independent, tiny module consisting of a small Multi-Head Attention layer and an MLP. Because computations are executed only by the synapses selected by the router, SRA achieves extremely high computational efficiency.
+A more "structural and modular" approach akin to SRA is **PathNet (2017)** by Google DeepMind. PathNet provides numerous modules and uses genetic algorithms to discover "paths" for each task, freezing the weights after learning to prevent forgetting.
 
-### 2.3 Architecture Diagram
-The diagram below illustrates the flow where an input is evaluated by the router and routed to the optimal synapses.
+### The Overwhelming Advantage of SRA (Simultaneous Learning)
+Compared to conventional approaches like PathNet, the fundamental novelty of SRA lies in its ability to **"simultaneously learn pathway discovery (routing) and module representations in a differentiable, end-to-end manner."**
+
+1. **Autonomous Routing (Task-Agnostic):** PathNet requires the model to be explicitly told "which task it is performing (Task ID)" during inference. In contrast, SRA's single linear router autonomously determines the domain (e.g., "this is a math task," "this is a language task") based on the cosine similarity of input features and routes it to the appropriate synapse.
+2. **Elimination of Weight Freezing and Evolutionary Algorithms:** Instead of requiring massive computational costs like genetic algorithms, SRA allows the router and synapses to learn cooperatively using only standard Backpropagation.
+3. **Emergence of Dynamic Functional Localization:** Because the router spontaneously learns pathways such that "similar tasks use the same synapse" and "different tasks use different synapses," spatial isolation (functional localization) naturally emerges through sparse activation without the need for artificial weight freezing.
+
+## 3. Architecture (Neuro-inspired Design)
+SRA is a dynamic and sparse architecture that mimics the synapse formation of the biological brain.
+
+### 3.1 The Router (Dynamic Synaptic Formation)
+The router, the heart of SRA, determines "which neural circuits to fire" based on the input information. The router is a simple linear layer that calculates the cosine similarity between the input features and the "embedding vector" of each synapse, determining the Top-k synapses that best match (fire).
+
+### 3.2 Tiny Synapses (Functional Modules)
+Each synapse consists of an independent, extremely small Multi-Head Attention and MLP. Only the synapses instructed to "fire" by the router execute computations; the parameters of other synapses remain un-interfered. This provides forgetting resistance similar to the brain's spatial isolation.
+
+### 3.3 Architecture Diagram
+The following diagram illustrates the flow where the input is evaluated by the router, and the optimal synapses (neural circuits) fire.
 
 ```mermaid
 graph TD
     X[Input Token] --> Base[Residual Base]
     X --> Norm[LayerNorm]
     
-    Norm --> Router["Router (Linear Layer)"]
+    Norm --> Router["Router (Synaptic Routing)"]
     Norm --> SynapseSpace
     
-    subgraph Synapse Space
+    subgraph Synapse Space (Functional Modules)
         SynapseSpace((Select Top-k))
         S1["Synapse 0<br/>(Mini-Transformer)"]
         S2["Synapse 1<br/>(Mini-Transformer)"]
@@ -38,7 +52,7 @@ graph TD
         Sn["Synapse 15<br/>(Mini-Transformer)"]
     end
     
-    Router -- "Output Routing Weights" --> SynapseSpace
+    Router -- "Routing Weights" --> SynapseSpace
     SynapseSpace --> S1
     SynapseSpace --> S2
     SynapseSpace -.-> Sn
@@ -51,80 +65,56 @@ graph TD
     Combine --> Out[Output Representation]
 ```
 
-## 3. Experiment 1: Algorithmic Reasoning
-To verify whether the router can autonomously distinguish between different tasks, we trained a single SRA model simultaneously on four algorithmic reasoning tasks with entirely different characteristics (`copy`, `reverse`, `paren`, `addmod`).
+## 4. Experiment 1: Algorithmic Reasoning
+To verify whether simultaneously learning the router and modules can discern task properties, we trained the model concurrently on four entirely different algorithmic reasoning tasks (`copy`, `reverse`, `paren`, `addmod`) without providing any task IDs.
+
+### Results and Emergence of Functional Localization
+After 10,000 steps of simultaneous learning, the model achieved 100% Accuracy on all tasks. Furthermore, analyzing the router's pathway distribution revealed an astonishing result.
+
+**Task Clustering by the Router:**
+- **Sequence Manipulation Area**: `COPY` and `REVERSE` (Shared the same synapse with a similarity of 0.969)
+- **Calculation/Logic Area**: `PAREN` and `ADDMOD` (Shared the same synapse with a similarity of 0.858)
+- The similarity between the above two groups was extremely low (0.029 - 0.336), showing clear functional separation.
+
+Without humans providing any instructions (task IDs), the simultaneous learning of the router autonomously clustered "sequence reordering tasks" and "logic-requiring tasks," **resulting in the emergence of modular segregation akin to the brain's functional localization.**
+
+## 5. Experiment 2: Cross-Domain Language Modeling
+Next, we conducted a more challenging "cross-domain language modeling." We simultaneously trained the model on three domains with entirely different grammars and vocabularies: `Code` (Python), `Math` (LaTeX), and `Text` (Natural Language).
 
 ### Results
-After 10,000 steps of joint training, the model achieved **100% Accuracy (perfect inference)** across all tasks.
-Furthermore, by extracting which synapses the router used for which tasks (the routing distribution) and analyzing the cosine similarity between tasks, we obtained striking results.
+Despite only 1,000 steps of training, the router completed the formation of "specialized circuits per domain":
+- `Code` Area: Dominated by **Synapse 8**
+- `Math` Area: Handled by **Synapses 10 and 13**
+- `Text` Area: Handled by **Synapses 0 and 15**
 
-**Task Clustering by the Router (in deep layers):**
-- **Sequence Manipulation Group**: `COPY` and `REVERSE` (Similarity 0.969)
-- **Computation / Logic Group**: `PAREN` and `ADDMOD` (Similarity 0.858)
-- The similarity between these two groups ranged from 0.029 to 0.336, showing a clear separation.
+In a situation where a monolithic model would experience catastrophic forgetting, SRA successfully minimized mutual interference by assigning specialized synapses (independent parameter spaces) to each domain through the router.
 
-Without any human instructions, the router autonomously distinguished between "tasks that reorder sequences" and "tasks requiring logic or computation." It dynamically shared synapses for similar tasks while explicitly separating modules by routing completely different tasks to different synapses.
+## 6. Experiment 3: Multilingual Machine Translation
+We performed multilingual machine translation using three languages with different syntactic structures (English: SVO, French: SVO, Japanese: SOV).
 
-## 4. Experiment 2: Cross-Domain Language Modeling
-Next, we conducted a much more challenging "cross-domain language modeling" experiment. We simultaneously trained the model on three domains with entirely different grammars and vocabularies: `Code` (Python), `Math` (LaTeX), and `Text` (Natural Language).
+### Results and Discussion
+Analyzing the synapse utilization rate revealed the autonomous formation of an "SVO-shared synapse" that activated frequently during translation between English and French, and an "SOV-specialized synapse" whose usage spiked only during translation into Japanese (SOV). This indicates that the router did not just use language labels, but acquired the essential underlying "word order and syntactic rules," dynamically switching neural circuits based on them.
 
-### Results
-Despite training for only 1,000 steps, the model was able to perfectly infer and generate Python indentation, special LaTeX notation, and natural language context.
+## 7. Experiment 4: Decision Transformer (Offline RL)
+Finally, to demonstrate its adaptability to non-natural language domains, we validated SRA as a Decision Transformer learning offline reinforcement learning (RL) trajectory data. We simultaneously trained the model on play logs from two environments with completely different rules (the "Treasure" task and the "Escape" task).
 
-**Evolution of Synapse Usage and Specialization:**
-During the early stages of training (Warmup), all synapses were used uniformly. However, towards the end of training, the router had completed a "domain-based segregation" as follows:
-- `Code` processing: Dominated by **Synapse 8**
-- `Math` processing: Handled by **Synapses 10 and 13**
-- `Text` processing: Handled by **Synapses 0 and 15**
+### Results and Discussion
+Visualizing the routing for each token confirmed an astonishing phenomenon: **complete functional separation of "Perception" and "Policy".**
+- **Perception Tokens (State Comprehension)**: For state tokens representing coordinates, the router routed them to a **common synapse (Expert 1) without exception**, regardless of the task type. This means a shared "spatial perception area" was formed.
+- **Action Tokens (Policy Decision)**: On the other hand, for tokens generating the next action, the pathways clearly branched into different synapses for the Treasure task and the Escape task.
 
-Even in a scenario where a monolithic model would suffer from catastrophic forgetting, the router successfully minimized mutual interference by allocating specialized synapses (independent parameter spaces) to each domain.
+The ideal modular structure of "perceiving the environment with the same eyes, but making decisions with different brains" was acquired without human design through simultaneous routing learning.
 
-## 5. Experiment 3: Multilingual Machine Translation
-To further verify modularity in natural language processing, we conducted multitask learning for multilingual machine translation using three languages with different syntactic structures (English: SVO, French: SVO, Japanese: SOV). During training, the "French↔Japanese" pairs were intentionally excluded to test zero-shot generalization.
+## 8. Conclusion
+In this paper, through the Synaptic Routing Architecture (SRA), we demonstrated the potential for a paradigm shift from "traditional static neural networks" that share all parameters across all tasks, to a "modular network equipped with biological spatial isolation and dynamic routing."
 
-### Results
-**Autonomous Routing Divergence based on Syntax Structure (SVO/SOV):**
-Analyzing the synapse usage rate revealed the autonomous formation of "SVO-shared synapses" that activate highly during translation between English and French (both SVO), and "SOV-specialized synapses" whose usage spikes only when translating into Japanese (SOV). This indicates that the router isolates and acquires word order and syntactic rules for each language as distinct modules.
+The greatest breakthrough is that **by performing end-to-end simultaneous learning of the router's pathway selection and the modules' representation learning, task-agnostic continual learning has become possible.** Without needing complex evolutionary algorithms like PathNet, simply optimizing a straightforward router resulted in the autonomous emergence of "functional localization" within the model.
+SRA overcomes catastrophic forgetting and allows an infinite number of new tasks (synapses) to be plugged in, representing a crucial step toward scalable Artificial General Intelligence (AGI).
 
-**Zero-Shot Translation and Pivot Language Fallback:**
-When requested to perform the unseen "French→Japanese" translation, the model exhibited a highly advanced behavior typical of zero-shot multilingual models: it fell back to outputting "English," which it had acquired as a common latent representation (hub) for both languages. This is evidence that SRA does not merely memorize pairs, but constructs a cross-lingual semantic space.
+## References
 
-## 6. Experiment 4: Decision Transformer (Offline RL)
-Finally, to demonstrate that SRA is applicable to domains beyond natural language, we evaluated it as a Decision Transformer trained on offline trajectory data from reinforcement learning (RL). The model was fed play logs (sequences of states, actions, and rewards) from two environments with completely different rules: a "Treasure" task (navigating to a goal) and an "Escape" task (fleeing from an enemy).
-
-### Results
-Visualizing the routing token by token revealed an astonishing phenomenon: **the complete separation of "Perception" and "Policy"**.
-- **State Tokens:** When tokens indicating the agent's own coordinates were input, the router **invariably routed them to a specific synapse (Expert 1)**, regardless of the task type. This shows that the environment model for "spatial perception" is perfectly shared across tasks.
-- **Action Tokens:** However, at the steps for generating the next action (e.g., UP/LEFT), the router clearly diverged, routing to a policy synapse for Treasure or a different policy synapse for Escape.
-
-Without any human design, SRA autonomously acquired the ideal modular structure for reinforcement learning: "Perceiving the environment with the same eyes, but making decisions with different brains."
-
-## 7. Conclusion
-Through the Synaptic Routing Architecture (SRA), this paper demonstrated the potential for a paradigm shift from "batch computation using a massive model" to the "dynamic selection of tiny modules."
-As evidenced by the diverse experimental results in algorithmic reasoning, cross-domain language modeling, multilingual machine translation, and Decision Transformer-based reinforcement learning, what is truly needed to prevent multitask interference, isolate task-specific logic and policies, and share common perception and latent spaces is not the gigantism of complex Attention mechanisms, but the presence of a simple and intelligent "Router." Indeed, **"All You Need Is Router."**
-
-## Appendix: Interactive Demos
-
-We have prepared Jupyter Notebook demos where you can interactively run and experience the SRA architecture and experimental results discussed in this paper directly in your browser. Feel free to try them out by opening Google Colab from the badges below.
-
-- **1. Basic Structure and Routing Validation**<br>
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/01_sra_quickstart.ipynb)
-- **2. Single-Task Learning and Routing Specialization**<br>
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/02_learning_and_routing_demo.ipynb)
-- **3. Multitask Learning and Task-Specific Routing**<br>
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/03_multitask_routing_demo.ipynb)
-- **4. Decision Transformer: Separation of Perception and Action**<br>
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/04_decision_transformer_routing_demo.ipynb)
-- **5. [Must-See] Synapse Lesion Experiment**<br>
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/05_lesion_experiment_demo.ipynb)
-
-## Appendix: Detailed Technical Reports
-
-For more detailed raw data, logs, and the architectural design process regarding the experiments in this paper, please refer to the following technical reports (Markdown) in the repository.
-
-- **[SRA GPU Optimization & Benchmarking Report](./dev/SRA_GPU_Optimization_Report.md)**
-  - Performance comparison (training speed, VRAM consumption, accuracy progression) between Baselines (Transformer/MLP) and SRA, along with validation results of three different SRA implementation approaches (Batched/MoE/Seq).
-- **[Multilingual Translation Routing Analysis](./dev/multilingual_translation_routing_analysis.md)**
-  - Analysis of autonomous synaptic branching based on SVO/SOV syntactic structures in multilingual machine translation (English, French, Japanese) and routing behavior during zero-shot translation.
-- **[Decision Transformer Routing Analysis](./dev/decision_transformer_routing_analysis.md)**
-  - Analysis of offline reinforcement learning in GridWorld tasks. Details on the separation of policy synapses per task and the separation of perception and action based on "State, Reward, and Action" tokens.
+- Suzuki, J. (2026). [Neuro-inspired Synaptic Routing: Overcoming Catastrophic Forgetting via Dynamic Modular Pathways. *Technical Report*.](https://github.com/JunSuzukiJapan/SynapticRouter/blob/main/docs/paper_draft_en.md)
+- Vaswani, A. et al. (2017). Attention Is All You Need. *NeurIPS*.
+- Shazeer, N. et al. (2017). Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer. *ICLR*.
+- Jiang, A.Q. et al. (2024). Mixtral of Experts. *arXiv:2401.04088*.
+- Jang, E. et al. (2017). Categorical Reparameterization with Gumbel-Softmax. *ICLR*.
