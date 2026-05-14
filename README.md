@@ -36,6 +36,9 @@ Typical AI models (like Transformers) try to process everything using a single, 
 
 The key here is the mechanism that decides "which expert to call." SRA has a "router (guide)," which instantly selects the most capable-looking expert by looking at the input data. As each expert becomes smarter (learns), this router simultaneously learns "who is the right one to choose," growing to be able to make optimal assignments automatically.
 
+### 🧠 Parallel Emergence of Multiple "Virtual Neurons" (Cell Assemblies)
+In SRA's massive network space, different combinations of synapses are dynamically selected depending on the task. This means that the "synapse combination A+B+C" used for solving math and the "synapse combination D+E+F" used for translation exist simultaneously within the network as completely different, **"independent virtual neurons."** This autonomously replicates how the human brain functions, with different neuron groups (cell assemblies) for vision and motor control existing and operating in parallel.
+
 ## 🧠 Architecture Overview
 
 SRA primarily consists of the following components:
