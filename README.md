@@ -96,22 +96,28 @@ python src/compare_architectures.py --task copy --steps 500
 
 > **📝 To be updated:**
 > We are currently conducting quantitative comparative verification against standard Transformer models.
-> Initial verifications (copy task with few steps) show promising signs that SRA reduces Validation Loss faster and reaches high accuracy quicker than Transformers (high learning/sample efficiency).
+> Initial verifications (copy task with few steps) show cases where SRA reduces validation loss faster than a small Transformer baseline, but these are still preliminary results on small-scale tasks.
 >
 > Detailed benchmark results, including step-by-step throughput and VRAM efficiency improvements, will be added here in the future.
+
+## 🔬 Current Research Scope
+
+This repository is not an attempt to directly build a ChatGPT-scale general LLM. It is a research prototype for testing **dynamic routing, module specialization, Hot-Swap, and task-interference control** through small- to medium-scale experiments. Current reports should be read as observed phenomena under specific experimental settings. The next priority is stronger reproducibility: baseline comparisons, multiple seeds, ablations, and reusable evaluation scripts.
+
+The development direction is tracked in [`docs/dev/SRA_development_roadmap.md`](./docs/dev/SRA_development_roadmap.md).
 
 ## 🧪 Experiments & Analysis
 
 - [Multi-Task Learning and Routing Analysis in Algorithmic Reasoning](./docs/routing_analysis_algorithmic.md)
-  - A report verifying that SRA can simultaneously learn multiple algorithmic tasks without interference, and autonomously separate and modularize experts (synapses) according to the nature of the tasks.
+  - A preliminary report showing routing specialization patterns on small algorithmic tasks.
 - [Routing Analysis in Cross-Domain Language Modeling (Code / Math / Text)](./docs/routing_analysis_language.md)
-  - A report verifying the mechanism where SRA simultaneously learns domains with different grammars and vocabularies (code, math formulas, natural language), and synapses functionally differentiate (specialize) to perform inference for each domain.
+  - A preliminary report analyzing whether synapse usage differs across code, math, and natural-language character modeling.
 - [Routing Analysis in Multilingual Translation (Eng / Fra / Jpn) & Zero-Shot Generality](./docs/dev/multilingual_translation_routing_analysis.md)
-  - A fascinating report showing that SRA automatically assigns different translation modules based on the grammar structure (SVO vs SOV). Even more surprisingly, when asked to translate an unlearned language pair, it unconsciously uses English as a "pivot language" to solve the problem!
-- [Complete Separation of Perception and Policy in Decision Transformer (Reinforcement Learning)](./docs/dev/decision_transformer_routing_analysis.md)
-  - We gave SRA the ability to play a game. It discovered an incredible strategy on its own: it uses the *exact same "vision" module* to perceive the environment across all tasks, but switches to *completely different "brain" modules* depending on whether it needs to find treasure or run away from an enemy.
-- [Verification of Practical Multilingual Translation using SRA Encoder-Decoder](./docs/dev/sra_seq2seq_translation_analysis.md)
-  - A report demonstrating that by extending SRA to an Encoder-Decoder architecture and training for 30,000 steps on a real corpus (opus100), it can translate practical expressions like "Merci beaucoup." and "Good morning." with BLEU=1.0. The introduction of Cross-Attention caused a leap from Decoder-only (BLEU=0) to an overall average BLEU of 0.27, and achieved a near-practical accuracy of BLEU=0.56 in the FR→EN direction.
+  - A preliminary report analyzing routing distributions across language pairs and observed output patterns on held-out translation directions.
+- [Routing Analysis in Decision Transformer-style Tasks (Reinforcement Learning)](./docs/dev/decision_transformer_routing_analysis.md)
+  - A report analyzing how routing differs between input processing and action selection in gridworld-style tasks.
+- [Preliminary Multilingual Translation Study with SRA Encoder-Decoder](./docs/dev/sra_seq2seq_translation_analysis.md)
+  - A preliminary study extending SRA to an encoder-decoder setup and measuring translation behavior on opus100 after 30,000 training steps.
 
 
 
