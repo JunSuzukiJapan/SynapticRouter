@@ -144,6 +144,15 @@ SRAモデルに対して「5つの異なるドメイン（NLP, Code, Math, DNA, 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/15_capacity_hypothesis_experiment.ipynb)
 
+---
+
+### 🚀 16. Lazy Routingの改善（Capacity LimitとEntropy制御）
+**ファイル:** [`16_lazy_routing_prevention_experiment.ipynb`](./16_lazy_routing_prevention_experiment.ipynb)
+
+SRAなどのMoEモデルで発生しがちな「一部のシナプスしか使われない（Lazy Routing）」問題を改善するための2つのアプローチを比較検証します。1つのシナプスに処理上限を設ける「Capacity Limit（ハード制約）」と、損失関数を操作して均等な使用を促す「Entropy Control（ソフト制約）」を導入し、ルーティング分布のエントロピーや死んだシナプスの割合がどのように改善されるかを可視化します。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/16_lazy_routing_prevention_experiment.ipynb)
+
 ## 🚀 実行方法
 
 1. **Google Colabで実行する場合（推奨）**:
