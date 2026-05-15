@@ -126,6 +126,15 @@ SRAモデルに対して「5つの異なるドメイン（NLP, Code, Math, DNA, 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/13_virtual_neuron_hotswap.ipynb)
 
+---
+
+### 🔬 14. 削除単位（シナプス量）の精度影響比較実験
+**ファイル:** [`14_compare_deletion_units.ipynb`](./14_compare_deletion_units.ipynb)
+
+本実験では、特定のタスクの知識をモデルから安全に削除する際、「専用シナプスを1個だけ削除する」場合と、「専用シナプスをすべて（仮想ニューロン単位で）削除する」場合での精度の低下度合い（Graceful Degradation）を比較します。他タスクとの共有シナプスは決して破壊しないため、どちらの場合も他タスクの精度は100%維持される「安全な削除」が成立することをグラフで確認できます。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/14_compare_deletion_units.ipynb)
+
 ## 🚀 実行方法
 
 1. **Google Colabで実行する場合（推奨）**:
