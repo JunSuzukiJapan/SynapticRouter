@@ -135,6 +135,15 @@ SRAモデルに対して「5つの異なるドメイン（NLP, Code, Math, DNA, 
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/14_compare_deletion_units.ipynb)
 
+---
+
+### 📊 15. 仮説検証：シナプス数（キャパシティ）と安全なアンラーニングの閾値
+**ファイル:** [`15_capacity_hypothesis_experiment.ipynb`](./15_capacity_hypothesis_experiment.ipynb)
+
+本実験では、「モデルのシナプス容量（キャパシティ）を増やせば、各シナプスの専門性が細かく分離され、より低い（厳しい）閾値でも他タスクを破壊することなく安全に特定の知識を削除（アンラーニング）できるのではないか？」という仮説を検証します。シナプス数を変化させた複数のモデルを訓練し、アンラーニング時の保護閾値とタスク精度の関係をグラフで可視化・分析します。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/15_capacity_hypothesis_experiment.ipynb)
+
 ## 🚀 実行方法
 
 1. **Google Colabで実行する場合（推奨）**:
