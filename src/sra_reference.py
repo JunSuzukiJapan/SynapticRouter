@@ -34,6 +34,56 @@ class TinySynapse(nn.Module):
         return self.norm2(out + h) + self.state
 
 
+class VectorDBSynapse(nn.Module):
+    """A synapse that acts as a Vector Database, returning fixed facts based on cosine similarity."""
+    def __init__(self, dim: int):
+        super().__init__()
+        self.dim = dim
+        self.register_buffer("keys", torch.empty(0, dim))
+        self.register_buffer("values", torch.empty(0, dim))
+        
+    def add_knowledge(self, key_tensor: torch.Tensor, value_tensor: torch.Tensor):
+        """Adds a new key-value pair to the database."""
+        assert key_tensor.shape[-1] == self.dim and value_tensor.shape[-1] == self.dim
+        if key_tensor.dim() == 1:
+            key_tensor = key_tensor.unsqueeze(0)
+            value_tensor = value_tensor.unsqueeze(0)
+        self.keys = torch.cat([self.keys, key_tensor.to(self.keys.device)], dim=0)
+        self.values = torch.cat([self.values, value_tensor.to(self.values.device)], dim=0)
+        
+    def forward(self, h, key_padding_mask=None, encoder_len=0):
+        # h: (B, T, D)
+        if self.keys.size(0) == 0:
+            return torch.zeros_like(h)
+        
+        # Calculate cosine similarity with all keys
+        h_norm = F.normalize(h, p=2, dim=-1)
+        k_norm = F.normalize(self.keys, p=2, dim=-1)
+        sim = torch.einsum("btd,nd->btn", h_norm, k_norm)  # (B, T, N)
+        
+        # Get the index of the most similar key
+        idx = sim.argmax(dim=-1)  # (B, T)
+        
+        # Fetch corresponding values
+        out = self.values[idx]  # (B, T, D)
+        return out
+
+
+class CalculatorSynapse(nn.Module):
+    """A synapse that performs deterministic rule-based calculation.
+    For demonstration, it outputs a deterministic transformation of the input.
+    """
+    def __init__(self, dim: int):
+        super().__init__()
+        self.dim = dim
+        self.register_buffer("signature", torch.ones(dim))
+        
+    def forward(self, h, key_padding_mask=None, encoder_len=0):
+        # h: (B, T, D)
+        # Deterministic dummy calculation: just flip the feature dimensions
+        return torch.flip(h, dims=[-1]) * self.signature
+
+
 class Router(nn.Module):
     def __init__(self, dim: int, num_synapses: int, k: int):
         super().__init__()
@@ -56,6 +106,20 @@ class Router(nn.Module):
         new_emb = new_emb / self.scale
         self.synapse_emb = nn.Parameter(new_emb)
         self.num_synapses += num_new
+
+    def add_custom_synapse(self, initial_embedding: torch.Tensor):
+        """Adds a single custom synapse with a specific initial router embedding."""
+        if not hasattr(self, "frozen_synapse_emb"):
+            self.register_buffer("frozen_synapse_emb", self.synapse_emb.data.clone())
+        else:
+            self.frozen_synapse_emb = torch.cat([self.frozen_synapse_emb, self.synapse_emb.data.clone()], dim=0)
+            
+        emb = initial_embedding.to(self.synapse_emb.device)
+        if emb.dim() == 1:
+            emb = emb.unsqueeze(0)
+            
+        self.synapse_emb = nn.Parameter(emb)
+        self.num_synapses += 1
 
     def get_full_emb(self):
         if hasattr(self, "frozen_synapse_emb"):
@@ -138,6 +202,11 @@ class SRABlock(nn.Module):
         self.router = Router(dim, num_synapses, k)
         self.norm = nn.LayerNorm(dim)
 
+    def add_custom_synapse(self, module: nn.Module, initial_embedding: torch.Tensor):
+        """Adds a custom module as a new synapse."""
+        self.synapses.append(module)
+        self.router.add_custom_synapse(initial_embedding)
+
     def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0):
         base = h
         h = self.norm(h)
@@ -165,6 +234,16 @@ class SRAModel(nn.Module):
         self.seg = nn.Embedding(2, dim)
         self.blocks = nn.ModuleList([SRABlock(dim, num_synapses, k, syn_hidden) for _ in range(layers)])
         self.out = nn.Linear(dim, vocab_size)
+
+    def add_custom_synapse(self, module_factory, initial_embedding_factory):
+        """Adds custom synapses to all blocks. 
+        module_factory: function that returns a new module.
+        initial_embedding_factory: function that returns a new embedding tensor.
+        """
+        for block in self.blocks:
+            module = module_factory()
+            emb = initial_embedding_factory()
+            block.add_custom_synapse(module, emb)
 
     def forward(self, x, y_in, dense=False):
         # encoder-ish summary from input + autoregressive-ish target prefix conditioning
