@@ -162,6 +162,16 @@ SRAのルーターにおいて、容量上限（Capacity Limit）に達したシ
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/17_routing_fallback_experiment.ipynb)
 
+---
+
+### 🧮 18. 確定的なカスタムシナプス（Vector DB & 電卓）のHot-swap
+**ファイル:** [`18_custom_synapses.ipynb`](./18_custom_synapses.ipynb)
+
+SRAのルーティング機構を拡張し、通常の「学習可能なニューラルシナプス」に加えて、外部からデータを動的に登録できる**「ベクトルDB型シナプス」**や、ルールベースの**「電卓モジュールシナプス」**を混在させるデモです。
+稼働中のモデルに対してこれらのモジュールを後から追加（Hot-swap）し、外部から「事実データ」を書き込んだ際に、正しくその事実（モジュール）へルーティングされる様子を体験できます。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/18_custom_synapses.ipynb)
+
 ## 🚀 実行方法
 
 1. **Google Colabで実行する場合（推奨）**:
