@@ -19,7 +19,7 @@ class TinySynapse(nn.Module):
         self.norm2 = nn.LayerNorm(dim)
         self.state = nn.Parameter(torch.zeros(dim))
 
-    def forward(self, h, key_padding_mask=None, encoder_len=0):
+    def forward(self, h, key_padding_mask=None, encoder_len=0, seq=None):
         B, T, D = h.shape
         attn_mask = torch.zeros((T, T), dtype=torch.bool, device=h.device)
         if encoder_len > 0:
@@ -51,7 +51,7 @@ class VectorDBSynapse(nn.Module):
         self.keys = torch.cat([self.keys, key_tensor.to(self.keys.device)], dim=0)
         self.values = torch.cat([self.values, value_tensor.to(self.values.device)], dim=0)
         
-    def forward(self, h, key_padding_mask=None, encoder_len=0):
+    def forward(self, h, key_padding_mask=None, encoder_len=0, seq=None):
         # h: (B, T, D)
         if self.keys.size(0) == 0:
             return torch.zeros_like(h)
@@ -69,19 +69,54 @@ class VectorDBSynapse(nn.Module):
         return out
 
 
-class CalculatorSynapse(nn.Module):
-    """A synapse that performs deterministic rule-based calculation.
-    For demonstration, it outputs a deterministic transformation of the input.
+class RealCalculatorSynapse(nn.Module):
+    """A synapse that performs deterministic rule-based calculation using Python's eval().
+    It extracts the math expression from the input sequence, evaluates it, and produces 
+    an output vector that forces the target tokens to be the answer.
     """
-    def __init__(self, dim: int):
+    def __init__(self, unembed_weight: torch.Tensor, dim: int):
         super().__init__()
         self.dim = dim
-        self.register_buffer("signature", torch.ones(dim))
+        self.register_buffer("unembed_weight", unembed_weight.clone()) # (VocabSize, D)
         
-    def forward(self, h, key_padding_mask=None, encoder_len=0):
-        # h: (B, T, D)
-        # Deterministic dummy calculation: just flip the feature dimensions
-        return torch.flip(h, dims=[-1]) * self.signature
+    def forward(self, h, key_padding_mask=None, encoder_len=0, seq=None):
+        out = torch.zeros_like(h)
+        if seq is None or encoder_len == 0:
+            return out
+            
+        B, T, D = h.shape
+        import re
+        
+        for b in range(B):
+            # Decode the source sequence
+            src_tokens = seq[b, :encoder_len].tolist()
+            # We assume char-level tokenization where token ID = ord(char)
+            src_str = "".join([chr(c) for c in src_tokens if 32 <= c <= 126])
+            
+            # Find a math expression like "12+34" or "15*3"
+            match = re.search(r'(\d+\s*[\+\-\*\/]\s*\d+)', src_str)
+            if match:
+                try:
+                    # Evaluate the math expression
+                    result = str(eval(match.group(1)))
+                    
+                    # For each character in the result, map it to the target sequence
+                    # We also add BOS (which is 1) and EOS (which is 2) at the ends
+                    from constants import BOS, EOS
+                    result_tokens = [BOS] + [ord(c) for c in result] + [EOS]
+                    for i, ans_token in enumerate(result_tokens):
+                        tgt_idx = encoder_len + i
+                        if tgt_idx < T:
+                            if ans_token < self.unembed_weight.size(0):
+                                # Create a massive embedding that will force the unembed layer to pick this token.
+                                # Since final output is base + out, and logits = (base + out) @ W^T,
+                                # adding a huge vector parallel to W[ans_token] guarantees its selection.
+                                vec = self.unembed_weight[ans_token]
+                                out[b, tgt_idx] = vec * 100.0 / (vec.norm() + 1e-5)
+                except Exception:
+                    pass
+                    
+        return out
 
 
 class Router(nn.Module):
@@ -207,7 +242,7 @@ class SRABlock(nn.Module):
         self.synapses.append(module)
         self.router.add_custom_synapse(initial_embedding)
 
-    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0, allowed_mask=None):
+    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0, allowed_mask=None, seq=None):
         base = h
         h = self.norm(h)
         k_override = self.router.num_synapses if dense else None
@@ -217,7 +252,7 @@ class SRABlock(nn.Module):
         syn_outputs = []  # record synapse outputs
 
         for syn_id, syn in enumerate(self.synapses):
-            y = syn(h, key_padding_mask=key_padding_mask, encoder_len=encoder_len)  # (B, T, D)
+            y = syn(h, key_padding_mask=key_padding_mask, encoder_len=encoder_len, seq=seq)  # (B, T, D)
             syn_outputs.append(y.detach())
             mask = (idx == syn_id).float()  # (B, T, k)
             coeff = (mask * weights).sum(dim=-1).unsqueeze(-1)  # (B, T, 1)
@@ -266,7 +301,7 @@ class SRAModel(nn.Module):
         router_logits = []
         all_synapse_outputs = []  # record all synapse outputs from all blocks
         for block in self.blocks:
-            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1), allowed_mask=allowed_mask)
+            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1), allowed_mask=allowed_mask, seq=seq)
             router_logits.append(logits)
             all_synapse_outputs.append(syn_outs)
         # predict only target positions
