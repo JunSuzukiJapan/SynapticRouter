@@ -199,6 +199,15 @@ VectorDBなどのカスタムシナプスを追加し、そのシナプスを使
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/21_finetuning_forgetting_check.ipynb)
 
+---
+
+### 🧩 22. Neuro-Symbolic な異種モジュールの共存と Hot-Swap 検証
+**ファイル:** [`22_multi_synapse_hotswap_eval.ipynb`](./22_multi_synapse_hotswap_eval.ipynb)
+
+SRAアーキテクチャの真骨頂である「異種モジュールの共存」を検証します。LLM（学習ベース）、VectorDB（検索ベース）、そしてPythonの `eval()` を用いたルールベース電卓（非学習）など、全く仕組みの異なるモジュール群が同一アーキテクチャ上で一つのインターフェースとして共存できることを証明します。再学習を一切行わずに、電卓モジュールへルーティングするだけでモデルが完璧に四則演算を解けるようになる様子を体験できます。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/22_multi_synapse_hotswap_eval.ipynb)
+
 ## 🚀 実行方法
 
 1. **Google Colabで実行する場合（推奨）**:
