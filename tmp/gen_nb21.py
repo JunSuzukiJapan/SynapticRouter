@@ -158,11 +158,20 @@ nb.cells.append(nbf.v4.new_code_cell(code5))
 
 # Cell 7: Code
 code6 = """# 5. VectorDB タスクのみを用いた Fine-tuning
-# ルーティングのみを学習させるため、Router のパラメータのみ最適化するか、全体を最適化するかを選択できます。
-# ここでは「Routerのみ更新」のケースと「モデル全体を更新」のケースを考えることができますが、
-# より厳しい条件として「モデル全体（EmbeddingやRouterなど）をFine-tuning」して影響を見ます。
+# SRAアーキテクチャの強みである「Zero Forgetting」を実証するため、
+# 追加学習時はベースモデル（Embeddingや既存シナプス）の重みを完全に凍結し、
+# Router のルーティングパラメータのみを更新します。
 
-optimizer_ft = torch.optim.Adam(model.parameters(), lr=1e-3)
+# ベースモデルのパラメータを凍結
+for param in model.parameters():
+    param.requires_grad = False
+
+# ルーターのパラメータのみ学習可能にする
+for block in model.blocks:
+    for param in block.router.parameters():
+        param.requires_grad = True
+
+optimizer_ft = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-3)
 FT_EPOCHS = 200
 
 # 学習前 VectorDB タスク確率
