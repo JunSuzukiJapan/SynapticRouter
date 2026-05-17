@@ -126,58 +126,40 @@ for t in range(3):
     allowed_mask[0, idx, :] = False
     allowed_mask[0, idx, calc_synapse_idx] = True
 
-# 再度 forward を実行。今回は SRAModel を改修せずにブロック単位で直接検証するか、
-# SRABlock の forward に allowed_mask を渡せるか確認する必要があります。
-# 実装を見ると、Router.forward には allowed_mask がありますが、SRAModel.forward には渡されていません。
-# そのため、各ブロックに対して手動で処理を行うか、一時的に SRABlock を直接呼び出して検証します。
-
-print("SRAModel に allowed_mask を渡す機能がないため、SRABlock 単体で検証を行います。")
+print("SRAModel の forward に allowed_mask を渡して検証を行います。")
 """
 nb.cells.append(nbf.v4.new_code_cell(code6))
 
 # Cell 8: Code
-code7 = """# 6. SRABlock 単体での検証
-block = model.blocks[0]
-h = torch.randn(BATCH_SIZE, SEQ_LEN, DIM).to(device)
-
-# マスク作成 (B, T, NumSynapses)
-# 最初の3トークンだけ CalculatorSynapse を強制
-mask = torch.ones((BATCH_SIZE, SEQ_LEN, block.router.num_synapses), dtype=torch.bool).to(device)
-for t in range(3):
-    mask[0, t, :] = False
-    mask[0, t, calc_synapse_idx] = True
-
+code7 = """# 6. SRAModel 全体での検証
+model.eval()
 with torch.no_grad():
-    # _norm
-    h_norm = block.norm(h)
-    
-    # 1. Mask なしのルーティング
-    idx_nomask, weights_nomask, logits_nomask = block.router(h_norm)
+    # 1. Mask なしのルーティング (再掲)
+    _, router_logits_nomask, _ = model(x, y_in)
+    logits_nomask = router_logits_nomask[-1][:, x.size(1):, :]
     
     # 2. Mask ありのルーティング
-    idx_mask, weights_mask, logits_mask = block.router(h_norm, allowed_mask=mask)
+    _, router_logits_mask, _ = model(x, y_in, allowed_mask=allowed_mask)
+    logits_mask = router_logits_mask[-1][:, x.size(1):, :]
 
 # logits から全シナプスの確率を計算
 probs_nomask = torch.softmax(logits_nomask, dim=-1)
 probs_mask = torch.softmax(logits_mask, dim=-1)
 
 print("--- Mask なし ---")
-print("最初のトークンの選択インデックス:", idx_nomask[0, 0].tolist())
 print("最初のトークンのルーティング確率:")
-for i in range(block.router.num_synapses):
+for i in range(model.blocks[0].router.num_synapses):
     print(f"  Synapse {i}: {probs_nomask[0, 0, i].item():.4f}")
 
 print("\\n--- Mask あり (Calculator強制) ---")
-print("最初のトークンの選択インデックス:", idx_mask[0, 0].tolist())
 print("最初のトークンのルーティング確率:")
-for i in range(block.router.num_synapses):
+for i in range(model.blocks[0].router.num_synapses):
     print(f"  Synapse {i}: {probs_mask[0, 0, i].item():.4f}")
 
 # 4番目のトークン（強制されていない）の確認
 print("\\n--- Mask あり (4番目のトークン、強制なし) ---")
-print("選択インデックス:", idx_mask[0, 3].tolist())
 print("ルーティング確率:")
-for i in range(block.router.num_synapses):
+for i in range(model.blocks[0].router.num_synapses):
     print(f"  Synapse {i}: {probs_mask[0, 3, i].item():.4f}")
 """
 nb.cells.append(nbf.v4.new_code_cell(code7))
@@ -189,7 +171,7 @@ md3 = """## 考察
 
 これにより、外部の分類器や正規表現、プロンプトのメタデータを用いて、モデルに確実な計算や事実検索（VectorDB）を強制する「Zero-Shot Hard Routing」の実現性が証明されました。
 
-今後の課題としては、この `allowed_mask` を `SRAModel.forward()` から各層のルーターへ透過的に渡せるようにインターフェースを拡張することが挙げられます。
+コアアーキテクチャ（`SRAModel`）への改修により、推論時に動的にマスクを渡すだけでドメイン制御が可能となりました。
 """
 nb.cells.append(nbf.v4.new_markdown_cell(md3))
 

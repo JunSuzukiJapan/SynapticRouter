@@ -190,6 +190,15 @@ VectorDBなどのカスタムシナプスを追加した後、少量のデータ
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/20_routing_finetuning.ipynb)
 
+---
+
+### 🛡️ 21. Fine-tuning によるルーティング学習の他タスクへの影響検証
+**ファイル:** [`21_finetuning_forgetting_check.ipynb`](./21_finetuning_forgetting_check.ipynb)
+
+VectorDBなどのカスタムシナプスを追加し、そのシナプスを使わせるためのルーティング学習（Fine-tuning）を行った際に、既存のベースタスク（事前学習済みの他タスク）の精度が破壊されないか（Catastrophic Forgetting）を検証します。ルーターのEmbedding更新のみで既存の知識が安全に保護される「Zero Forgetting」の仕組みを実証します。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/21_finetuning_forgetting_check.ipynb)
+
 ## 🚀 実行方法
 
 1. **Google Colabで実行する場合（推奨）**:

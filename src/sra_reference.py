@@ -207,11 +207,11 @@ class SRABlock(nn.Module):
         self.synapses.append(module)
         self.router.add_custom_synapse(initial_embedding)
 
-    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0):
+    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0, allowed_mask=None):
         base = h
         h = self.norm(h)
         k_override = self.router.num_synapses if dense else None
-        idx, weights, logits = self.router(h, k_override=k_override)
+        idx, weights, logits = self.router(h, k_override=k_override, allowed_mask=allowed_mask)
         B, T, D = h.shape
         out = torch.zeros_like(h)
         syn_outputs = []  # record synapse outputs
@@ -245,7 +245,7 @@ class SRAModel(nn.Module):
             emb = initial_embedding_factory()
             block.add_custom_synapse(module, emb)
 
-    def forward(self, x, y_in, dense=False):
+    def forward(self, x, y_in, dense=False, allowed_mask=None):
         # encoder-ish summary from input + autoregressive-ish target prefix conditioning
         seq = torch.cat([x, y_in], dim=1)
         mask = seq == PAD
@@ -266,7 +266,7 @@ class SRAModel(nn.Module):
         router_logits = []
         all_synapse_outputs = []  # record all synapse outputs from all blocks
         for block in self.blocks:
-            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1))
+            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1), allowed_mask=allowed_mask)
             router_logits.append(logits)
             all_synapse_outputs.append(syn_outs)
         # predict only target positions

@@ -99,11 +99,11 @@ class BatchedSRABlock(nn.Module):
         self.router = Router(dim, num_synapses, k)
         self.norm = nn.LayerNorm(dim)
 
-    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0):
+    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0, allowed_mask=None):
         base = h
         h = self.norm(h)
         k_override = self.router.num_synapses if dense else None
-        idx, weights, logits = self.router(h, k_override=k_override) # idx: (B, T, k)
+        idx, weights, logits = self.router(h, k_override=k_override, allowed_mask=allowed_mask) # idx: (B, T, k)
         
         B, T, D = h.shape
         # all synapses evaluated
@@ -132,7 +132,7 @@ class BatchedSRAModel(nn.Module):
         self.blocks = nn.ModuleList([BatchedSRABlock(dim, num_synapses, k, syn_hidden) for _ in range(layers)])
         self.out = nn.Linear(dim, vocab_size)
 
-    def forward(self, x, y_in, dense=False):
+    def forward(self, x, y_in, dense=False, allowed_mask=None):
         seq = torch.cat([x, y_in], dim=1)
         mask = seq == PAD
         segment_ids = torch.cat([torch.zeros_like(x), torch.ones_like(y_in)], dim=1)
@@ -142,7 +142,7 @@ class BatchedSRAModel(nn.Module):
         router_logits = []
         all_synapse_outputs = []
         for block in self.blocks:
-            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1))
+            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1), allowed_mask=allowed_mask)
             router_logits.append(logits)
             all_synapse_outputs.append(syn_outs)
         return self.out(h[:, x.size(1):]), router_logits, all_synapse_outputs
@@ -169,7 +169,7 @@ class MoESRABlock(nn.Module):
         self.b2 = nn.Parameter(torch.zeros(num_synapses, dim))
         self.state = nn.Parameter(torch.zeros(num_synapses, dim))
 
-    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0):
+    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0, allowed_mask=None):
         base = h
         B, T, D = h.shape
         
@@ -187,7 +187,7 @@ class MoESRABlock(nn.Module):
         h_routed = h
         h_routed = self.norm2(h_routed)
         k_override = self.num_synapses if dense else self.k
-        idx, weights, logits = self.router(h_routed, k_override=k_override)
+        idx, weights, logits = self.router(h_routed, k_override=k_override, allowed_mask=allowed_mask)
         
         # Gather/Scatter
         h_flat = h_routed.view(B*T, D)
@@ -229,7 +229,7 @@ class MoESRAModel(nn.Module):
         self.blocks = nn.ModuleList([MoESRABlock(dim, num_synapses, k, syn_hidden) for _ in range(layers)])
         self.out = nn.Linear(dim, vocab_size)
 
-    def forward(self, x, y_in, dense=False):
+    def forward(self, x, y_in, dense=False, allowed_mask=None):
         seq = torch.cat([x, y_in], dim=1)
         mask = seq == PAD
         segment_ids = torch.cat([torch.zeros_like(x), torch.ones_like(y_in)], dim=1)
@@ -239,7 +239,7 @@ class MoESRAModel(nn.Module):
         router_logits = []
         all_synapse_outputs = []
         for block in self.blocks:
-            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1))
+            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1), allowed_mask=allowed_mask)
             router_logits.append(logits)
             all_synapse_outputs.append(syn_outs)
         return self.out(h[:, x.size(1):]), router_logits, all_synapse_outputs
@@ -257,7 +257,7 @@ class SeqRouter(nn.Module):
         self.synapse_emb.data = self.synapse_emb.data / math.sqrt(dim)
         self.scale = math.sqrt(dim)
 
-    def forward(self, h, mask=None, k_override=None):
+    def forward(self, h, mask=None, k_override=None, allowed_mask=None):
         k = self.k if k_override is None else k_override
         if mask is not None:
             h_masked = h.masked_fill(mask.unsqueeze(-1), 0.0)
@@ -267,6 +267,18 @@ class SeqRouter(nn.Module):
             h_pool = h.mean(dim=1)
             
         logits = torch.einsum("bd,nd->bn", h_pool, self.synapse_emb) / self.scale
+        
+        # apply allowed_mask if provided
+        if allowed_mask is not None:
+            if allowed_mask.dim() == 2:
+                # Assuming allowed_mask is (B, num_synapses)
+                logits = logits.masked_fill(~allowed_mask, float('-inf'))
+            elif allowed_mask.dim() == 3:
+                # If (B, T, num_synapses), we average it or just use it. SeqRouter doesn't have T dimension in logits.
+                # Just use the first token's mask or average it
+                allowed_mask_reduced = allowed_mask.any(dim=1)
+                logits = logits.masked_fill(~allowed_mask_reduced, float('-inf'))
+
         vals, idx = torch.topk(logits, k, dim=-1)
         weights = F.softmax(vals, dim=-1)
         return idx, weights, logits
@@ -279,11 +291,11 @@ class SeqSRABlock(nn.Module):
         self.router = SeqRouter(dim, num_synapses, k)
         self.norm = nn.LayerNorm(dim)
 
-    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0):
+    def forward(self, h, dense=False, key_padding_mask=None, encoder_len=0, allowed_mask=None):
         base = h
         h = self.norm(h)
         k_override = self.num_synapses if dense else None
-        idx, weights, logits = self.router(h, mask=key_padding_mask, k_override=k_override)
+        idx, weights, logits = self.router(h, mask=key_padding_mask, k_override=k_override, allowed_mask=allowed_mask)
         
         B, T, D = h.shape
         out = torch.zeros_like(h)
@@ -323,7 +335,7 @@ class SeqSRAModel(nn.Module):
         self.blocks = nn.ModuleList([SeqSRABlock(dim, num_synapses, k, syn_hidden) for _ in range(layers)])
         self.out = nn.Linear(dim, vocab_size)
 
-    def forward(self, x, y_in, dense=False):
+    def forward(self, x, y_in, dense=False, allowed_mask=None):
         seq = torch.cat([x, y_in], dim=1)
         mask = seq == PAD
         segment_ids = torch.cat([torch.zeros_like(x), torch.ones_like(y_in)], dim=1)
@@ -333,7 +345,7 @@ class SeqSRAModel(nn.Module):
         router_logits = []
         all_synapse_outputs = []
         for block in self.blocks:
-            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1))
+            h, logits, syn_outs = block(h, dense=dense, key_padding_mask=mask, encoder_len=x.size(1), allowed_mask=allowed_mask)
             router_logits.append(logits)
             all_synapse_outputs.append(syn_outs)
         return self.out(h[:, x.size(1):]), router_logits, all_synapse_outputs
