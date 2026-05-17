@@ -206,6 +206,8 @@ VectorDBなどのカスタムシナプスを追加し、そのシナプスを使
 
 SRAアーキテクチャの真骨頂である「異種モジュールの共存」を検証します。LLM（学習ベース）、VectorDB（検索ベース）、そしてPythonの `eval()` を用いたルールベース電卓（非学習）など、全く仕組みの異なるモジュール群が同一アーキテクチャ上で一つのインターフェースとして共存できることを証明します。再学習を一切行わずに、電卓モジュールへルーティングするだけでモデルが完璧に四則演算を解けるようになる様子を体験できます。
 
+> ⚠️ **セキュリティ警告**: 本ノートブックで使用している `RealCalculatorSynapse` は検証目的のため `eval()` を用いて数式を評価しています。これは任意のPythonコードが実行可能となる重大なセキュリティリスクを伴うため、決して本番環境や信頼できない入力に対して使用しないでください。
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/22_multi_synapse_hotswap_eval.ipynb)
 
 ## 🚀 実行方法

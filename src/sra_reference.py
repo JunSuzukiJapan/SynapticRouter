@@ -73,6 +73,11 @@ class RealCalculatorSynapse(nn.Module):
     """A synapse that performs deterministic rule-based calculation using Python's eval().
     It extracts the math expression from the input sequence, evaluates it, and produces 
     an output vector that forces the target tokens to be the answer.
+    
+    WARNING: SECURITY RISK
+    This module uses Python's built-in `eval()` to calculate results. This allows arbitrary 
+    code execution if untrusted text is passed. It is strictly for demonstration/research 
+    purposes and must never be used in a production environment.
     """
     def __init__(self, unembed_weight: torch.Tensor, dim: int):
         super().__init__()
