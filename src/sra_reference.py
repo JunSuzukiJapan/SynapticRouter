@@ -102,17 +102,17 @@ class RealCalculatorSynapse(nn.Module):
                     
                     # For each character in the result, map it to the target sequence
                     # We also add BOS (which is 1) and EOS (which is 2) at the ends
-                    from constants import BOS, EOS
+                    from constants import BOS, EOS, PAD
                     result_tokens = [BOS] + [ord(c) for c in result] + [EOS]
-                    for i, ans_token in enumerate(result_tokens):
-                        tgt_idx = encoder_len + i
-                        if tgt_idx < T:
-                            if ans_token < self.unembed_weight.size(0):
-                                # Create a massive embedding that will force the unembed layer to pick this token.
-                                # Since final output is base + out, and logits = (base + out) @ W^T,
-                                # adding a huge vector parallel to W[ans_token] guarantees its selection.
-                                vec = self.unembed_weight[ans_token]
-                                out[b, tgt_idx] = vec * 100.0 / (vec.norm() + 1e-5)
+                    for tgt_idx in range(encoder_len, T):
+                        # Pad the rest of the sequence with PAD
+                        ans_token = result_tokens[tgt_idx - encoder_len] if tgt_idx - encoder_len < len(result_tokens) else PAD
+                        if ans_token < self.unembed_weight.size(0):
+                            # Create a massive embedding that will force the unembed layer to pick this token.
+                            # Since final output is base + out, and logits = (base + out) @ W^T,
+                            # adding a huge vector parallel to W[ans_token] guarantees its selection.
+                            vec = self.unembed_weight[ans_token]
+                            out[b, tgt_idx] = vec * 100.0 / (vec.norm() + 1e-5)
                 except Exception:
                     pass
                     
