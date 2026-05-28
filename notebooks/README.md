@@ -95,11 +95,155 @@ Experience simultaneous learning of multiple domains (Code, Math, Text) on a sma
 ---
 
 ### 💻 10. Practical Plugin Hot-Swap (Zero-Shot Hot-Swap)
-**File:** [`10_hotswap_plugins_demo.ipynb`](./10_hotswap_plugins_demo.ipynb)
+**File:** [`10_hotswap_plugins_demo_en.ipynb`](./10_hotswap_plugins_demo_en.ipynb)
 
 A practical demo where multiple teams independently train "Code" and "Math" plugins parallel to a "Text" base model. We then physically merge these tensor weights (Hot-Swap) into the base model, demonstrating mathematically ZERO catastrophic forgetting!
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/10_hotswap_plugins_demo_en.ipynb)
+
+---
+
+### 🗑️ 11. Dynamic Synapse Deletion (pop & clear)
+**File:** [`11_synapse_deletion_demo_en.ipynb`](./11_synapse_deletion_demo_en.ipynb)
+
+Demonstrates two ways to delete synapses from a trained SRA model: physical removal via `pop_synapses()` (restores model size) and zero-clear purge via `clear_synapses()` (converts a slot into a free reusable slot). Also explores the "cosine similarity trap" that occurs after a zero-clear and how to mitigate it.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/11_synapse_deletion_demo_en.ipynb)
+
+---
+
+### 🧬 12. Virtual Neuron Emergence Validation Experiment
+**File:** [`12_virtual_neuron_experiment_en.ipynb`](./12_virtual_neuron_experiment_en.ipynb)
+
+Trains an SRA model on **25 tasks across 5 domains × 5 tasks** (NL / Code / Math / DNA / CSV) at the character level. Without any task ID, the router autonomously identifies each task and forms distinct synapse groups (= virtual neurons / cell assemblies) per domain. Includes hierarchical extraction of Universal / Assembly / Peripheral synapses.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/12_virtual_neuron_experiment_en.ipynb)
+
+---
+
+### 🧠 13. Safe Hot-Swap (Unlearning) at the Virtual Neuron Granularity
+**File:** [`13_virtual_neuron_hotswap_en.ipynb`](./13_virtual_neuron_hotswap_en.ipynb)
+
+Building on Notebook 12's virtual neurons, demonstrates that operating at the Cell Assembly granularity allows surgical unlearning (deletion) of an entire functional group without affecting the others.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/13_virtual_neuron_hotswap_en.ipynb)
+
+---
+
+### 🔬 14. Knowledge Entanglement and Safe Deletion (Synapse vs. Neuron Unit)
+**File:** [`14_compare_deletion_units_en.ipynb`](./14_compare_deletion_units_en.ipynb)
+
+Compares deletion at two granularities — individual Synapse vs. Virtual Neuron — and shows why deleting only dedicated synapses leaves universal-core entanglement behind, motivating neuron-level operations.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/14_compare_deletion_units_en.ipynb)
+
+---
+
+### 📐 15. Capacity Hypothesis: Number of Synapses vs. Safe Unlearning Threshold
+**File:** [`15_capacity_hypothesis_experiment_en.ipynb`](./15_capacity_hypothesis_experiment_en.ipynb)
+
+Tests how the number of synapses (model capacity) affects whether dedicated synapses emerge for each task — establishing a capacity threshold above which clean virtual neurons reliably form.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/15_capacity_hypothesis_experiment_en.ipynb)
+
+---
+
+### 💤 16. Lazy Routing Prevention Experiment
+**File:** [`16_lazy_routing_prevention_experiment_en.ipynb`](./16_lazy_routing_prevention_experiment_en.ipynb)
+
+Diagnoses and mitigates "router laziness," where a few synapses absorb most traffic and starve others. Explores load-balancing techniques that produce healthy, diverse routing distributions.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/16_lazy_routing_prevention_experiment_en.ipynb)
+
+---
+
+### 🔁 17. Routing Fallback (Reassignment) Experiment
+**File:** [`17_routing_fallback_experiment_en.ipynb`](./17_routing_fallback_experiment_en.ipynb)
+
+Implements and verifies a fallback mechanism that reassigns traffic when a target synapse becomes unavailable (e.g., deleted or masked). Ensures graceful degradation rather than catastrophic failure.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/17_routing_fallback_experiment_en.ipynb)
+
+---
+
+### 🧩 18. Custom Synapses (Vector DB & Calculator)
+**File:** [`18_custom_synapses_en.ipynb`](./18_custom_synapses_en.ipynb)
+
+Demonstrates building **non-trainable, custom Synapses**: a Vector-DB-backed retrieval Synapse and a Python-`eval()` calculator Synapse. They plug into SRA alongside neural synapses through the same routing interface.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/18_custom_synapses_en.ipynb)
+
+---
+
+### 🎯 19. Zero-Shot Hard Routing (Forced Assignment via Metadata)
+**File:** [`19_zero_shot_hard_routing_en.ipynb`](./19_zero_shot_hard_routing_en.ipynb)
+
+Uses the router's `allowed_mask` to force 100% of traffic for a task to a specific Synapse — no training required. Useful for pinning a deterministic Synapse (Vector DB / calculator) into the routing path.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/19_zero_shot_hard_routing_en.ipynb)
+
+---
+
+### 🛠️ 20. Routing Fine-tuning (Autonomous Routing Learning)
+**File:** [`20_routing_finetuning_en.ipynb`](./20_routing_finetuning_en.ipynb)
+
+After adding a `VectorDBSynapse`, fine-tunes the router and encoder on a small dataset so the model autonomously learns to route appropriate queries to the new synapse — without forcing assignments.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/20_routing_finetuning_en.ipynb)
+
+---
+
+### 🧯 21. Catastrophic Forgetting Check after Routing Fine-tuning
+**File:** [`21_finetuning_forgetting_check_en.ipynb`](./21_finetuning_forgetting_check_en.ipynb)
+
+After fine-tuning routing for a new Synapse, verifies whether the accuracy on existing base tasks degrades. Quantifies catastrophic forgetting in the routing-fine-tuning regime.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/21_finetuning_forgetting_check_en.ipynb)
+
+---
+
+### 🧪 22. Coexistence of Neuro-Symbolic Heterogeneous Modules
+**File:** [`22_multi_synapse_hotswap_eval_en.ipynb`](./22_multi_synapse_hotswap_eval_en.ipynb)
+
+Validates SRA's true highlight: an LLM (learning-based), Vector DB (retrieval-based), and rule-based calculator coexist as Synapses on the same architecture. Adds `RealCalculatorSynapse` and proves arithmetic ability appears **without retraining**, while existing tasks remain intact.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/22_multi_synapse_hotswap_eval_en.ipynb)
+
+---
+
+### 🦙 23. SRA Native LLM Integration PoC (TinyLlama)
+**File:** [`nb23_sra_llm_integration_en.ipynb`](./nb23_sra_llm_integration_en.ipynb)
+
+Proof of concept that natively integrates the SRA router with an existing LLM (TinyLlama, a lightweight Llama variant) by matching dimensions. Validates that SRA can route over a pre-trained LLM's hidden space.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/nb23_sra_llm_integration_en.ipynb)
+
+---
+
+### 🏎️ 24. Router Architecture Benchmark
+**File:** [`24_router_architecture_benchmark_en.ipynb`](./24_router_architecture_benchmark_en.ipynb)
+
+Benchmarks router architectures (single-stage vs. multi-stage, last-token vs. all-token aggregation) on the LLM-integrated setup from Notebook 23, surfacing which design generalizes best.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/24_router_architecture_benchmark_en.ipynb)
+
+---
+
+### 🧰 25. Integrated Heterogeneous Routing (Motherboard Architecture)
+**File:** [`25_integrated_heterogeneous_routing_en.ipynb`](./25_integrated_heterogeneous_routing_en.ipynb)
+
+End-to-end integration of SRA's near-final form: the **"Motherboard architecture"** that routes Last-Token signals over heterogeneous Synapses (LLM / Vector DB / Calculator) with semantic fallback.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/25_integrated_heterogeneous_routing_en.ipynb)
+
+---
+
+### 💬 26. SRA Chatbot Demo
+**File:** [`26_chatbot_demo_en.ipynb`](./26_chatbot_demo_en.ipynb)
+
+A working chat UI built on the Motherboard architecture from Notebook 25 — combining LLM, Vector DB, and Calculator Synapses behind a single chat interface (ipywidgets).
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/26_chatbot_demo_en.ipynb)
 
 ## 🚀 How to Run
 
