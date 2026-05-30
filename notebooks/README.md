@@ -212,11 +212,11 @@ Validates SRA's true highlight: an LLM (learning-based), Vector DB (retrieval-ba
 ---
 
 ### 🦙 23. SRA Native LLM Integration PoC (TinyLlama)
-**File:** [`nb23_sra_llm_integration_en.ipynb`](./nb23_sra_llm_integration_en.ipynb)
+**File:** [`23_sra_llm_integration_en.ipynb`](./23_sra_llm_integration_en.ipynb)
 
 Proof of concept that natively integrates the SRA router with an existing LLM (TinyLlama, a lightweight Llama variant) by matching dimensions. Validates that SRA can route over a pre-trained LLM's hidden space.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/nb23_sra_llm_integration_en.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JunSuzukiJapan/SynapticRouter/blob/main/notebooks/23_sra_llm_integration_en.ipynb)
 
 ---
 
