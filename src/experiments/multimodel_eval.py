@@ -242,10 +242,13 @@ SEED = [
     },
 ]
 
+# Specialty descriptions double as the router's class anchors. They are phrased to
+# match each domain's task *form* (e.g. "multiple-choice ... A B C D" for qa) so that
+# numeric-but-non-math questions are not pulled to the math synapse.
 SYNAPSE_SPECIALTIES = {
-    "coder": "writing and fixing program code, Python functions, algorithms, implementation",
-    "math": "solving arithmetic and math word problems, numeric reasoning, calculation",
-    "general": "general knowledge questions, facts, history, geography, everyday conversation",
+    "coder": "writing or debugging program code, implementing a Python function or algorithm",
+    "math": "solving a math word problem by calculation to reach a numeric answer",
+    "general": "answering a general-knowledge multiple-choice question with options A B C D about facts, history, geography or science",
 }
 
 
