@@ -258,7 +258,7 @@ def load_humaneval(n: int = 20) -> list:
     """HumanEval -> code items. `question` is the function prompt; `test` defines check()."""
     from datasets import load_dataset
 
-    ds = load_dataset("openai_humaneval", split="test")
+    ds = load_dataset("openai/openai_humaneval", split="test")
     n = min(n, len(ds))
     return [
         {
@@ -275,7 +275,7 @@ def load_gsm8k(n: int = 20) -> list:
     """GSM8K (main/test) -> math items. Gold answer follows '#### '."""
     from datasets import load_dataset
 
-    ds = load_dataset("gsm8k", "main", split="test")
+    ds = load_dataset("openai/gsm8k", "main", split="test")
     n = min(n, len(ds))
     items = []
     for r in ds.select(range(n)):
