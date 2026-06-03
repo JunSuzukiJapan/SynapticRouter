@@ -159,6 +159,7 @@ activemq-data/
 .env
 .envrc
 .venv
+.venv_*/
 env/
 venv/
 ENV/
@@ -219,6 +220,12 @@ tempCodeRunnerFile.py
 
 # PyPI configuration file
 .pypirc
+
+# Local training artifacts
+.uv_cache/
+.pycache_local/
+data/hf_cache/
+checkpoints/
 
 # Marimo
 marimo/_static/
