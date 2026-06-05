@@ -2,7 +2,7 @@ import argparse
 import os
 import random
 import time
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 
 import torch
 import torch.nn.functional as F
@@ -14,6 +14,45 @@ from train_small_llm import choose_device
 
 
 IGNORE_INDEX = -100
+
+
+SFT_DATASETS = {
+    "no_robots": {
+        "train_split": "train",
+        "valid_split": "test",
+        "default_max_train": 8000,
+        "default_max_valid": 500,
+        "builder": "build_no_robots_examples",
+    },
+    "oasst2_en": {
+        "train_split": "train",
+        "valid_split": "validation",
+        "default_max_train": 12000,
+        "default_max_valid": 1000,
+        "builder": "build_oasst2_examples",
+    },
+    "ultrachat_200k": {
+        "train_split": "train_sft",
+        "valid_split": "test_sft",
+        "default_max_train": 12000,
+        "default_max_valid": 1000,
+        "builder": "build_ultrachat_200k_examples",
+    },
+    "llm_jp_oasst2_33k_ja": {
+        "train_split": "train",
+        "valid_split": "train",
+        "default_max_train": 12000,
+        "default_max_valid": 1000,
+        "builder": "build_llm_jp_oasst2_33k_ja_examples",
+    },
+    "swallow_instruct_v0_1": {
+        "train_split": "train",
+        "valid_split": "train",
+        "default_max_train": 8000,
+        "default_max_valid": 500,
+        "builder": "build_swallow_instruct_examples",
+    },
+}
 
 
 def load_checkpoint(path: str, device: str):
@@ -46,14 +85,38 @@ def import_datasets():
     return load_dataset, DownloadConfig
 
 
+def load_dataset_cache_first(load_dataset, download_config, local_only: bool, **kwargs):
+    if local_only:
+        return load_dataset(
+            **kwargs,
+            download_config=download_config(local_files_only=True),
+        )
+
+    try:
+        ds = load_dataset(
+            **kwargs,
+            download_config=download_config(local_files_only=True),
+        )
+        print(f"cache hit: {kwargs['path']} split={kwargs.get('split')}")
+        return ds
+    except Exception as exc:
+        print(f"cache miss: {kwargs['path']} split={kwargs.get('split')} fallback=remote reason={exc.__class__.__name__}")
+        return load_dataset(
+            **kwargs,
+            download_config=download_config(local_files_only=False),
+        )
+
+
 def build_no_robots_examples(split: str, max_examples: int, local_only: bool) -> List[Tuple[str, str]]:
     if max_examples == 0:
         return []
     load_dataset, DownloadConfig = import_datasets()
-    ds = load_dataset(
-        "HuggingFaceH4/no_robots",
+    ds = load_dataset_cache_first(
+        load_dataset,
+        DownloadConfig,
+        local_only,
+        path="HuggingFaceH4/no_robots",
         split=split,
-        download_config=DownloadConfig(local_files_only=local_only),
     )
     examples = []
     for row in ds:
@@ -83,10 +146,12 @@ def build_oasst2_examples(split: str, max_examples: int, local_only: bool) -> Li
     if max_examples == 0:
         return []
     load_dataset, DownloadConfig = import_datasets()
-    ds = load_dataset(
-        "OpenAssistant/oasst2",
+    ds = load_dataset_cache_first(
+        load_dataset,
+        DownloadConfig,
+        local_only,
+        path="OpenAssistant/oasst2",
         split=split,
-        download_config=DownloadConfig(local_files_only=local_only),
     )
     rows = [row for row in ds]
     by_id = {row["message_id"]: row for row in rows}
@@ -109,6 +174,156 @@ def build_oasst2_examples(split: str, max_examples: int, local_only: bool) -> Li
         examples.append((format_prompt(user_text), assistant_text))
         if max_examples > 0 and len(examples) >= max_examples:
             break
+    return examples
+
+
+def normalize_messages(row) -> List[Tuple[str, str]]:
+    for key in ("messages", "conversation", "conversations"):
+        messages = row.get(key)
+        if isinstance(messages, list):
+            normalized = []
+            for msg in messages:
+                if not isinstance(msg, dict):
+                    continue
+                role = msg.get("role", msg.get("from", ""))
+                content = msg.get("content", msg.get("value", msg.get("text", "")))
+                if role is None or content is None:
+                    continue
+                normalized.append((str(role).strip().lower(), str(content).strip()))
+            if normalized:
+                return normalized
+    return []
+
+
+def examples_from_messages(messages: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
+    history = []
+    examples = []
+    for role, content in messages:
+        if not content:
+            continue
+        if role in {"user", "human", "prompter"}:
+            history.append(("user", content))
+        elif role in {"assistant", "gpt", "bot"} and history:
+            prompt_turns = []
+            for h_role, h_content in history:
+                tag = "User" if h_role == "user" else "Assistant"
+                prompt_turns.append(f"{tag}: {h_content}")
+            prompt = "System: You are a helpful assistant.\n\n" + "\n".join(prompt_turns) + "\nAssistant: "
+            examples.append((prompt, content))
+            history.append(("assistant", content))
+    return examples
+
+
+def example_from_instruction_fields(row) -> Tuple[str, str] | None:
+    instruction = row.get("instruction", row.get("prompt", ""))
+    input_text = row.get("input", row.get("context", ""))
+    response = row.get("output", row.get("response", row.get("answer", "")))
+    if instruction is None or response is None:
+        return None
+    instruction = str(instruction).strip()
+    input_text = str(input_text).strip() if input_text is not None else ""
+    response = str(response).strip()
+    if not instruction or not response:
+        return None
+    user_text = instruction if not input_text else f"{instruction}\n\n{input_text}"
+    return format_prompt(user_text), response
+
+
+def build_ultrachat_200k_examples(split: str, max_examples: int, local_only: bool) -> List[Tuple[str, str]]:
+    if max_examples == 0:
+        return []
+    load_dataset, DownloadConfig = import_datasets()
+    ds = load_dataset_cache_first(
+        load_dataset,
+        DownloadConfig,
+        local_only,
+        path="HuggingFaceH4/ultrachat_200k",
+        split=split,
+    )
+    examples = []
+    for row in ds:
+        row_examples = examples_from_messages(normalize_messages(row))
+        for item in row_examples:
+            examples.append(item)
+            if max_examples > 0 and len(examples) >= max_examples:
+                return examples
+    return examples
+
+
+def build_llm_jp_oasst2_33k_ja_examples(split: str, max_examples: int, local_only: bool) -> List[Tuple[str, str]]:
+    if max_examples == 0:
+        return []
+    load_dataset, DownloadConfig = import_datasets()
+    ds = load_dataset_cache_first(
+        load_dataset,
+        DownloadConfig,
+        local_only,
+        path="llm-jp/oasst2-33k-ja",
+        split=split,
+    )
+    examples = []
+    for row in ds:
+        row_examples = examples_from_messages(normalize_messages(row))
+        for item in row_examples:
+            examples.append(item)
+            if max_examples > 0 and len(examples) >= max_examples:
+                return examples
+    return examples
+
+
+def build_swallow_instruct_examples(split: str, max_examples: int, local_only: bool) -> List[Tuple[str, str]]:
+    if max_examples == 0:
+        return []
+    load_dataset, DownloadConfig = import_datasets()
+    ds = load_dataset_cache_first(
+        load_dataset,
+        DownloadConfig,
+        local_only,
+        path="tokyotech-llm/Swallow-Instruct-v0.1",
+        split=split,
+    )
+    examples = []
+    for row in ds:
+        row_examples = examples_from_messages(normalize_messages(row))
+        if not row_examples:
+            single = example_from_instruction_fields(row)
+            row_examples = [single] if single is not None else []
+        for item in row_examples:
+            examples.append(item)
+            if max_examples > 0 and len(examples) >= max_examples:
+                return examples
+    return examples
+
+
+def parse_sft_sources(spec: str) -> List[str]:
+    names = [name.strip() for name in spec.split(",") if name.strip()]
+    if not names:
+        raise SystemExit("At least one SFT source must be provided.")
+    unknown = [name for name in names if name not in SFT_DATASETS]
+    if unknown:
+        raise SystemExit(f"Unknown SFT sources: {', '.join(unknown)}")
+    return names
+
+
+def build_split_examples(args, split_kind: str) -> List[Tuple[str, str]]:
+    examples = []
+    builder_map: dict[str, Callable[[str, int, bool], List[Tuple[str, str]]]] = {
+        "build_no_robots_examples": build_no_robots_examples,
+        "build_oasst2_examples": build_oasst2_examples,
+        "build_ultrachat_200k_examples": build_ultrachat_200k_examples,
+        "build_llm_jp_oasst2_33k_ja_examples": build_llm_jp_oasst2_33k_ja_examples,
+        "build_swallow_instruct_examples": build_swallow_instruct_examples,
+    }
+    for source_name in parse_sft_sources(args.sft_sources):
+        cfg = SFT_DATASETS[source_name]
+        builder = builder_map[cfg["builder"]]
+        split_name = cfg["train_split"] if split_kind == "train" else cfg["valid_split"]
+        limit_attr = f"max_{split_kind}_{source_name}"
+        source_examples = builder(split_name, getattr(args, limit_attr), args.local_datasets_only)
+        if split_kind == "valid" and cfg["valid_split"] == cfg["train_split"]:
+            source_examples = source_examples[-getattr(args, limit_attr):] if getattr(args, limit_attr) > 0 else source_examples
+        examples += source_examples
+        print(f"loaded sft_source={source_name} split={split_name} examples={len(source_examples)}")
     return examples
 
 
@@ -206,11 +421,21 @@ def parse_args():
     p.add_argument("--log-every", type=int, default=25)
     p.add_argument("--save-every", type=int, default=100)
     p.add_argument("--seed", type=int, default=42)
-    p.add_argument("--max-train-no-robots", type=int, default=8000)
-    p.add_argument("--max-train-oasst2", type=int, default=12000)
-    p.add_argument("--max-valid-no-robots", type=int, default=500)
-    p.add_argument("--max-valid-oasst2", type=int, default=1000)
-    p.add_argument("--local-datasets-only", action="store_true", default=True)
+    p.add_argument("--sft-sources", type=str, default="no_robots,oasst2_en")
+    p.add_argument("--local-datasets-only", action="store_true")
+    for source_name, cfg in SFT_DATASETS.items():
+        p.add_argument(
+            f"--max-train-{source_name}",
+            dest=f"max_train_{source_name}",
+            type=int,
+            default=cfg["default_max_train"],
+        )
+        p.add_argument(
+            f"--max-valid-{source_name}",
+            dest=f"max_valid_{source_name}",
+            type=int,
+            default=cfg["default_max_valid"],
+        )
     return p.parse_args()
 
 
@@ -224,12 +449,8 @@ def main():
     seq_len = train_args["seq_len"]
 
     print("Loading SFT datasets...")
-    train_examples = []
-    train_examples += build_no_robots_examples("train", args.max_train_no_robots, args.local_datasets_only)
-    train_examples += build_oasst2_examples("train", args.max_train_oasst2, args.local_datasets_only)
-    valid_examples = []
-    valid_examples += build_no_robots_examples("test", args.max_valid_no_robots, args.local_datasets_only)
-    valid_examples += build_oasst2_examples("validation", args.max_valid_oasst2, args.local_datasets_only)
+    train_examples = build_split_examples(args, "train")
+    valid_examples = build_split_examples(args, "valid")
 
     train_batches = make_batches(train_examples, tokenizer, seq_len)
     valid_batches = make_batches(valid_examples, tokenizer, seq_len)

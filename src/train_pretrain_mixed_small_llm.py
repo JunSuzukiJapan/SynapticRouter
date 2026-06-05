@@ -18,6 +18,7 @@ SOURCE_PRESETS = {
     "tinystories": {
         "path": "roneneldan/TinyStories",
         "name": None,
+        "data_dir": None,
         "train_split": "train",
         "valid_split": "validation",
         "text_column": "text",
@@ -28,6 +29,7 @@ SOURCE_PRESETS = {
     "wikitext2": {
         "path": "wikitext",
         "name": "wikitext-2-raw-v1",
+        "data_dir": None,
         "train_split": "train",
         "valid_split": "validation",
         "text_column": "text",
@@ -38,12 +40,24 @@ SOURCE_PRESETS = {
     "fineweb_edu_sample": {
         "path": "HuggingFaceFW/fineweb-edu",
         "name": "sample-10BT",
+        "data_dir": None,
         "train_split": "train",
         "valid_split": None,
         "text_column": "text",
         "train_examples": 50000,
         "valid_examples": 2000,
         "weight": 0.45,
+    },
+    "llm_jp_synth": {
+        "path": "llm-jp/scaling-data-constrained-llms",
+        "name": None,
+        "data_dir": None,
+        "train_split": "train",
+        "valid_split": None,
+        "text_column": "text",
+        "train_examples": 10000,
+        "valid_examples": 500,
+        "weight": 0.10,
     },
 }
 
@@ -82,6 +96,28 @@ def import_datasets():
     return load_dataset, DownloadConfig
 
 
+def load_dataset_cache_first(load_dataset, download_config, local_only: bool, **kwargs):
+    if local_only:
+        return load_dataset(
+            **kwargs,
+            download_config=download_config(local_files_only=True),
+        )
+
+    try:
+        ds = load_dataset(
+            **kwargs,
+            download_config=download_config(local_files_only=True),
+        )
+        print(f"cache hit: {kwargs['path']} split={kwargs.get('split')}")
+        return ds
+    except Exception as exc:
+        print(f"cache miss: {kwargs['path']} split={kwargs.get('split')} fallback=remote reason={exc.__class__.__name__}")
+        return load_dataset(
+            **kwargs,
+            download_config=download_config(local_files_only=False),
+        )
+
+
 def parse_sources(spec: str) -> list[str]:
     names = [s.strip() for s in spec.split(",") if s.strip()]
     if not names:
@@ -113,12 +149,15 @@ def read_text_split(load_dataset, download_config, cfg: dict, split: str, max_ex
     actual_split = cfg[split]
     if actual_split is None:
         return ""
-    ds = load_dataset(
-        cfg["path"],
+    ds = load_dataset_cache_first(
+        load_dataset,
+        download_config,
+        local_only,
+        path=cfg["path"],
         name=cfg["name"],
+        data_dir=cfg.get("data_dir"),
         split=actual_split,
         cache_dir=cache_dir,
-        download_config=download_config(local_files_only=local_only),
     )
     total = len(ds)
     limit = total if max_examples <= 0 else min(total, max_examples)
@@ -189,7 +228,7 @@ def load_mixed_corpus(args) -> MixedCorpusBundle:
             )
         )
         print(
-            f"loaded source={source_name} path={cfg['path']} name={cfg['name']} "
+            f"loaded source={source_name} path={cfg['path']} name={cfg['name']} data_dir={cfg.get('data_dir')} "
             f"train_tokens={len(train_tokens)} valid_tokens={len(valid_tokens)} weight={weight:.3f}"
         )
 
