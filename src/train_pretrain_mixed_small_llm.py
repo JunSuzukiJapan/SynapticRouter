@@ -63,6 +63,7 @@ SOURCE_PRESETS = {
 
 MODEL_PRESETS = {
     "8gb_safe": {"dim": 384, "layers": 6, "synapses": 32, "syn_hidden": 768, "seq_len": 256, "batch_size": 4, "eval_batch_size": 4, "grad_accum": 4},
+    "8gb_infer": {"dim": 448, "layers": 7, "synapses": 32, "syn_hidden": 896, "seq_len": 256, "batch_size": 3, "eval_batch_size": 3, "grad_accum": 6},
     "8gb_max": {"dim": 512, "layers": 8, "synapses": 32, "syn_hidden": 1024, "seq_len": 256, "batch_size": 2, "eval_batch_size": 2, "grad_accum": 8},
 }
 

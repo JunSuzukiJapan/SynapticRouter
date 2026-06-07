@@ -16,11 +16,11 @@ fi
   --base-model checkpoints/mixed_sra_pretrain_en.pt \
   --save checkpoints/mixed_sra_chat_ja.pt \
   --device auto \
-  --steps 300 \
-  --batch-size 8 \
-  --grad-accum 2 \
-  --log-every 25 \
-  --save-every 100 \
+  --steps 1500 \
+  --batch-size 4 \
+  --grad-accum 4 \
+  --log-every 50 \
+  --save-every 250 \
   --sft-sources llm_jp_oasst2_33k_ja \
   --max-train-llm_jp_oasst2_33k_ja 8000 \
   --max-valid-llm_jp_oasst2_33k_ja 500

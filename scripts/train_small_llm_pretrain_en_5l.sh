@@ -6,12 +6,12 @@ set -euo pipefail
   --weight-tinystories 0.90 \
   --weight-wikitext2 0.10 \
   --model-preset 8gb_infer \
-  --layers 3 \
-  --steps 18000 \
-  --warmup-steps 1800 \
-  --joint-steps 12600 \
-  --stabilize-steps 2700 \
-  --log-every 100 \
-  --save-every 400 \
+  --layers 5 \
+  --steps 2000 \
+  --warmup-steps 200 \
+  --joint-steps 1400 \
+  --stabilize-steps 300 \
+  --log-every 50 \
+  --save-every 200 \
   --device auto \
-  --checkpoint-path checkpoints/mixed_sra_pretrain_en.pt
+  --checkpoint-path checkpoints/mixed_sra_pretrain_en_5l_smoke.pt
