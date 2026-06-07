@@ -344,6 +344,10 @@ def encode_example(tokenizer, prompt: str, response: str, seq_len: int):
             response_tokens = response_tokens[: max_total - len(prompt_tokens)]
             full_tokens = prompt_tokens + response_tokens
 
+    # Truncation can erase the supervised tail entirely for long prompts.
+    if len(response_tokens) < 2:
+        return None
+
     if len(full_tokens) < 2:
         return None
 
@@ -353,6 +357,8 @@ def encode_example(tokenizer, prompt: str, response: str, seq_len: int):
     labels = [IGNORE_INDEX] * len(y)
     for idx in range(max(0, response_start - 1), len(y)):
         labels[idx] = y[idx]
+    if all(label == IGNORE_INDEX for label in labels):
+        return None
     return x, labels
 
 
@@ -383,15 +389,19 @@ def evaluate(model, batches, batch_size: int, seq_len: int, device: str):
     for start in range(0, len(batches), batch_size):
         batch = batches[start:start + batch_size]
         x, labels = pad_batch(batch, seq_len, device)
+        if not (labels != IGNORE_INDEX).any():
+            continue
         logits, _ = model(x)
         loss = F.cross_entropy(
             logits.reshape(-1, logits.size(-1)),
             labels.reshape(-1),
             ignore_index=IGNORE_INDEX,
         )
+        if not torch.isfinite(loss):
+            continue
         total_loss += loss.item()
         count += 1
-    return total_loss / max(count, 1)
+    return float("nan") if count == 0 else total_loss / count
 
 
 @torch.no_grad()
